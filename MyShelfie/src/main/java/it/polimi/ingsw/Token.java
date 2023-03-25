@@ -5,7 +5,7 @@ package it.polimi.ingsw;
  * This class extends Card Class and represents the Token of the game.
  */
 public class Token extends Card{
-
+    private final int id;
     private int points;
     private TokenType type;
 
@@ -20,6 +20,7 @@ public class Token extends Card{
 
         if (checkID(ID)) {
             associateIDtoTokenPoints(ID);
+            this.id = ID;
         } else throw new IllegalArgumentException("ID isn't correct");
 
     }
@@ -115,6 +116,15 @@ public class Token extends Card{
      */
     private boolean isBetween(int ID, int leftExtreme, int rightExtreme) {
         return ID >= leftExtreme && ID <= rightExtreme;
+    }
+
+    /**
+     * getter of attribute id
+     * @return int (the token id)
+     */
+    @Override
+    public int getId(){
+        return this.id;
     }
 
 }
