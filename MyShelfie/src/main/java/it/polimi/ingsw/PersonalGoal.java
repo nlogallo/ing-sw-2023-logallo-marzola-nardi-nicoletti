@@ -4,7 +4,7 @@ package it.polimi.ingsw;
  * @author Nunzio Logallo
  * This class represents the Personal Goal which are assigned to each player in the beginning of a Game
  */
-public class PersonalGoal extends Card{
+public class PersonalGoal{
     private TileType[][] matrix;
 
     /**

@@ -1,13 +1,12 @@
 package it.polimi.ingsw;
 
 import java.util.ArrayList;
-import java.util.DoubleSummaryStatistics;
 
 /**
  * Class that represents the Common Goal Card
  * @author Emanuele Nicoletti
  */
-public class CommonGoal extends Card{
+public class CommonGoal{
     private final int id;
     private final String description;
 
@@ -92,7 +91,7 @@ public class CommonGoal extends Card{
      * @return true if is achieved, false otherwise
      */
     private boolean checkCommonGoal1(TileType[][] tileTypes){
-        //still possible check if a diagonal could be in the shelf
+        //still possible check if a diagonal could be on the shelf
         boolean stillPossible;
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < tileTypes[i].length;){

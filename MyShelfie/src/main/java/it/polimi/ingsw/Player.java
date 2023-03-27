@@ -21,7 +21,7 @@ public class Player {
      * @param personalGoal as the Personal Goal assigned to the player
      * @param game as the game in which the player is
      */
-    public Player(boolean seat, Shelf shelf, String nickname, State state, Card personalGoal, Game game){
+    public Player(boolean seat, Shelf shelf, String nickname, State state, PersonalGoal personalGoal, Game game){
         this.seat = seat;
         this.shelf = shelf;
         this.nickname = nickname;
@@ -53,7 +53,7 @@ public class Player {
 
     }
 
-    public Card verifyCommonGoal(){
+    public CommonGoal verifyCommonGoal(){
         return null;
     }
 

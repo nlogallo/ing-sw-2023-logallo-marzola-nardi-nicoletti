@@ -4,7 +4,7 @@ package it.polimi.ingsw;
  * @author Andrea Nardi
  * This class extends Card Class and represents the Token of the game.
  */
-public class Token extends Card{
+public class Token{
     private final int id;
     private int points;
     private TokenType type;
@@ -17,7 +17,6 @@ public class Token extends Card{
      * the types in the enum
      */
     public Token (int ID) throws IllegalArgumentException {
-
         if (checkID(ID)) {
             associateIDtoTokenPoints(ID);
             this.id = ID;
@@ -122,7 +121,7 @@ public class Token extends Card{
      * getter of attribute id
      * @return int (the token id)
      */
-    @Override
+
     public int getId(){
         return this.id;
     }
