@@ -1,5 +1,9 @@
 package it.polimi.ingsw;
 import java.util.ArrayList;
+
+import it.polimi.ingsw.model.Shelf;
+import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.model.TileType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

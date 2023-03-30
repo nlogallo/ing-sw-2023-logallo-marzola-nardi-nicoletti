@@ -1,5 +1,7 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.model.TileType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

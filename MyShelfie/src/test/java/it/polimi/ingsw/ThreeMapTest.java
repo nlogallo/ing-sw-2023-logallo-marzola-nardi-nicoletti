@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.model.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,7 +15,7 @@ public class ThreeMapTest {
     @Test
     public void addKey_setPlayer_CorrectInput_CorrectOutput(){
         ThreeMap threeMap = new ThreeMap(4);
-        CommonGoal commonGoal0 = new CommonGoal("description0", 0);
+        CommonGoal_old commonGoal0 = new CommonGoal_old("description0", 0);
         Token token0 = new Token(8);
         State state = new State() {};
         Player[] players = {};
@@ -38,7 +39,7 @@ public class ThreeMapTest {
     @Test
     public void addKey_WrongInput_ThrowIllegalArgumentException(){
         ThreeMap threeMap = new ThreeMap(4);
-        CommonGoal commonGoal0 = new CommonGoal("description0", 0);
+        CommonGoal_old commonGoal0 = new CommonGoal_old("description0", 0);
         Token token0 = new Token(8);
         State state = new State() {};
         Player[] players = {};
@@ -63,7 +64,7 @@ public class ThreeMapTest {
     @Test
     public void hasToken_Token_AssertTrue(){
         ThreeMap threeMap = new ThreeMap(4);
-        CommonGoal commonGoal0 = new CommonGoal("description0", 0);
+        CommonGoal_old commonGoal0 = new CommonGoal_old("description0", 0);
         Token token0 = new Token(7);
         Player[] players = {};
         Game game0 = new Game(players);
@@ -79,7 +80,7 @@ public class ThreeMapTest {
     @Test
     public void hasToken_Token_AssertFalse(){
         ThreeMap threeMap = new ThreeMap(4);
-        CommonGoal commonGoal0 = new CommonGoal("description0", 0);
+        CommonGoal_old commonGoal0 = new CommonGoal_old("description0", 0);
         Token token0 = new Token(7);
         Player[] players = {};
         Game game0 = new Game(players);
@@ -94,8 +95,8 @@ public class ThreeMapTest {
     @Test
     public void allClass_2Token_AssertTrue(){
         ThreeMap threeMap = new ThreeMap(4);
-        CommonGoal commonGoal0 = new CommonGoal("description0", 0);
-        CommonGoal commonGoal1 = new CommonGoal("description1", 11);
+        CommonGoal_old commonGoal0 = new CommonGoal_old("description0", 0);
+        CommonGoal_old commonGoal1 = new CommonGoal_old("description1", 11);
         Token token0 = new Token(7);
         Token token1 = new Token(8);
         threeMap.addKey(commonGoal0, token0);

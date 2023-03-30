@@ -1,5 +1,7 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.model.Token;
+import it.polimi.ingsw.model.TokenType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Class that represents the Common Goal Card
  * @author Emanuele Nicoletti
  */
-public class CommonGoal{
+public class CommonGoal_old {
     private final int id;
     private final String description;
 
@@ -15,7 +15,7 @@ public class CommonGoal{
      * @param cardDescription is the text description of the card
      * @param id specifies the Common Goal
      */
-    public CommonGoal(String cardDescription, int id) throws IllegalArgumentException, NullPointerException{
+    public CommonGoal_old(String cardDescription, int id) throws IllegalArgumentException, NullPointerException{
         if(id < 0 || id > 11) throw new IllegalArgumentException("Invalid id");
         if(cardDescription == null) throw new NullPointerException("Description cannot be null");
         this.id = id;

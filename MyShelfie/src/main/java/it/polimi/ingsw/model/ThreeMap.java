@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
  */
 
 public class ThreeMap {
-    private Map<CommonGoal, Token> firstMap;
+    private Map<CommonGoal_old, Token> firstMap;
     private Map<Token, Player> secondMap;
 
     private final int playersNumber;
@@ -23,7 +23,7 @@ public class ThreeMap {
         if(playersNumber < 2 || playersNumber > 4)
             throw new IllegalArgumentException("Illegal number of players ");
         this.playersNumber = playersNumber;
-        firstMap = new HashMap<CommonGoal, Token>(2);
+        firstMap = new HashMap<CommonGoal_old, Token>(2);
         secondMap = new HashMap<Token, Player>(playersNumber * 2);
     }
 
@@ -33,7 +33,7 @@ public class ThreeMap {
      * @param tokenKey is the Token create for that specific Common Goal card
      * @throws IllegalArgumentException if the Common Goal or the Token already exist
      */
-    public void addKey(CommonGoal commonGoalKey, Token tokenKey) throws IllegalArgumentException{
+    public void addKey(CommonGoal_old commonGoalKey, Token tokenKey) throws IllegalArgumentException{
         if(firstMap.containsKey(commonGoalKey) || secondMap.containsKey(tokenKey))
             throw new IllegalArgumentException("This key already exists");
         firstMap.put(commonGoalKey, tokenKey);
@@ -47,7 +47,7 @@ public class ThreeMap {
      * @throws IllegalArgumentException if the Common Goal does not exist
      * @return token that is the Token that the player achieved for that specific Common Goal
      */
-    public Token setPlayer(CommonGoal commonGoalKey, Player player) throws IllegalArgumentException{
+    public Token setPlayer(CommonGoal_old commonGoalKey, Player player) throws IllegalArgumentException{
         if(!firstMap.containsKey(commonGoalKey))
             throw new IllegalArgumentException("This common goal doesn't exist");
         Token token = firstMap.remove(commonGoalKey);
@@ -65,7 +65,7 @@ public class ThreeMap {
      * @param player is the player
      * @return true if the player already has a token the that Common Goal, false otherwise
      */
-    public boolean hasToken(CommonGoal commonGoalKey, Player player){
+    public boolean hasToken(CommonGoal_old commonGoalKey, Player player){
         if(!firstMap.containsKey(commonGoalKey))
             return true;
         else{

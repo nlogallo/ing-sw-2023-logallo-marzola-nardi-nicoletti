@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import org.junit.After;
-import org.junit.Before;
+import it.polimi.ingsw.model.commonGoal.*;
+import it.polimi.ingsw.model.TileType;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,22 +9,34 @@ import static org.junit.Assert.*;
 public class CommonGoalTest {
     @Test
     public void constructor_InvalidID_ThrowsIllegalArgumentException(){
-        assertThrows(IllegalArgumentException.class, () -> new CommonGoal ("description1", 14));
+        assertThrows(IllegalArgumentException.class, () -> new CG_SpecialEqualTiles(14, "description1"));
+        assertThrows(IllegalArgumentException.class, () -> new CG_3DiffTypes(-1, "description1"));
+        assertThrows(IllegalArgumentException.class, () -> new CG_8Tiles(15, "description1"));
+        assertThrows(IllegalArgumentException.class, () -> new CG_DiffHeight(19, "description1"));
+        assertThrows(IllegalArgumentException.class, () -> new CG_DiffTiles(22, "description1"));
+        assertThrows(IllegalArgumentException.class, () -> new CG_SpecialEqualTiles(17, "description1"));
+        assertThrows(IllegalArgumentException.class, () -> new CG_StdEqualTiles(20, "description1"));
     }
 
     @Test
     public void constructor_NullDescription_ThrowsNullPointerException(){
-        assertThrows(NullPointerException.class, () -> new CommonGoal(null, 5));
+        assertThrows(IllegalArgumentException.class, () -> new CG_SpecialEqualTiles(14, null));
+        assertThrows(IllegalArgumentException.class, () -> new CG_3DiffTypes(-1, null));
+        assertThrows(IllegalArgumentException.class, () -> new CG_8Tiles(15, null));
+        assertThrows(IllegalArgumentException.class, () -> new CG_DiffHeight(19, null));
+        assertThrows(IllegalArgumentException.class, () -> new CG_DiffTiles(22, null));
+        assertThrows(IllegalArgumentException.class, () -> new CG_SpecialEqualTiles(17, null));
+        assertThrows(IllegalArgumentException.class, () -> new CG_StdEqualTiles(20, null));
     }
 
     @Test
     public void constructor_CorrectInput_CorrectOutput(){
-        CommonGoal commonGoal = new CommonGoal("""
+        CG_StdEqualTiles commonGoal = new CG_StdEqualTiles(0, """
                 Six groups each containing at least
                 2 tiles of the same type (not necessarily
                 in the depicted shape).
                 The tiles of one group can be different
-                from those of another group.""", 0);
+                from those of another group.""");
         assertEquals("""
                 Six groups each containing at least
                 2 tiles of the same type (not necessarily
@@ -36,7 +48,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal0_0groups_AssertFalse(){
-        CommonGoal commonGoal = new CommonGoal("description0", 0);
+        CG_StdEqualTiles commonGoal = new CG_StdEqualTiles(0, "description0");
         TileType[][] playerShelf = new TileType[6][5];
         for(int i = 0; i < 6; i++)
             for(int j = 0; j < 5; j++)
@@ -58,7 +70,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal0_5groups_AssertFalse(){
-        CommonGoal commonGoal = new CommonGoal("description0", 0);
+        CG_StdEqualTiles commonGoal = new CG_StdEqualTiles(0, "description0");
         TileType[][] playerShelf = new TileType[6][5];
         for(int i = 0; i < 6; i++)
             for(int j = 0; j < 5; j++)
@@ -73,7 +85,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal0_8groups_AssertTrue(){
-        CommonGoal commonGoal = new CommonGoal("description0", 0);
+        CG_StdEqualTiles commonGoal = new CG_StdEqualTiles(0, "description0");
         TileType[][] playerShelf = new TileType[6][5];
         for(int i = 0; i < 6; i++)
             for(int j = 0; j < 5; j++)
@@ -97,7 +109,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal1_NoDiagonal_AssertFalse(){
-        CommonGoal commonGoal = new CommonGoal("description1", 1);
+        CG_SpecialEqualTiles commonGoal = new CG_SpecialEqualTiles(1, "description1");
         TileType[][] playerShelf = new TileType[6][5];
         for(int i = 0; i < 6; i++)
             for(int j = 0; j < 5; j++)
@@ -121,7 +133,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal1_Diagonal_AssertTrue(){
-        CommonGoal commonGoal = new CommonGoal("description1", 1);
+        CG_SpecialEqualTiles commonGoal = new CG_SpecialEqualTiles(1, "description1");
         TileType[][] playerShelf = new TileType[6][5];
         for(int i = 0; i < 6; i++)
             for(int j = 0; j < 5; j++)
@@ -148,7 +160,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal1_ReverseDiagonal_AssertTrue(){
-        CommonGoal commonGoal = new CommonGoal("description1", 1);
+        CG_SpecialEqualTiles commonGoal = new CG_SpecialEqualTiles(1, "description1");
         TileType[][] playerShelf = new TileType[6][5];
         for(int i = 0; i < 6; i++)
             for(int j = 0; j < 5; j++)
@@ -178,7 +190,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal2_0groups_AssertFalse(){
-        CommonGoal commonGoal = new CommonGoal("description2", 2);
+        CG_StdEqualTiles commonGoal = new CG_StdEqualTiles(2, "description2");
         TileType[][] playerShelf = new TileType[6][5];
         for(int i = 0; i < 6; i++)
             for(int j = 0; j < 5; j++)
@@ -202,7 +214,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal2_4groups_AssertTrue(){
-        CommonGoal commonGoal = new CommonGoal("description2", 2);
+        CG_StdEqualTiles commonGoal = new CG_StdEqualTiles(2, "description2");
         TileType[][] playerShelf = new TileType[6][5];
         for(int i = 0; i < 6; i++)
             for(int j = 0; j < 5; j++)
@@ -230,7 +242,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal3_3groups_AssertFalse() {
-        CommonGoal commonGoal = new CommonGoal("description3", 3);
+        CG_3DiffTypes commonGoal = new CG_3DiffTypes(3, "description3");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -255,7 +267,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal3_4groups_AssertTrue() {
-        CommonGoal commonGoal = new CommonGoal("description3", 3);
+        CG_3DiffTypes commonGoal = new CG_3DiffTypes(3, "description3");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -284,7 +296,7 @@ public class CommonGoalTest {
     }
     @Test
     public void checkCommonGoal4_NoMatches_AssertFalse() {
-        CommonGoal commonGoal = new CommonGoal("description4", 4);
+        CG_4Corners commonGoal = new CG_4Corners(4, "description4");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -298,7 +310,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal4_Matches_AssertTrue() {
-        CommonGoal commonGoal = new CommonGoal("description4", 4);
+        CG_4Corners commonGoal = new CG_4Corners(4, "description4");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -311,7 +323,7 @@ public class CommonGoalTest {
     }
     @Test
     public void checkCommonGoal5_0groups_AssertFalse() {
-        CommonGoal commonGoal = new CommonGoal("description5", 5);
+        CG_DiffTiles commonGoal = new CG_DiffTiles(5, "description5");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -332,7 +344,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal5_0groups_AssertTrue() {
-        CommonGoal commonGoal = new CommonGoal("description5", 5);
+        CG_DiffTiles commonGoal = new CG_DiffTiles(5, "description5");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -354,7 +366,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal6_1group_AssertFalse() {
-        CommonGoal commonGoal = new CommonGoal("description6", 6);
+        CG_SpecialEqualTiles commonGoal = new CG_SpecialEqualTiles(6, "description6");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -370,7 +382,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal6_2groups_AssertTrue() {
-        CommonGoal commonGoal = new CommonGoal("description6", 6);
+        CG_SpecialEqualTiles commonGoal = new CG_SpecialEqualTiles(6, "description6");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -386,7 +398,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal7_1group_AssertFalse() {
-        CommonGoal commonGoal = new CommonGoal("description7", 7);
+        CG_DiffTiles commonGoal = new CG_DiffTiles(7, "description7");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -405,7 +417,7 @@ public class CommonGoalTest {
     }
     @Test
     public void checkCommonGoal7_2groups_AssertTrue() {
-        CommonGoal commonGoal = new CommonGoal("description7", 7);
+        CG_DiffTiles commonGoal = new CG_DiffTiles(7, "description7");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -425,7 +437,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal8_2groups_AssertFalse() {
-        CommonGoal commonGoal = new CommonGoal("description8", 8);
+        CG_3DiffTypes commonGoal = new CG_3DiffTypes(8, "description8");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -452,7 +464,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal8_3groups_AssertTrue() {
-        CommonGoal commonGoal = new CommonGoal("description8", 8);
+        CG_3DiffTypes commonGoal = new CG_3DiffTypes(8, "description8");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -480,7 +492,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal9_NoX_AssertFalse() {
-        CommonGoal commonGoal = new CommonGoal("description9", 9);
+        CG_SpecialEqualTiles commonGoal = new CG_SpecialEqualTiles(9, "description9");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -498,7 +510,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal9_X_AssertTrue() {
-        CommonGoal commonGoal = new CommonGoal("description9", 9);
+        CG_SpecialEqualTiles commonGoal = new CG_SpecialEqualTiles(9, "description9");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -519,7 +531,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal10_7tiles_AssertFalse() {
-        CommonGoal commonGoal = new CommonGoal("description10", 10);
+        CG_8Tiles commonGoal = new CG_8Tiles(10, "description8");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -541,7 +553,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal10_8tiles_AssertTrue() {
-        CommonGoal commonGoal = new CommonGoal("description10", 10);
+        CG_8Tiles commonGoal = new CG_8Tiles(10, "description8");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -564,7 +576,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal11_NoIncreasingOrDecreasing_AssertFalse() {
-        CommonGoal commonGoal = new CommonGoal("description11", 11);
+        CG_DiffHeight commonGoal = new CG_DiffHeight(11, "description11");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -587,7 +599,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal11_Increasing_AssertTrue() {
-        CommonGoal commonGoal = new CommonGoal("description11", 11);
+        CG_DiffHeight commonGoal = new CG_DiffHeight(11, "description11");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)
@@ -617,7 +629,7 @@ public class CommonGoalTest {
 
     @Test
     public void checkCommonGoal11_Decreasing_AssertTrue() {
-        CommonGoal commonGoal = new CommonGoal("description11", 11);
+        CG_DiffHeight commonGoal = new CG_DiffHeight(11, "description11");
         TileType[][] playerShelf = new TileType[6][5];
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 5; j++)

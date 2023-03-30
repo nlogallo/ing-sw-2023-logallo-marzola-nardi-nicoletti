@@ -1,5 +1,7 @@
 
 package it.polimi.ingsw;
+import it.polimi.ingsw.model.PersonalGoal;
+import it.polimi.ingsw.model.TileType;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 

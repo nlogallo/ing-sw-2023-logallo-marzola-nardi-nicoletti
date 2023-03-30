@@ -1,4 +1,6 @@
 package it.polimi.ingsw;
+import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.Shelf;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 

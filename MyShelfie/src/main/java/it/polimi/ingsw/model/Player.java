@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
 /**
  * @author Nunzio Logallo
  * This class represents the in game Player
@@ -53,7 +53,7 @@ public class Player {
 
     }
 
-    public CommonGoal verifyCommonGoal(){
+    public CommonGoal_old verifyCommonGoal(){
         return null;
     }
 

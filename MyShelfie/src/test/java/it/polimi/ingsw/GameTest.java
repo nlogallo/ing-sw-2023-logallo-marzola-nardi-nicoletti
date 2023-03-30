@@ -1,5 +1,9 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.Shelf;
+import it.polimi.ingsw.model.TileType;
 import org.junit.jupiter.api.Test;
 
 class GameTest {
