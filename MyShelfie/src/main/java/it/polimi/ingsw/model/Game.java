@@ -5,8 +5,9 @@ import it.polimi.ingsw.model.commonGoal.*;
 import it.polimi.ingsw.model.wrapperCustom.DescriptionWrapper;
 import it.polimi.ingsw.model.wrapperCustom.PersonalGoalWrapper;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -14,20 +15,23 @@ import java.util.Random;
 /**
  * This class represents the single game started by the server
  */
-public class Game {
+public class Game implements Serializable{
+    int id;
     private ArrayList<Player> players;
     private Board board;
     private GameState state;
     private Player firstToEnd;
     private Player currentPlayer;
     private ThreeMap commonGoals;
+    private final File gameFile;
 
     /**
      * Class constructor
      * @param participants as the players participating in the game
      * @throws NullPointerException if participants is null
      */
-    public Game(ArrayList<Player> participants) throws NullPointerException{
+    public Game(int id, ArrayList<Player> participants) throws NullPointerException{
+        this.id = id;
         this.players = new ArrayList<>();
         if(participants == null)
             throw new NullPointerException("Players list cannot be null");
@@ -37,10 +41,11 @@ public class Game {
         this.firstToEnd = null;
         this.currentPlayer = null;
         this.commonGoals = null;
+        this.gameFile = new File("data/savedGame/game" + this.id + ".bin");
     }
 
     /**
-     * This method permits to start a new game
+     * This method allows to start a new game
      * @throws IllegalArgumentException if the number of players is incorrect
      */
     public void startGame() throws  IllegalArgumentException{
@@ -56,6 +61,78 @@ public class Game {
         chooseCommonGoals();
         assignPersonalGoal();
         board = new Board(players.size());
+        //saveGame();
+    }
+
+    /**
+     * This method ends the game
+     */
+    public void endGame(){
+        this.state = GameState.ENDED;
+        this.currentPlayer = null;
+        try {
+            Files.delete(Path.of("data/savedGame/game" + this.id + ".bin"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * This method saves the game infos in a binary file
+     */
+    public void saveGame(){
+        try {
+            byte[] idData = serializeObject(this);
+            FileOutputStream fileOutputStream = new FileOutputStream(this.gameFile);
+            fileOutputStream.write(idData, 0, idData.length);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * This method restore the infos of the game
+     * @return a Game object
+     */
+    public Game restoreGame(){
+        Object object;
+        byte[] data = new byte[(int) this.gameFile.length()];
+        try {
+            FileInputStream fileInputStream = new FileInputStream(this.gameFile);
+            fileInputStream.read(data, 0, data.length);
+            fileInputStream.close();
+            object = deserializeObject(data);
+        } catch (ClassNotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        return (Game) object;
+    }
+
+    /**
+     * This method serialize an Object
+     * @param object is the object to serialize
+     * @return a byte array
+     * @throws IOException
+     */
+    private byte[] serializeObject(Object object) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(object);
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    /**
+     * This method deserialize in an Object
+     * @param data is an array of byte
+     * @return an Object
+     * @throws IOException
+     */
+    private Object deserializeObject(byte[] data) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        return objectInputStream.readObject();
     }
 
     /**
@@ -136,7 +213,6 @@ public class Game {
         return commonGoals.getCommonGoals();
     }
 
-
     /**
      * This private method reads the PersonalGoals matrix from the personalGoals.json file
      * @param id is the id of the PersonalGoal card
@@ -197,7 +273,7 @@ public class Game {
             default -> throw new IllegalStateException("Unexpected id value: " + id);
         }
     }
-
-
-
+    public int getId() {
+        return id;
+    }
 }

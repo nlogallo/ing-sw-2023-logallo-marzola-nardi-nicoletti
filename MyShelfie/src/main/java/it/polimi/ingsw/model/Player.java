@@ -1,9 +1,12 @@
 package it.polimi.ingsw.model;
+
+import java.io.Serializable;
+
 /**
  * @author Nunzio Logallo
  * This class represents the in game Player
  */
-public class Player {
+public class Player implements Serializable {
     private boolean seat;
     private Shelf shelf;
     private String nickname;

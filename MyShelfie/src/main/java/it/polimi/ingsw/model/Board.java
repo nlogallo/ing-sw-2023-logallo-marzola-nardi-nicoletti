@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,7 +8,7 @@ import java.util.Random;
  * This class represents the game's board
  * @author Pier Matteo Marzola
  */
-public class Board {
+public class Board implements Serializable {
     /**
      * This attribute represents players number
      */

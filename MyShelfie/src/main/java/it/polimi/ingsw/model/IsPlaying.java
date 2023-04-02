@@ -1,4 +1,6 @@
 package it.polimi.ingsw.model;
 
-public class IsPlaying extends State{
+import java.io.Serializable;
+
+public class IsPlaying extends State implements Serializable {
 }

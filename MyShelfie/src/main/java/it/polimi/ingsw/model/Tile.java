@@ -1,11 +1,13 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
+
 /**
  * @author Andrea Nardi
  * This class represents the Tile class of the game
  */
 
-public class Tile {
+public class Tile implements Serializable {
 
     private int ID;
     private TileType type;

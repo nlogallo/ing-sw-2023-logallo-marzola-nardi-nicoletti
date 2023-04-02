@@ -6,14 +6,16 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
+
 class GameTest {
     @Test
     public void assignPersonalGoal() {
         ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(players);
+        Game game1 = new Game(0, players);
         players.add(new Player(true, new Shelf(), "player1", null, null, game1));
         players.add(new Player(false, new Shelf(), "player2", null, null, game1));
-        game1 = new Game(players); //delete when the method Game.addPlayers is done
+        game1 = new Game(0, players); //delete when the method Game.addPlayers is done
         game1.assignPersonalGoal();
         TileType[][] matrix1 = players.get(0).getPersonalGoal().getMatrix();
         TileType[][] matrix2 = players.get(1).getPersonalGoal().getMatrix();
@@ -35,10 +37,10 @@ class GameTest {
     @Test
     public void addCommonGoals_correctBehavior(){
         ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(players);
+        Game game1 = new Game(0, players);
         players.add(new Player(true, new Shelf(), "player1", null, null, game1));
         players.add(new Player(false, new Shelf(), "player2", null, null, game1));
-        game1 = new Game(players);//delete when the method Game.addPlayers is done
+        game1 = new Game(0,players);//delete when the method Game.addPlayers is done
         game1.startGame();
         for(CommonGoal key : game1.getCommonGoals())
             System.out.println("-------" + "\n" + key.getDescription());
@@ -47,30 +49,30 @@ class GameTest {
     @Test
     public void startGame_correctInput_correctBehavior(){
         ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(players);
+        Game game1 = new Game(0, players);
         players.add(new Player(true, new Shelf(), "player1", null, null, game1));
         players.add(new Player(false, new Shelf(), "player2", null, null, game1));
-        game1 = new Game(players); //delete when the method Game.addPlayers is done
+        game1 = new Game(0, players); //delete when the method Game.addPlayers is done
         game1.startGame();
     }
 
     @Test
     public void startGame_only1player_correctBehavior(){
         ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(players);
+        Game game1 = new Game(0, players);
         players.add(new Player(true, new Shelf(), "player1", null, null, game1));
-        game1 = new Game(players); //delete when the method Game.addPlayers is done
+        game1 = new Game(0, players); //delete when the method Game.addPlayers is done
         game1.startGame();
     }
 
     @Test
     public void updateCommonGoal_correctBehavior(){
         ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(players);
+        Game game1 = new Game(0, players);
         Player player1 = new Player(true, new Shelf(), "player1", null, null, game1);
         players.add(player1);
         players.add(new Player(true, new Shelf(), "player2", null, null, game1));
-        game1 = new Game(players); //delete when the method Game.addPlayers is done
+        game1 = new Game(0, players); //delete when the method Game.addPlayers is done
         game1.startGame();
         CommonGoal commonGoal = game1.getCommonGoals().get(0);
         TileType[][] playerShelf = {{TileType.CAT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
@@ -81,6 +83,18 @@ class GameTest {
         };
     }
 
-
-
+    @Test
+    public void fileTest_AssertEquals(){
+        ArrayList<Player> players= new ArrayList<>();
+        Game game1 = new Game(456, players);
+        Player player1 = new Player(true, new Shelf(), "player1", null, null, game1);
+        players.add(player1);
+        players.add(new Player(true, new Shelf(), "player2", null, null, game1));
+        game1 = new Game(456, players); //delete when the method Game.addPlayers is done
+        game1.startGame();
+        game1.saveGame();
+        Game game2 = game1.restoreGame();
+        assertEquals(game1.getId(), game2.getId());
+        game2.endGame();
+    }
 }

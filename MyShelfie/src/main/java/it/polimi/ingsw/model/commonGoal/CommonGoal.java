@@ -2,7 +2,9 @@ package it.polimi.ingsw.model.commonGoal;
 
 import it.polimi.ingsw.model.TileType;
 
-public abstract class CommonGoal {
+import java.io.Serializable;
+
+public abstract class CommonGoal implements Serializable {
     final private int id;
     final private String description;
 

@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -9,7 +10,7 @@ import java.util.*;
  * @author Emanuele Nicoletti
  */
 
-public class ThreeMap {
+public class ThreeMap implements Serializable {
     private Map<CommonGoal, Token> firstMap;
     private Map<Token, Player> secondMap;
 

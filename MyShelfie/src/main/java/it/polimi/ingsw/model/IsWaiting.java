@@ -1,4 +1,6 @@
 package it.polimi.ingsw.model;
 
-public class IsWaiting extends State{
+import java.io.Serializable;
+
+public class IsWaiting extends State implements Serializable {
 }

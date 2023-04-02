@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -6,7 +7,7 @@ import java.util.ArrayList;
  * This class represents the player's shelf
  * @author Pier Matteo Marzola
  */
-public class Shelf {
+public class Shelf implements Serializable {
 
     /**
      * This attribute represents the shelf's rows
