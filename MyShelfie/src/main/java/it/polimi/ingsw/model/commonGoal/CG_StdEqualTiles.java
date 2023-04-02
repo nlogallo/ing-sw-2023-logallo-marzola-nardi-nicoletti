@@ -2,8 +2,16 @@ package it.polimi.ingsw.model.commonGoal;
 
 import it.polimi.ingsw.model.TileType;
 
+/**
+ * This is the class associated to the CommonGoal that checks whether there are n equal tiles on standard positions, like rows or columns
+ */
 public class CG_StdEqualTiles extends CommonGoal{
 
+    /**
+     * Constructor method, recalls the CommonGoal constructor method
+     * @param id identifies the CommonGoal id
+     * @param description is the description associated with the card
+     */
     public CG_StdEqualTiles(int id, String description){
         super(id, description);
     }
@@ -18,17 +26,29 @@ public class CG_StdEqualTiles extends CommonGoal{
         return super.getDescription();
     }
 
+    /**
+     * This method checks if these types of CommonGoal are achieved
+     * @param tileTypes is the player shelf
+     * @return true if the CommonGoal is achieved
+     * @throws NullPointerException if the player's shelf is null
+     * @throws IllegalArgumentException if the id is not correct
+     */
     @Override
-    public boolean checkCommonGoal(TileType[][] tileTypes) {
+    public boolean checkCommonGoal(TileType[][] tileTypes) throws NullPointerException, IllegalStateException{
         if(tileTypes == null)
             throw new NullPointerException("The shelf cannot be null");
         return switch (this.getId()) {
             case 0 -> check2Tiles(tileTypes);
             case 2 -> check4Tiles(tileTypes);
-            default -> throw new IllegalArgumentException("Card id is wrong!");
+            default -> throw new IllegalStateException("Unexpected id value" );
         };
     }
 
+    /**
+     * This method checks if there are 2 equal tiles types in the rows and in the columns. This has to be repeated for six times.
+     * @param tileTypes is the player's shelf
+     * @return true if the CommonGoal is achieved
+     */
     private boolean check2Tiles(TileType[][] tileTypes){
         int countTimes = 0;
         for(int i = 0; i < tileTypes.length; i++){
@@ -44,6 +64,11 @@ public class CG_StdEqualTiles extends CommonGoal{
         return false;
     }
 
+    /**
+     * This method checks if there are 4 equal tiles types in the rows and in the columns. This has to be repeated for four times
+     * @param tileTypes is the player's shelf
+     * @return true if the CommonGoal is achieved
+     */
     private boolean check4Tiles(TileType[][] tileTypes){
         int countTimes = 0, countEquals;
         for(int i = 0; i < tileTypes.length; i++){

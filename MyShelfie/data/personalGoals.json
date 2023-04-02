@@ -1,115 +1,93 @@
 {
-  "0": {
-      "matrix": [
-        ["PLANT", "EMPTY", "FRAME", "EMPTY", "EMPTY"],
-        ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "CAT"],
-        ["EMPTY", "EMPTY", "EMPTY", "BOOK", "EMPTY"],
-        ["EMPTY", "GAME", "EMPTY", "EMPTY", "EMPTY"],
-        ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
-        ["EMPTY", "EMPTY", "TROPHY", "EMPTY", "EMPTY"]
-      ]
-  },
-  "1": {
-      "matrix": [
-        ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
-        ["EMPTY", "PLANT", "EMPTY", "EMPTY", "EMPTY"],
-        ["CAT", "EMPTY", "GAME", "EMPTY", "EMPTY"],
-        ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "BOOK"],
-        ["EMPTY", "EMPTY", "EMPTY", "TROPHY", "EMPTY"],
-        ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "FRAME"]
-      ]
-  },
-  "2": {
-      "matrix": [
-        ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
-        ["FRAME", "EMPTY", "EMPTY", "GAME", "EMPTY"],
-        ["EMPTY", "EMPTY", "PLANT", "EMPTY", "EMPTY"],
-        ["EMPTY", "CAT", "EMPTY", "EMPTY", "TROPHY"],
-        ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
-        ["BOOK", "EMPTY", "EMPTY", "EMPTY", "EMPTY"]
-      ]
-  },
-  "3": {
-      "matrix": [
-        ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "GAME"],
-        ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
-        ["TROPHY", "EMPTY", "FRAME", "EMPTY", "EMPTY"],
-        ["EMPTY", "EMPTY", "EMPTY", "PLANT", "EMPTY"],
-        ["EMPTY", "BOOK", "CAT", "EMPTY", "EMPTY"],
-        ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"]
-      ]
-  },
-  "4": {
-  "matrix": [
-    ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
-    ["EMPTY", "TROPHY", "EMPTY", "EMPTY", "EMPTY"],
-    ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
-    ["EMPTY", "FRAME", "BOOK", "EMPTY", "EMPTY"],
-    ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "PLANT"],
-    ["GAME", "EMPTY", "EMPTY", "CAT", "EMPTY"]]
-  },
-  "5": {
-    "matrix": [
+    "matrix0": [
+      ["PLANT", "EMPTY", "FRAME", "EMPTY", "EMPTY"],
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "CAT"],
+      ["EMPTY", "EMPTY", "EMPTY", "BOOK", "EMPTY"],
+      ["EMPTY", "GAME", "EMPTY", "EMPTY", "EMPTY"],
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
+      ["EMPTY", "EMPTY", "TROPHY", "EMPTY", "EMPTY"]
+    ],
+    "matrix1": [
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
+      ["EMPTY", "PLANT", "EMPTY", "EMPTY", "EMPTY"],
+      ["CAT", "EMPTY", "GAME", "EMPTY", "EMPTY"],
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "BOOK"],
+      ["EMPTY", "EMPTY", "EMPTY", "TROPHY", "EMPTY"],
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "FRAME"]
+    ],
+    "matrix2": [
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
+      ["FRAME", "EMPTY", "EMPTY", "GAME", "EMPTY"],
+      ["EMPTY", "EMPTY", "PLANT", "EMPTY", "EMPTY"],
+      ["EMPTY", "CAT", "EMPTY", "EMPTY", "TROPHY"],
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
+      ["BOOK", "EMPTY", "EMPTY", "EMPTY", "EMPTY"]
+    ],
+    "matrix3": [
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "GAME"],
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
+      ["TROPHY", "EMPTY", "FRAME", "EMPTY", "EMPTY"],
+      ["EMPTY", "EMPTY", "EMPTY", "PLANT", "EMPTY"],
+      ["EMPTY", "BOOK", "CAT", "EMPTY", "EMPTY"],
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"]
+    ],
+    "matrix4": [
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
+      ["EMPTY", "TROPHY", "EMPTY", "EMPTY", "EMPTY"],
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
+      ["EMPTY", "FRAME", "BOOK", "EMPTY", "EMPTY"],
+      ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "PLANT"],
+      ["GAME", "EMPTY", "EMPTY", "CAT", "EMPTY"]
+    ],
+    "matrix5": [
       ["EMPTY", "EMPTY", "TROPHY", "EMPTY", "CAT"],
       ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "BOOK", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "GAME", "EMPTY", "FRAME", "EMPTY"],
       ["PLANT", "EMPTY", "EMPTY", "EMPTY", "EMPTY"]
-    ]
-  },
-  "6": {
-    "matrix": [
+    ],
+    "matrix6": [
       ["CAT", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "FRAME", "EMPTY"],
       ["EMPTY", "PLANT", "EMPTY", "EMPTY", "EMPTY"],
       ["TROPHY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "GAME"],
       ["EMPTY", "EMPTY", "BOOK", "EMPTY", "EMPTY"]
-    ]
-  },
-  "7": {
-    "matrix": [
+    ],
+    "matrix7": [
       ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "FRAME"],
       ["EMPTY", "CAT", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "TROPHY", "EMPTY", "EMPTY"],
       ["PLANT", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "BOOK", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "GAME", "EMPTY"]
-    ]
-  },
-  "8": {
-    "matrix": [
+    ],
+    "matrix8": [
       ["EMPTY", "EMPTY", "GAME", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "CAT", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "BOOK"],
       ["EMPTY", "TROPHY", "EMPTY", "EMPTY", "PLANT"],
       ["FRAME", "EMPTY", "EMPTY", "EMPTY", "EMPTY"]
-    ]
-  },
-  "9": {
-    "matrix": [
+    ],
+    "matrix9": [
       ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "TROPHY"],
       ["EMPTY", "GAME", "EMPTY", "EMPTY", "EMPTY"],
       ["BOOK", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "CAT", "EMPTY"],
       ["EMPTY", "FRAME", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "PLANT", "EMPTY"]
-    ]
-  },
-  "10": {
-    "matrix": [
+    ],
+    "matrix10": [
       ["EMPTY", "EMPTY", "PLANT", "EMPTY", "EMPTY"],
       ["EMPTY", "BOOK", "EMPTY", "EMPTY", "EMPTY"],
       ["GAME", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "FRAME", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "CAT"],
       ["EMPTY", "EMPTY", "EMPTY", "TROPHY", "EMPTY"]
-    ]
-  },
-  "11": {
-    "matrix": [
+    ],
+    "matrix11": [
       ["EMPTY", "EMPTY", "BOOK", "EMPTY", "EMPTY"],
       ["EMPTY", "PLANT", "EMPTY", "EMPTY", "EMPTY"],
       ["EMPTY", "EMPTY", "FRAME", "EMPTY", "EMPTY"],
@@ -117,5 +95,4 @@
       ["EMPTY", "EMPTY", "EMPTY", "EMPTY", "GAME"],
       ["CAT", "EMPTY", "EMPTY", "EMPTY", "EMPTY"]
     ]
-  }
 }

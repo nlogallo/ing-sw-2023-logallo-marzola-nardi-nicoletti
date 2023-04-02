@@ -2,8 +2,16 @@ package it.polimi.ingsw.model.commonGoal;
 
 import it.polimi.ingsw.model.TileType;
 
+/**
+ * This is the class associated to the CommonGoal that checks whether there are equal tiles on special positions, like diagonal, square or cross
+ */
 public class CG_SpecialEqualTiles extends CommonGoal{
 
+    /**
+     * Constructor method, recalls the CommonGoal constructor method
+     * @param id identifies the CommonGoal id
+     * @param description is the description associated with the card
+     */
     public CG_SpecialEqualTiles(int id, String description){
         super(id, description);
     }
@@ -18,18 +26,30 @@ public class CG_SpecialEqualTiles extends CommonGoal{
         return super.getDescription();
     }
 
+    /**
+     * This method checks if these types of CommonGoal are achieved
+     * @param tileTypes is the player shelf
+     * @return true if the CommonGoal is achieved
+     * @throws NullPointerException if the player's shelf is null
+     * @throws IllegalArgumentException if the id is not correct
+     */
     @Override
-    public boolean checkCommonGoal(TileType[][] tileTypes) {
+    public boolean checkCommonGoal(TileType[][] tileTypes) throws NullPointerException, IllegalStateException{
         if(tileTypes == null)
             throw new NullPointerException("The shelf cannot be null");
         return switch (this.getId()) {
             case 1 -> checkDiagonal(tileTypes);
             case 6 -> checkSquare(tileTypes);
             case 9 -> checkCross(tileTypes);
-            default -> throw new IllegalArgumentException("Card id is wrong!");
+            default -> throw new IllegalStateException("Unexpected id value");
         };
     }
 
+    /**
+     * This method checks if the CommonGoal is achieved for one diagonal
+     * @param tileTypes is the player's shelf
+     * @return true if the CommonGoal is achieved
+     */
     private boolean checkDiagonal(TileType[][] tileTypes){
         boolean stillPossible;
         for(int i = 0; i < 2; i++){
@@ -54,6 +74,11 @@ public class CG_SpecialEqualTiles extends CommonGoal{
         return false;
     }
 
+    /**
+     * This method checks if the CommonGoal is achieved for two squares
+     * @param tileTypes is the player's shelf
+     * @return true if the CommonGoal is achieved
+     */
     private boolean checkSquare(TileType[][] tileTypes){
         int countTimes = 0;
         boolean stillPossible;
@@ -78,6 +103,11 @@ public class CG_SpecialEqualTiles extends CommonGoal{
         return false;
     }
 
+    /**
+     * This method checks if the CommonGoal is achieved for one cross (X)
+     * @param tileTypes is the player's shelf
+     * @return true if the CommonGoal is achieved
+     */
     public boolean checkCross(TileType[][] tileTypes){
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 3; j++){

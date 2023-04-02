@@ -1,7 +1,11 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.commonGoal.CG_DiffHeight;
+import it.polimi.ingsw.model.commonGoal.CG_StdEqualTiles;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -15,10 +19,10 @@ public class ThreeMapTest {
     @Test
     public void addKey_setPlayer_CorrectInput_CorrectOutput(){
         ThreeMap threeMap = new ThreeMap(4);
-        CommonGoal_old commonGoal0 = new CommonGoal_old("description0", 0);
+        CG_StdEqualTiles commonGoal0 = new CG_StdEqualTiles( 0, "description0");
         Token token0 = new Token(8);
         State state = new State() {};
-        Player[] players = {};
+        ArrayList<Player> players = new ArrayList<>();
         Game game0 = new Game(players);
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
@@ -39,10 +43,10 @@ public class ThreeMapTest {
     @Test
     public void addKey_WrongInput_ThrowIllegalArgumentException(){
         ThreeMap threeMap = new ThreeMap(4);
-        CommonGoal_old commonGoal0 = new CommonGoal_old("description0", 0);
+        CG_StdEqualTiles commonGoal0 = new CG_StdEqualTiles( 0, "description0");
         Token token0 = new Token(8);
         State state = new State() {};
-        Player[] players = {};
+        ArrayList<Player> players = new ArrayList<>();
         Game game0 = new Game(players);
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
@@ -64,9 +68,9 @@ public class ThreeMapTest {
     @Test
     public void hasToken_Token_AssertTrue(){
         ThreeMap threeMap = new ThreeMap(4);
-        CommonGoal_old commonGoal0 = new CommonGoal_old("description0", 0);
+        CG_StdEqualTiles commonGoal0 = new CG_StdEqualTiles( 0, "description0");
         Token token0 = new Token(7);
-        Player[] players = {};
+        ArrayList<Player> players = new ArrayList<>();
         Game game0 = new Game(players);
         State state = new State() {};
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
@@ -80,9 +84,9 @@ public class ThreeMapTest {
     @Test
     public void hasToken_Token_AssertFalse(){
         ThreeMap threeMap = new ThreeMap(4);
-        CommonGoal_old commonGoal0 = new CommonGoal_old("description0", 0);
+        CG_StdEqualTiles commonGoal0 = new CG_StdEqualTiles( 0, "description0");
         Token token0 = new Token(7);
-        Player[] players = {};
+        ArrayList<Player> players = new ArrayList<>();
         Game game0 = new Game(players);
         State state = new State() {};
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
@@ -95,13 +99,13 @@ public class ThreeMapTest {
     @Test
     public void allClass_2Token_AssertTrue(){
         ThreeMap threeMap = new ThreeMap(4);
-        CommonGoal_old commonGoal0 = new CommonGoal_old("description0", 0);
-        CommonGoal_old commonGoal1 = new CommonGoal_old("description1", 11);
+        CG_StdEqualTiles commonGoal0 = new CG_StdEqualTiles( 0, "description0");
+        CG_DiffHeight commonGoal1 = new CG_DiffHeight(11, "description11");
         Token token0 = new Token(7);
         Token token1 = new Token(8);
         threeMap.addKey(commonGoal0, token0);
         threeMap.addKey(commonGoal1, token1);
-        Player[] players = {};
+        ArrayList<Player> players = new ArrayList<>();
         Game game0 = new Game(players);
         State state = new State() {};
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};

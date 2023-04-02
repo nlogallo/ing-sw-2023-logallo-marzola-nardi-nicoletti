@@ -2,8 +2,16 @@ package it.polimi.ingsw.model.commonGoal;
 
 import it.polimi.ingsw.model.TileType;
 
+/**
+ * This is the class associated to the CommonGoal that checks whether there eight tiles of the same type
+ */
 public class CG_8Tiles extends CommonGoal{
 
+    /**
+     * Constructor method, recalls the CommonGoal constructor method
+     * @param id identifies the CommonGoal id
+     * @param description is the description associated with the card
+     */
     public CG_8Tiles(int id, String description){
         super(id, description);
     }
@@ -17,6 +25,12 @@ public class CG_8Tiles extends CommonGoal{
         return super.getDescription();
     }
 
+    /**
+     * This method checks if these types of CommonGoal are achieved
+     * @param tileTypes is the player's shelf
+     * @return true if the CommonGoal is achieved
+     * @throws NullPointerException if the player's shelf is null
+     */
     @Override
     public boolean checkCommonGoal(TileType[][] tileTypes) throws NullPointerException{
         if(tileTypes == null)

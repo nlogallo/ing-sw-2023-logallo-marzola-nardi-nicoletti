@@ -53,10 +53,6 @@ public class Player {
 
     }
 
-    public CommonGoal_old verifyCommonGoal(){
-        return null;
-    }
-
     /**
      * Sets the player's personal goal
      * @param personalGoal as the personal goal assigned to the player
