@@ -19,7 +19,7 @@ import java.util.Random;
 public class Game implements Serializable{
     int id;
     private ArrayList<Player> players;
-    private it.polimi.ingsw.model.Board board;
+    private Board board;
     private GameState state;
     private Player firstToEnd;
     private Player currentPlayer;
@@ -59,7 +59,7 @@ public class Game implements Serializable{
         }
         chooseCommonGoals();
         assignPersonalGoal();
-        board = new it.polimi.ingsw.model.Board(players.size());
+        board = new Board(players.size());
         //saveGame();
     }
 

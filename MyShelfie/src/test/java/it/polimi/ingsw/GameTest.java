@@ -12,7 +12,7 @@ class GameTest {
     @Test
     public void assignPersonalGoal() {
 
-        it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(0);
+        Game game1 = new Game(0);
         game1.addPlayer(new Player(true, new Shelf(), "player1", null, null, game1));
         game1.addPlayer(new Player(false, new Shelf(), "player2", null, null, game1));
         game1.assignPersonalGoal();
@@ -36,7 +36,7 @@ class GameTest {
     @Test
     public void addCommonGoals_correctBehavior(){
 
-        it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(0);
+        Game game1 = new Game(0);
         game1.addPlayer(new Player(true, new Shelf(), "player1", null, null, game1));
         game1.addPlayer(new Player(false, new Shelf(), "player2", null, null, game1));
         game1.startGame();
@@ -47,7 +47,7 @@ class GameTest {
     @Test
     public void startGame_correctInput_correctBehavior(){
 
-        it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(0);
+        Game game1 = new Game(0);
         game1.addPlayer(new Player(true, new Shelf(), "player1", null, null, game1));
         game1.addPlayer(new Player(false, new Shelf(), "player2", null, null, game1));
         game1.startGame();
@@ -56,7 +56,7 @@ class GameTest {
     @Test
     public void startGame_only1player_correctBehavior_throwIllegalArgumentException(){
         assertThrows(IllegalArgumentException.class, () -> {
-            it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(0);
+            Game game1 = new Game(0);
             game1.addPlayer(new Player(true, new Shelf(), "player1", null, null, game1));
             game1.startGame();
         });
@@ -65,7 +65,7 @@ class GameTest {
     @Test
     public void updateCommonGoal_correctBehavior(){
 
-        it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(0);
+        Game game1 = new Game(0);
         Player player1 = new Player(true, new Shelf(), "player1", null, null, game1);
         game1.addPlayer(player1);
 
@@ -83,13 +83,13 @@ class GameTest {
     @Test
     public void fileTest_AssertEquals(){
 
-        it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(456);
+        Game game1 = new Game(456);
         Player player1 = new Player(true, new Shelf(), "player1", null, null, game1);
         game1.addPlayer(player1);
         game1.addPlayer(new Player(true, new Shelf(), "player2", null, null, game1));
         game1.startGame();
         game1.saveGame();
-        it.polimi.ingsw.model.Game game2 = game1.restoreGame();
+        Game game2 = game1.restoreGame();
         assertEquals(game1.getId(), game2.getId());
         game2.endGame();
     }
@@ -103,7 +103,7 @@ class GameTest {
     @Test
     public void nextPhaseText() {
 
-        it.polimi.ingsw.model.Game game = new it.polimi.ingsw.model.Game(400);
+        Game game = new Game(400);
         Shelf shelf = new Shelf();
         for (int i = 0; i<4; i++) {
             String nickname = "Player" + i;
