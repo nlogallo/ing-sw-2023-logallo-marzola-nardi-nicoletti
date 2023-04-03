@@ -59,7 +59,7 @@ public class Board implements Serializable {
     /**
      * Getter
      */
-    public ArrayList<Integer> getValidIdListList () {
+    public ArrayList<Integer> getValidIdList () {
         return validIdList;
     }
 
@@ -92,7 +92,7 @@ public class Board implements Serializable {
                 if (tilesTable[i][j] == null) {
                     if ((constraintsTable[i][j] == 0) || (playersNumber < constraintsTable[i][j])) {
                         tilesTable[i][j] = null;
-                    } else {
+                    } else if (validIdList.size() > 0){
                         tilesTable[i][j] = new Tile(generateId());
                     }
                 }
@@ -150,7 +150,7 @@ public class Board implements Serializable {
 
             //check if the tiles are in the board
             if (tilesTable[r][c] == null) {
-                throw new IllegalArgumentException("There is not a tile in this position");
+                throw new NullPointerException("There is not a tile in this position");
             }
 
             //check if the tiles can be pulled

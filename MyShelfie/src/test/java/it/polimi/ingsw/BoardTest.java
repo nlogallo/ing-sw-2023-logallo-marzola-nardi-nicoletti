@@ -30,7 +30,7 @@ class BoardTest {
 
         int c = 0;
         ArrayList<Integer> validIdList;
-        validIdList = boardTwo.getValidIdListList();
+        validIdList = boardTwo.getValidIdList();
         while (validIdList.size() > 0) {
             boardTwo.generateId();
             c++;
@@ -43,7 +43,7 @@ class BoardTest {
 
         int c = 0;
         ArrayList<Integer> validIdList;
-        validIdList = boardThree.getValidIdListList();
+        validIdList = boardThree.getValidIdList();
         while (validIdList.size() > 0) {
             boardThree.generateId();
             c++;
@@ -56,7 +56,7 @@ class BoardTest {
 
         int c = 0;
         ArrayList<Integer> validIdList;
-        validIdList = boardFour.getValidIdListList();
+        validIdList = boardFour.getValidIdList();
         while (validIdList.size() > 0) {
             boardFour.generateId();
             c++;
@@ -232,7 +232,7 @@ class BoardTest {
 
     @Test
     void pullTilesException1() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             ArrayList<Integer> positions = new ArrayList<>();
 
             positions.add(3);
