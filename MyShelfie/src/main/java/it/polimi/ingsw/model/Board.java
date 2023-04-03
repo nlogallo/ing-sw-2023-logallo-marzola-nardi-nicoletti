@@ -18,19 +18,20 @@ public class Board implements Serializable {
      * This attribute represents the constraints Table
      */
     private static final int[][] constraintsTable = {   {0, 0, 0, 3, 4, 0, 0, 0, 0},
-                                                        {0, 0, 0, 2, 2, 4, 0, 0, 0},
-                                                        {0, 0, 3, 2, 2, 2, 3, 0, 0},
-                                                        {0, 4, 2, 2, 2, 2, 2, 2, 3},
-                                                        {4, 2, 2, 2, 2, 2, 2, 2, 4},
-                                                        {3, 2, 2, 2, 2, 2, 2, 4, 0},
-                                                        {0, 0, 3, 2, 2, 2, 3, 0, 0},
-                                                        {0, 0, 0, 4, 2, 2, 0, 0, 0},
-                                                        {0, 0, 0, 0, 4, 3, 0, 0, 0}};
+            {0, 0, 0, 2, 2, 4, 0, 0, 0},
+            {0, 0, 3, 2, 2, 2, 3, 0, 0},
+            {0, 4, 2, 2, 2, 2, 2, 2, 3},
+            {4, 2, 2, 2, 2, 2, 2, 2, 4},
+            {3, 2, 2, 2, 2, 2, 2, 4, 0},
+            {0, 0, 3, 2, 2, 2, 3, 0, 0},
+            {0, 0, 0, 4, 2, 2, 0, 0, 0},
+            {0, 0, 0, 0, 4, 3, 0, 0, 0}};
 
     /**
      * This attribute represents the Tile board
      */
     private final Tile[][] tilesTable = new Tile[9][9];
+
 
     /**
      * This attribute stores the valid id for the tiles;
@@ -49,12 +50,6 @@ public class Board implements Serializable {
         refillBoard();
     }
 
-    /**
-     * Getter
-     */
-    public Board getBoard() {
-        return this;
-    }
 
     /**
      * Getter
@@ -63,12 +58,14 @@ public class Board implements Serializable {
         return validIdList;
     }
 
+
     /**
      * Getter
      */
     public Tile[][] getTilesTable () {
         return tilesTable;
     }
+
 
     /**
      * Generates a new valid id
@@ -82,6 +79,7 @@ public class Board implements Serializable {
         validIdList.remove(idPos);
         return id;
     }
+
 
     /**
      * Refill the board
@@ -99,8 +97,6 @@ public class Board implements Serializable {
             }
         }
     }
-
-
 
 
     /**
@@ -130,6 +126,7 @@ public class Board implements Serializable {
         return true;
     }
 
+
     /**
      * Pull the tiles from the board
      *
@@ -139,33 +136,32 @@ public class Board implements Serializable {
      *
      * @exception IllegalArgumentException throws an IllegalArgumentException
      */
-    public ArrayList<Tile> pullTiles(ArrayList<Integer> positions) throws IllegalArgumentException {
+    public ArrayList<Tile> pullTiles(ArrayList<Position> positions) throws IllegalArgumentException, NullPointerException {
         ArrayList<Tile> pulledTiles = new ArrayList<>();
-        int tilesNo = positions.size();
 
-
-        for (int i = 0; i < tilesNo; i += 2) {
-            int r = positions.get(i);
-            int c = positions.get(i + 1);
+        for (Position position : positions) {
+            int row = position.getRow();
+            int column = position.getColumn();
 
             //check if the tiles are in the board
-            if (tilesTable[r][c] == null) {
-                throw new NullPointerException("There is not a tile in this position");
+            if (tilesTable[row][column] == null) {
+                throw new NullPointerException("There is not a tile in this position: " + row + "," + column);
             }
 
             //check if the tiles can be pulled
-            if (!canPull(r, c)) {
+            if (!canPull(row, column)) {
                 throw new IllegalArgumentException("One or more tile cannot be pulled");
             }
         }
 
         //pull tiles
-        for (int i = 0; i < tilesNo; i += 2) {
-            pulledTiles.add(tilesTable[positions.get(i)][positions.get(i + 1)]);
-            tilesTable[positions.get(i)][positions.get(i + 1)] = null;
+        for (Position position : positions) {
+            pulledTiles.add(tilesTable[position.getRow()][position.getColumn()]);
+            tilesTable[position.getRow()][position.getColumn()] = null;
         }
         return pulledTiles;
     }
+
 
     /**
      * Check if a tile can be pulled form the board
@@ -190,5 +186,14 @@ public class Board implements Serializable {
             canBePulled = true;
         }
         return canBePulled;
+    }
+
+
+    /**
+     * Getter method
+     * @return the current Board
+     */
+    public Tile[][] getCurrentBoard () {
+        return tilesTable;
     }
 }

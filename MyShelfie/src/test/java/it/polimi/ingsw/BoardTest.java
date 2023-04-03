@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.Board;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.Tile;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +36,7 @@ class BoardTest {
             boardTwo.generateId();
             c++;
         }
-            assertSame(132 - 29, c);
+        assertSame(132 - 29, c);
     }
 
     @Test
@@ -124,83 +125,67 @@ class BoardTest {
 
     @Test
     void checkRefill2() {
-        ArrayList<Integer> positions1 = new ArrayList<>();
-        positions1.add(1);
-        positions1.add(4);
+        ArrayList<Position> positions1 = new ArrayList<>();
 
-        positions1.add(7);
-        positions1.add(4);
+        positions1.add(new Position(1,4));
 
-        positions1.add(2);
-        positions1.add(3);
+        positions1.add(new Position(7,4));
 
-        positions1.add(2);
-        positions1.add(5);
+        positions1.add(new Position(2,3));
 
-        positions1.add(3);
-        positions1.add(2);
+        positions1.add(new Position(2,5));
 
-        positions1.add(3);
-        positions1.add(6);
+        positions1.add(new Position(3,2));
 
-        positions1.add(3);
-        positions1.add(7);
+        positions1.add(new Position(3,6));
 
-        positions1.add(4);
-        positions1.add(1);
+        positions1.add(new Position(3,7));
 
-        positions1.add(4);
-        positions1.add(7);
+        positions1.add(new Position(4,1));
 
-        positions1.add(5);
-        positions1.add(1);
+        positions1.add(new Position(4,7));
 
-        positions1.add(5);
-        positions1.add(2);
+        positions1.add(new Position(5,1));
 
-        positions1.add(5);
-        positions1.add(6);
+        positions1.add(new Position(5,2));
 
-        positions1.add(6);
-        positions1.add(3);
+        positions1.add(new Position(5,6));
 
-        positions1.add(6);
-        positions1.add(5);
+        positions1.add(new Position(6,3));
+
+        positions1.add(new Position(6,5));
+
         ArrayList<Tile> pulledTiles1 = boardTwo.pullTiles(positions1);
 
-        ArrayList<Integer> positions2 = new ArrayList<>();
-        positions2.add(3);
-        positions2.add(3);
+        //----------------------------------------------------------------------
 
-        positions2.add(3);
-        positions2.add(5);
+        ArrayList<Position> positions2 = new ArrayList<>();
 
-        positions2.add(4);
-        positions2.add(2);
+        positions2.add(new Position(3,5));
 
-        positions2.add(4);
-        positions2.add(6);
+        positions2.add(new Position(3,5));
 
-        positions2.add(5);
-        positions2.add(3);
+        positions2.add(new Position(4,2));
 
-        positions2.add(5);
-        positions2.add(5);
+        positions2.add(new Position(4,6));
+
+        positions2.add(new Position(5,3));
+
+        positions2.add(new Position(5,5));
         ArrayList<Tile> pulledTiles2 = boardTwo.pullTiles(positions2);
 
+        //----------------------------------------------------------------------
 
-        ArrayList<Integer> positions3 = new ArrayList<>();
-        positions3.add(3);
-        positions3.add(4);
 
-        positions3.add(4);
-        positions3.add(3);
+        ArrayList<Position> positions3 = new ArrayList<>();
 
-        positions3.add(5);
-        positions3.add(4);
+        positions3.add(new Position(3,4));
 
-        positions3.add(4);
-        positions3.add(5);
+        positions3.add(new Position(4,3));
+
+        positions3.add(new Position(5,4));
+
+        positions3.add(new Position(4,5));
         ArrayList<Tile> pulledTiles3 = boardTwo.pullTiles(positions3);
 
         assertSame(true, boardTwo.checkRefill());
@@ -212,49 +197,42 @@ class BoardTest {
     void pullTiles1() {
         Tile[][] tilesTable;
         tilesTable = boardFour.getTilesTable();
-        ArrayList<Integer> positions = new ArrayList<>();
-        ArrayList<Tile> pulledTiles;
+        ArrayList<Position> positions = new ArrayList<>();
 
-        int r = 3;
-        int c = 1;
-        Tile tileToPull;
-        tileToPull = tilesTable[r][c];
-        positions.add(r);
-        positions.add(c);
+        int row = 3;
+        int column = 1;
+        Tile tileToPull = tilesTable[row][column];
+        positions.add(new Position(row,column));
 
-        pulledTiles = boardFour.pullTiles(positions);
+        ArrayList <Tile> pulledTiles = boardFour.pullTiles(positions);
         tilesTable = boardFour.getTilesTable();
 
-        assertSame(null, tilesTable[r][c]);
+        assertSame(null, tilesTable[row][column]);
         assertSame(tileToPull.getID(), (pulledTiles.get(0)).getID());
     }
 
 
     @Test
-    void pullTilesException1() {
+    void pullTilesException1_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> {
-            ArrayList<Integer> positions = new ArrayList<>();
+            ArrayList<Position> positions = new ArrayList<>();
 
-            positions.add(3);
-            positions.add(1);
+            positions.add(new Position(3,1));
 
             ArrayList<Tile> pulledTiles = boardTwo.pullTiles(positions);
         });
     }
 
     @Test
-    void pullTilesException2() {
+    void pullTilesException2_throwsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> {
-            ArrayList<Integer> positions = new ArrayList<>();
+            ArrayList<Position> positions = new ArrayList<>();
 
-            positions.add(1);
-            positions.add(3);
+            positions.add(new Position(1,3));
 
-            positions.add(1);
-            positions.add(4);
+            positions.add(new Position(1,4));
 
-            positions.add(1);
-            positions.add(5);
+            positions.add(new Position(1,5));
 
             ArrayList<Tile> pulledTiles = boardFour.pullTiles(positions);
         });

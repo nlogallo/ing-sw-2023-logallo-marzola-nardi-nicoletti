@@ -12,7 +12,7 @@ public class Player implements Serializable {
     private String nickname;
     private State state;
     private PersonalGoal personalGoal;
-    private Game game;
+    private it.polimi.ingsw.model.Game game;
     private Token[] tokenCards;
     private int points;
 
@@ -24,7 +24,7 @@ public class Player implements Serializable {
      * @param personalGoal as the Personal Goal assigned to the player
      * @param game as the game in which the player is
      */
-    public Player(boolean seat, Shelf shelf, String nickname, State state, PersonalGoal personalGoal, Game game){
+    public Player(boolean seat, Shelf shelf, String nickname, State state, PersonalGoal personalGoal, it.polimi.ingsw.model.Game game){
         this.seat = seat;
         this.shelf = shelf;
         this.nickname = nickname;
@@ -67,4 +67,9 @@ public class Player implements Serializable {
     public PersonalGoal getPersonalGoal(){
         return this.personalGoal;
     }
+
+    public int getPoints() {
+        return this.points;
+    }
 }
+

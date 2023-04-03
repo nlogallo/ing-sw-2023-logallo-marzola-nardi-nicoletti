@@ -4,21 +4,20 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 class GameTest {
+
     @Test
     public void assignPersonalGoal() {
-        ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(0, players);
-        players.add(new Player(true, new Shelf(), "player1", null, null, game1));
-        players.add(new Player(false, new Shelf(), "player2", null, null, game1));
-        game1 = new Game(0, players); //delete when the method Game.addPlayers is done
+
+        it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(0);
+        game1.addPlayer(new Player(true, new Shelf(), "player1", null, null, game1));
+        game1.addPlayer(new Player(false, new Shelf(), "player2", null, null, game1));
         game1.assignPersonalGoal();
-        TileType[][] matrix1 = players.get(0).getPersonalGoal().getMatrix();
-        TileType[][] matrix2 = players.get(1).getPersonalGoal().getMatrix();
+        TileType[][] matrix1 = game1.getPlayers().get(0).getPersonalGoal().getMatrix();
+        TileType[][] matrix2 = game1.getPlayers().get(1).getPersonalGoal().getMatrix();
         for(int i=0; i<6; i++){
             for(int j=0; j<5; j++) {
                 System.out.print(matrix1[i][j]+" ");
@@ -36,11 +35,10 @@ class GameTest {
 
     @Test
     public void addCommonGoals_correctBehavior(){
-        ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(0, players);
-        players.add(new Player(true, new Shelf(), "player1", null, null, game1));
-        players.add(new Player(false, new Shelf(), "player2", null, null, game1));
-        game1 = new Game(0,players);//delete when the method Game.addPlayers is done
+
+        it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(0);
+        game1.addPlayer(new Player(true, new Shelf(), "player1", null, null, game1));
+        game1.addPlayer(new Player(false, new Shelf(), "player2", null, null, game1));
         game1.startGame();
         for(CommonGoal key : game1.getCommonGoals())
             System.out.println("-------" + "\n" + key.getDescription());
@@ -48,31 +46,30 @@ class GameTest {
 
     @Test
     public void startGame_correctInput_correctBehavior(){
-        ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(0, players);
-        players.add(new Player(true, new Shelf(), "player1", null, null, game1));
-        players.add(new Player(false, new Shelf(), "player2", null, null, game1));
-        game1 = new Game(0, players); //delete when the method Game.addPlayers is done
+
+        it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(0);
+        game1.addPlayer(new Player(true, new Shelf(), "player1", null, null, game1));
+        game1.addPlayer(new Player(false, new Shelf(), "player2", null, null, game1));
         game1.startGame();
     }
 
     @Test
-    public void startGame_only1player_correctBehavior(){
-        ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(0, players);
-        players.add(new Player(true, new Shelf(), "player1", null, null, game1));
-        game1 = new Game(0, players); //delete when the method Game.addPlayers is done
-        game1.startGame();
-    }
+    public void startGame_only1player_correctBehavior_throwIllegalArgumentException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(0);
+            game1.addPlayer(new Player(true, new Shelf(), "player1", null, null, game1));
+            game1.startGame();
+        });
 
+    }
     @Test
     public void updateCommonGoal_correctBehavior(){
-        ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(0, players);
+
+        it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(0);
         Player player1 = new Player(true, new Shelf(), "player1", null, null, game1);
-        players.add(player1);
-        players.add(new Player(true, new Shelf(), "player2", null, null, game1));
-        game1 = new Game(0, players); //delete when the method Game.addPlayers is done
+        game1.addPlayer(player1);
+
+        game1.addPlayer(new Player(true, new Shelf(), "player2", null, null, game1));
         game1.startGame();
         CommonGoal commonGoal = game1.getCommonGoals().get(0);
         TileType[][] playerShelf = {{TileType.CAT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
@@ -85,16 +82,43 @@ class GameTest {
 
     @Test
     public void fileTest_AssertEquals(){
-        ArrayList<Player> players= new ArrayList<>();
-        Game game1 = new Game(456, players);
+
+        it.polimi.ingsw.model.Game game1 = new it.polimi.ingsw.model.Game(456);
         Player player1 = new Player(true, new Shelf(), "player1", null, null, game1);
-        players.add(player1);
-        players.add(new Player(true, new Shelf(), "player2", null, null, game1));
-        game1 = new Game(456, players); //delete when the method Game.addPlayers is done
+        game1.addPlayer(player1);
+        game1.addPlayer(new Player(true, new Shelf(), "player2", null, null, game1));
         game1.startGame();
         game1.saveGame();
-        Game game2 = game1.restoreGame();
+        it.polimi.ingsw.model.Game game2 = game1.restoreGame();
         assertEquals(game1.getId(), game2.getId());
         game2.endGame();
+    }
+
+
+    @Test
+    public void winnerTest() {
+        //To be implemented after complete PlayerClass
+    }
+
+    @Test
+    public void nextPhaseText() {
+
+        it.polimi.ingsw.model.Game game = new it.polimi.ingsw.model.Game(400);
+        Shelf shelf = new Shelf();
+        for (int i = 0; i<4; i++) {
+            String nickname = "Player" + i;
+            Player player = new Player (false, shelf, nickname,null,null, game);
+            game.addPlayer(player);
+        }
+        Player initialFirstPlayer = game.getPlayers().get(0);
+        Player initialSecondPlayer = game.getPlayers().get(1);
+        Player initialThirdPlayer = game.getPlayers().get(2);
+        Player initialFourthPlayer = game.getPlayers().get(3);
+        game.nextPhase();
+        assertEquals(initialSecondPlayer, game.getPlayers().get(0));
+        assertEquals(initialThirdPlayer, game.getPlayers().get(1));
+        assertEquals(initialFourthPlayer, game.getPlayers().get(2));
+        assertEquals(initialFirstPlayer, game.getPlayers().get(3));
+
     }
 }

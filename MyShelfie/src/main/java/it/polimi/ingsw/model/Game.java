@@ -9,6 +9,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 
@@ -18,24 +19,22 @@ import java.util.Random;
 public class Game implements Serializable{
     int id;
     private ArrayList<Player> players;
-    private Board board;
+    private it.polimi.ingsw.model.Board board;
     private GameState state;
     private Player firstToEnd;
     private Player currentPlayer;
     private ThreeMap commonGoals;
     private final File gameFile;
 
+
     /**
      * Class constructor
-     * @param participants as the players participating in the game
+     * @param id is the ID of the game instance
      * @throws NullPointerException if participants is null
      */
-    public Game(int id, ArrayList<Player> participants) throws NullPointerException{
+    public Game(int id) throws NullPointerException{
         this.id = id;
         this.players = new ArrayList<>();
-        if(participants == null)
-            throw new NullPointerException("Players list cannot be null");
-        players.addAll(participants);
         this.board = null;
         this.state = GameState.WAITING_FOR_PLAYERS;
         this.firstToEnd = null;
@@ -49,8 +48,8 @@ public class Game implements Serializable{
      * @throws IllegalArgumentException if the number of players is incorrect
      */
     public void startGame() throws  IllegalArgumentException{
-        /*if(players.size() < 2 || players.size() > 4)
-            throw new IllegalArgumentException("Number of players incorrect"); reuse when the method add player is done*/
+        if(players.size() < 2 || players.size() > 4)
+            throw new IllegalArgumentException("Incorrect number of players");
         this.state = GameState.STARTED;
         try {
             this.commonGoals = new ThreeMap(players.size());
@@ -60,7 +59,7 @@ public class Game implements Serializable{
         }
         chooseCommonGoals();
         assignPersonalGoal();
-        board = new Board(players.size());
+        board = new it.polimi.ingsw.model.Board(players.size());
         //saveGame();
     }
 
@@ -276,4 +275,77 @@ public class Game implements Serializable{
     public int getId() {
         return id;
     }
+
+
+    /**
+     * Getter method
+     * @return the current players list
+     */
+    public ArrayList<Player> getPlayers () {
+        return players;
+    }
+
+
+    /**
+     * This method adds a new player in the game, and if the list is empty it associates the
+     * first player that has been added to the current player
+     * @param player is the new player
+     * @throws IllegalArgumentException if the game has already the maximum number of players
+     */
+    public void addPlayer (Player player) throws IllegalArgumentException{
+        if (players.size() == 0) {
+            this.currentPlayer = player;
+        }
+        if (players.size() <= 3) {
+            this.players.add(player);
+        } else throw new IllegalArgumentException("The game has already the max number of players");
+    }
+
+
+    /**
+     * This method changes the order of the players in the players' ArrayList and set the new current player
+     * The player's position in the list represents the remaining turns he will have to wait before his turn
+     * @return the next player who will play
+     */
+    public Player nextPhase() {
+
+        int currentPlayerIndex = players.indexOf(this.currentPlayer);
+        players.set(currentPlayerIndex, players.get(currentPlayerIndex + 1));
+        for(int i = 1; i <=2 ; i++) {
+            Player tempPlayer = players.get(i);
+            players.set(i, players.get(i+1));
+            players.set(i+1, tempPlayer);
+        }
+        players.set(players.size()-1, this.currentPlayer);
+        this.currentPlayer = players.get(0);
+        return this.currentPlayer;
+    }
+
+
+    /**
+     * This method decrees the winner of the game
+     * @return the winner of the game
+     */
+    public Player winner () {
+
+        Player winner;
+        ArrayList <Integer> playerPoints = new ArrayList<>();
+        for (Player player : players) {
+            playerPoints.add(player.getPoints());
+        }
+        int maxPointIndex = playerPoints.indexOf(Collections.max(playerPoints));
+        winner = players.get(maxPointIndex);
+        return winner;
+    }
+
+
+    /**
+     * Getter method
+     * @return the current Board of the game
+     */
+    public it.polimi.ingsw.model.Board getBoard() {
+        return this.board;
+    }
 }
+
+
