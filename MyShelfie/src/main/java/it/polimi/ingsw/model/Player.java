@@ -21,10 +21,9 @@ public class Player implements Serializable {
      * @param shelf as the personal Shelf of the Player
      * @param nickname as the in game name of the Player
      * @param state as the state in which the player is
-     * @param personalGoal as the Personal Goal assigned to the player
      * @param game as the game in which the player is
      */
-    public Player(boolean seat, Shelf shelf, String nickname, State state, PersonalGoal personalGoal, Game game){
+    public Player(boolean seat, Shelf shelf, String nickname, State state, Game game){
         this.seat = seat;
         this.shelf = shelf;
         this.nickname = nickname;

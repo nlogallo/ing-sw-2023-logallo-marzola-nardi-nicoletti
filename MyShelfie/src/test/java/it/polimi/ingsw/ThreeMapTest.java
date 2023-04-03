@@ -26,10 +26,10 @@ public class ThreeMapTest {
         Game game0 = new Game(0);
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
-        Player player0 = new Player(false, new Shelf(), "player0", state, personalGoal0, game0);
-        Player player1 = new Player(false, new Shelf(), "player1", state, personalGoal0, game0);
-        Player player2 = new Player(false, new Shelf(), "player2", state, personalGoal0, game0);
-        Player player3 = new Player(false, new Shelf(), "player3", state, personalGoal0, game0);
+        Player player0 = new Player(false, new Shelf(), "player0", state, game0);
+        Player player1 = new Player(false, new Shelf(), "player1", state, game0);
+        Player player2 = new Player(false, new Shelf(), "player2", state, game0);
+        Player player3 = new Player(false, new Shelf(), "player3", state, game0);
         threeMap.addKey(commonGoal0, token0);
         assertEquals(token0.getId(), threeMap.setPlayer(commonGoal0, player0).getId());
         Token token1 = new Token(6);
@@ -50,10 +50,10 @@ public class ThreeMapTest {
         Game game0 = new Game(0);
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
-        Player player0 = new Player(false, new Shelf(), "player0", state, personalGoal0, game0);
-        Player player1 = new Player(false, new Shelf(), "player1", state, personalGoal0, game0);
-        Player player2 = new Player(false, new Shelf(), "player2", state, personalGoal0, game0);
-        Player player3 = new Player(false, new Shelf(), "player3", state, personalGoal0, game0);
+        Player player0 = new Player(false, new Shelf(), "player0", state, game0);
+        Player player1 = new Player(false, new Shelf(), "player1", state, game0);
+        Player player2 = new Player(false, new Shelf(), "player2", state, game0);
+        Player player3 = new Player(false, new Shelf(), "player3", state, game0);
         threeMap.addKey(commonGoal0, token0);
         threeMap.setPlayer(commonGoal0, player0);
         Token token1 = new Token(6);
@@ -75,7 +75,7 @@ public class ThreeMapTest {
         State state = new State() {};
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
-        Player player0 = new Player(false, new Shelf(), "player0", state, personalGoal0, game0);
+        Player player0 = new Player(false, new Shelf(), "player0", state, game0);
         threeMap.addKey(commonGoal0, token0);
         threeMap.setPlayer(commonGoal0, player0);
         assertTrue(threeMap.hasToken(commonGoal0, player0));
@@ -91,7 +91,7 @@ public class ThreeMapTest {
         State state = new State() {};
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
-        Player player0 = new Player(false, new Shelf(), "player0", state, personalGoal0, game0);
+        Player player0 = new Player(false, new Shelf(), "player0", state, game0);
         threeMap.addKey(commonGoal0, token0);
         assertFalse(threeMap.hasToken(commonGoal0, player0));
     }
@@ -110,8 +110,8 @@ public class ThreeMapTest {
         State state = new State() {};
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
-        Player player0 = new Player(false, new Shelf(), "player0", state, personalGoal0, game0);
-        Player player1 = new Player(false, new Shelf(), "player1", state, personalGoal0, game0);
+        Player player0 = new Player(false, new Shelf(), "player0", state, game0);
+        Player player1 = new Player(false, new Shelf(), "player1", state, game0);
         assertEquals(token0.getId(), threeMap.setPlayer(commonGoal0, player0).getId());
         assertEquals(token0.getId() - 2, threeMap.setPlayer(commonGoal0, player1).getId());
         assertTrue(threeMap.hasToken(commonGoal0,player0));
