@@ -324,27 +324,21 @@ public class Game implements Serializable {
      * The player's position in the list represents the remaining turns he will have to wait before his turn
      * @return the next player who will play
      */
-    public Player nextPhase() {
-
-        int currentPlayerIndex = players.indexOf(this.currentPlayer);
-        players.set(currentPlayerIndex, players.get(currentPlayerIndex + 1));
-        for(int i = 1; i <=2 ; i++) {
-            Player tempPlayer = players.get(i);
-            players.set(i, players.get(i+1));
-            players.set(i+1, tempPlayer);
-        }
-        players.set(players.size()-1, this.currentPlayer);
+    public Player nextPhase() throws IllegalArgumentException{
+        Player delete = players.remove(0);
+        players.add(delete);
         this.currentPlayer = players.get(0);
+        if(firstToEnd != null && currentPlayer.hasSeat())
+            throw new IllegalStateException("No phase remained");
         return this.currentPlayer;
     }
-
 
     /**
      * This method decrees the winner of the game
      * @return the winner of the game
      */
     public Player winner () {
-
+        Collections.reverse(players);
         Player winner;
         ArrayList <Integer> playerPoints = new ArrayList<>();
         for (Player player : players) {
@@ -385,6 +379,10 @@ public class Game implements Serializable {
 
     public int getPlayersNumber() {
         return playersNumber;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 }
 

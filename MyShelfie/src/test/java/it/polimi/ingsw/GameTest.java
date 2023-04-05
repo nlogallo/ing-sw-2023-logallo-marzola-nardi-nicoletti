@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
@@ -120,5 +122,70 @@ class GameTest {
         assertEquals(initialFourthPlayer, game.getPlayers().get(2));
         assertEquals(initialFirstPlayer, game.getPlayers().get(3));
 
+    }
+    @Test
+    public void testAllGame(){
+        Game game = new Game(1, 2);
+        Player player1 = new Player(true, new Shelf(), "pippo", game);
+        Player player2 = new Player(false, new Shelf(), "pluto", game);
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.startGame();
+        for(CommonGoal cg : game.getCommonGoals())
+            System.out.println(cg.getDescription());
+        System.out.println("------------");
+        for(Player p : game.getPlayers()) {
+            TileType[][] matrix1 = p.getPersonalGoal().getMatrix();
+            for(int i=0; i<6; i++){
+                for(int j=0; j<5; j++) {
+                    System.out.print(matrix1[i][j]+" ");
+                }
+                System.out.print("\n");
+            }
+            System.out.println("-----------");
+            p.calculatePoints();
+            System.out.println(p.getPoints());
+        }
+        System.out.println("Current player: " + game.getCurrentPlayer().getNickname());
+        System.out.println("-----------");
+        TileType[][] tt = game.getBoard().getTilesType();
+        for(int i=0; i<9; i++){
+            for(int j=0; j<9; j++) {
+                System.out.print(tt[i][j]+" ");
+            }
+            System.out.print("\n");
+        }
+        ArrayList<Position> positions1 = new ArrayList<>();
+        positions1.add(new Position(1, 3));
+        positions1.add(new Position(1,4));
+        game.getCurrentPlayer().makeMove(0, positions1);
+        tt = game.getBoard().getTilesType();
+        for(int i=0; i<9; i++){
+            for(int j=0; j<9; j++) {
+                System.out.print(tt[i][j]+" ");
+            }
+            System.out.print("\n");
+        }
+        System.out.println("\n\n");
+        game.getBoard().getTilesType();
+        for(int i=0; i<9; i++){
+            for(int j=0; j<9; j++) {
+                System.out.print(tt[i][j]+" ");
+            }
+            System.out.print("\n");
+        }
+        System.out.print("\n\n");
+        TileType[][] shelf1 = game.getCurrentPlayer().getShelf().getShelfTypes();
+        for(int i=0; i<6; i++){
+            for(int j=0; j<5; j++) {
+                System.out.print(shelf1[i][j]+" ");
+            }
+            System.out.print("\n");
+        }
+        game.nextPhase();
+        System.out.println("Current player: " + game.getCurrentPlayer().getNickname());
+        game.nextPhase();
+        System.out.println("Current player: " + game.getCurrentPlayer().getNickname());
+        System.out.println(game.winner().getNickname());
     }
 }

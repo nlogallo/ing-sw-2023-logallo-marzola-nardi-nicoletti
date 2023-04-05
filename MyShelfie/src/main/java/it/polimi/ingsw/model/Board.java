@@ -196,4 +196,22 @@ public class Board implements Serializable {
     public Tile[][] getCurrentBoard () {
         return tilesTable;
     }
+
+    /**
+     * This method converts the Shelf in a matrix of TileType
+     * @return the TileType matrix
+     */
+    public TileType[][] getTilesType(){
+        TileType[][] matrixTypes = new TileType[9][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (tilesTable[i][j] == null) {
+                    matrixTypes[i][j] = TileType.EMPTY;
+                } else {
+                    matrixTypes[i][j] = tilesTable[i][j].getType();
+                }
+            }
+        }
+        return matrixTypes;
+    }
 }

@@ -215,5 +215,16 @@ public class Player implements Serializable {
     {
         return this.state;
     }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    /**
+     * Getter
+     */
+    public Shelf getShelf() {
+        return shelf;
+    }
 }
 
