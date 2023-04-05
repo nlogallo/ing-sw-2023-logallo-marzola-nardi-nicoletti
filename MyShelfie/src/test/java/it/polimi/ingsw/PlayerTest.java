@@ -14,7 +14,7 @@ class PlayerTest {
 
     @Before
     public void setUp(){
-        player = new Player(false, new Shelf(), "username", null, null);
+        player = new Player(false, new Shelf(), "username", null);
     }
 
     @Test

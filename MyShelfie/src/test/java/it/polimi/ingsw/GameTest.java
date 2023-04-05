@@ -13,8 +13,8 @@ class GameTest {
     public void assignPersonalGoal() {
 
         Game game1 = new Game(0,2);
-        game1.addPlayer(new Player(true, new Shelf(), "player1", null, game1));
-        game1.addPlayer(new Player(false, new Shelf(), "player2", null, game1));
+        game1.addPlayer(new Player(true, new Shelf(), "player1", game1));
+        game1.addPlayer(new Player(false, new Shelf(), "player2", game1));
         game1.assignPersonalGoal();
         TileType[][] matrix1 = game1.getPlayers().get(0).getPersonalGoal().getMatrix();
         TileType[][] matrix2 = game1.getPlayers().get(1).getPersonalGoal().getMatrix();
@@ -37,8 +37,8 @@ class GameTest {
     public void addCommonGoals_correctBehavior(){
 
         Game game1 = new Game(0,2);
-        game1.addPlayer(new Player(true, new Shelf(), "player1", null, game1));
-        game1.addPlayer(new Player(false, new Shelf(), "player2", null, game1));
+        game1.addPlayer(new Player(true, new Shelf(), "player1", game1));
+        game1.addPlayer(new Player(false, new Shelf(), "player2", game1));
         game1.startGame();
         for(CommonGoal key : game1.getCommonGoals())
             System.out.println("-------" + "\n" + key.getDescription());
@@ -48,8 +48,8 @@ class GameTest {
     public void startGame_correctInput_correctBehavior(){
 
         Game game1 = new Game(0,2);
-        game1.addPlayer(new Player(true, new Shelf(), "player1", null, game1));
-        game1.addPlayer(new Player(false, new Shelf(), "player2", null, game1));
+        game1.addPlayer(new Player(true, new Shelf(), "player1", game1));
+        game1.addPlayer(new Player(false, new Shelf(), "player2", game1));
         game1.startGame();
     }
 
@@ -57,7 +57,7 @@ class GameTest {
     public void startGame_only1player_correctBehavior_throwIllegalArgumentException(){
         assertThrows(IllegalArgumentException.class, () -> {
             Game game1 = new Game(0,2);
-            game1.addPlayer(new Player(true, new Shelf(), "player1", null, game1));
+            game1.addPlayer(new Player(true, new Shelf(), "player1", game1));
             game1.startGame();
         });
 
@@ -66,10 +66,10 @@ class GameTest {
     public void updateCommonGoal_correctBehavior(){
 
         Game game1 = new Game(0,2);
-        Player player1 = new Player(true, new Shelf(), "player1", null, game1);
+        Player player1 = new Player(true, new Shelf(), "player1", game1);
         game1.addPlayer(player1);
 
-        game1.addPlayer(new Player(true, new Shelf(), "player2", null, game1));
+        game1.addPlayer(new Player(true, new Shelf(), "player2", game1));
         game1.startGame();
         CommonGoal commonGoal = game1.getCommonGoals().get(0);
         TileType[][] playerShelf = {{TileType.CAT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
@@ -84,9 +84,9 @@ class GameTest {
     public void fileTest_AssertEquals(){
 
         Game game1 = new Game(456,2);
-        Player player1 = new Player(true, new Shelf(), "player1", null, game1);
+        Player player1 = new Player(true, new Shelf(), "player1", game1);
         game1.addPlayer(player1);
-        game1.addPlayer(new Player(true, new Shelf(), "player2", null, game1));
+        game1.addPlayer(new Player(true, new Shelf(), "player2", game1));
         game1.startGame();
         game1.saveGame();
         Game game2 = game1.restoreGame();
@@ -107,7 +107,7 @@ class GameTest {
         Shelf shelf = new Shelf();
         for (int i = 0; i<4; i++) {
             String nickname = "Player" + i;
-            Player player = new Player (false, shelf, nickname,null, game);
+            Player player = new Player (false, shelf, nickname, game);
             game.addPlayer(player);
         }
         Player initialFirstPlayer = game.getPlayers().get(0);

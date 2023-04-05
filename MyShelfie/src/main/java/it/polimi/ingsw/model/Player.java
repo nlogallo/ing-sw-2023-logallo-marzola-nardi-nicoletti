@@ -21,14 +21,14 @@ public class Player implements Serializable {
      * Class constructor
      * @param shelf as the personal Shelf of the Player
      * @param nickname as the in game name of the Player
-     * @param state as the state in which the player is
+
      * @param game as the game in which the player is
      */
-    public Player(boolean seat, Shelf shelf, String nickname, State state, Game game){
+    public Player(boolean seat, Shelf shelf, String nickname, Game game){
         this.seat = seat;
         this.shelf = shelf;
         this.nickname = nickname;
-        this.state = new IsWaiting();
+        this.state = State.IS_WAITING;
         this.personalGoal = null;
         this.game = game;
         this.points = 0;
@@ -198,6 +198,22 @@ public class Player implements Serializable {
      */
     public int getPoints() {
         return this.points;
+    }
+
+    /**
+     * Setter
+     */
+    public void setState (State state)
+    {
+        this.state = state;
+    }
+
+    /**
+     * Getter
+     */
+    public State getState ()
+    {
+        return this.state;
     }
 }
 

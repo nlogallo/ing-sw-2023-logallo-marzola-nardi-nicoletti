@@ -1,4 +1,6 @@
 package it.polimi.ingsw.model;
 
-public abstract class State {
+public enum State {
+    IS_PLAYING,
+    IS_WAITING;
 }

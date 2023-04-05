@@ -66,7 +66,7 @@ public class MyShelfieServer {
                 }else{
                     output.write("addedToGame".getBytes());
                 }
-                game.addPlayer(new Player(seat, new Shelf(), nickname, null, game));
+                game.addPlayer(new Player(seat, new Shelf(), nickname, game));
                 System.out.println("Added " + nickname + " to game with id " + game.getId());
                 String message = "Hi " + nickname + "!\nYou have been added to game with id " + game.getId() + "\nYour game will start when the players number is fulfilled";
                 output.write(message.getBytes());
