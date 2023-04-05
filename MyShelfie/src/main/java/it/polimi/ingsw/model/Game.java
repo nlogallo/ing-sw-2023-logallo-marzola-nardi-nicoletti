@@ -16,7 +16,7 @@ import java.util.Random;
 /**
  * This class represents the single game started by the server
  */
-public class Game implements Serializable{
+public class Game implements Serializable {
     int id;
     private ArrayList<Player> players;
     private int playersNumber;
@@ -30,10 +30,11 @@ public class Game implements Serializable{
 
     /**
      * Class constructor
+     *
      * @param id is the ID of the game instance
      * @throws NullPointerException if participants is null
      */
-    public Game(int id, int playersNumber) throws NullPointerException{
+    public Game(int id, int playersNumber) throws NullPointerException {
         this.id = id;
         this.playersNumber = playersNumber;
         this.players = new ArrayList<>();
@@ -47,15 +48,16 @@ public class Game implements Serializable{
 
     /**
      * This method allows to start a new game
+     *
      * @throws IllegalArgumentException if the number of players is incorrect
      */
-    public void startGame() throws  IllegalArgumentException{
-        if(players.size() < 2 || players.size() > 4)
+    public void startGame() throws IllegalArgumentException {
+        if (players.size() < 2 || players.size() > 4)
             throw new IllegalArgumentException("Incorrect number of players");
         this.state = GameState.STARTED;
         try {
             this.commonGoals = new ThreeMap(players.size());
-        }catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException ex) {
             System.out.println("Now you have to wait a player");
             /*here we have to do something*/
         }
@@ -68,7 +70,7 @@ public class Game implements Serializable{
     /**
      * This method ends the game
      */
-    public void endGame(){
+    public void endGame() {
         this.state = GameState.ENDED;
         this.currentPlayer = null;
         try {
@@ -81,7 +83,7 @@ public class Game implements Serializable{
     /**
      * This method saves the game infos in a binary file
      */
-    public void saveGame(){
+    public void saveGame() {
         try {
             byte[] idData = serializeObject(this);
             FileOutputStream fileOutputStream = new FileOutputStream(this.gameFile);
@@ -95,9 +97,10 @@ public class Game implements Serializable{
 
     /**
      * This method restore the infos of the game
+     *
      * @return a Game object
      */
-    public Game restoreGame(){
+    public Game restoreGame() {
         Object object;
         byte[] data = new byte[(int) this.gameFile.length()];
         try {
@@ -113,6 +116,7 @@ public class Game implements Serializable{
 
     /**
      * This method serialize an Object
+     *
      * @param object is the object to serialize
      * @return a byte array
      * @throws IOException
@@ -126,6 +130,7 @@ public class Game implements Serializable{
 
     /**
      * This method deserialize in an Object
+     *
      * @param data is an array of byte
      * @return an Object
      * @throws IOException
@@ -139,9 +144,9 @@ public class Game implements Serializable{
     /**
      * Makes the assignation of the personalGoal to each player
      */
-    public void assignPersonalGoal(){
+    public void assignPersonalGoal() {
         ArrayList<Integer> personalGoalsIndex = new ArrayList<>();
-        for(int i = 0; i < 12; i++)
+        for (int i = 0; i < 12; i++)
             personalGoalsIndex.add(i);
         Random random = new Random();
         int randomNum;
@@ -157,9 +162,9 @@ public class Game implements Serializable{
     /**
      * This method picks two random commonGoals and saved them in the ThreeMap
      */
-    public void chooseCommonGoals(){
+    public void chooseCommonGoals() {
         ArrayList<Integer> commonGoalIndex = new ArrayList<>();
-        for(int i = 0; i < 12; i++)
+        for (int i = 0; i < 12; i++)
             commonGoalIndex.add(i);
         Random random = new Random();
         int randomNum;
@@ -174,13 +179,23 @@ public class Game implements Serializable{
         }
     }
 
-    /* Needs to be modified after we create the new class for positions
-    public requestForTiles(){
-        if(board.checkRefill())
+    /**
+     * This method calls the board for the refill
+     */
+    void boardRefill() {
+    if(board.checkRefill())
             board.refillBoard();
-        board.pullTiles();
     }
-    */
+
+    /**
+     * This tells the board which tiles to pick
+     * @param positions is the list of positions of the tiles to pick
+     * @return the list of picked tiles
+     */
+    public ArrayList<Tile> requestForTiles(ArrayList<Position> positions){
+        return board.pullTiles(positions);
+    }
+
 
     /**
      * This method give the correct token if the player has achieved the commonGoal
@@ -340,12 +355,23 @@ public class Game implements Serializable{
         return winner;
     }
 
+    /**
+     * This method check if the firstToEnd token is still available, and gives it to the player
+     * @param player the player that asks for the token
+     */
+    public void giveFirstToEndToken (Player player) {
+        if (firstToEnd == null){
+            player.giveToken(new Token(0));
+            firstToEnd = player;
+        }
+    }
+
 
     /**
      * Getter method
      * @return the current Board of the game
      */
-    public it.polimi.ingsw.model.Board getBoard() {
+    public Board getBoard() {
         return this.board;
     }
 

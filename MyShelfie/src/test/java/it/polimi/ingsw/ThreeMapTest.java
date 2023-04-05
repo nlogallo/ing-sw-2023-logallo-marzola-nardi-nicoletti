@@ -23,7 +23,7 @@ public class ThreeMapTest {
         Token token0 = new Token(8);
         State state = new State() {};
         ArrayList<Player> players = new ArrayList<>();
-        Game game0 = new Game(0);
+        Game game0 = new Game(0,2);
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
         Player player0 = new Player(false, new Shelf(), "player0", state, game0);
@@ -47,7 +47,7 @@ public class ThreeMapTest {
         Token token0 = new Token(8);
         State state = new State() {};
         ArrayList<Player> players = new ArrayList<>();
-        Game game0 = new Game(0);
+        Game game0 = new Game(0,2);
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
         Player player0 = new Player(false, new Shelf(), "player0", state, game0);
@@ -71,7 +71,7 @@ public class ThreeMapTest {
         CG_StdEqualTiles commonGoal0 = new CG_StdEqualTiles( 0, "description0");
         Token token0 = new Token(7);
         ArrayList<Player> players = new ArrayList<>();
-        Game game0 = new Game(0);
+        Game game0 = new Game(0,2);
         State state = new State() {};
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
@@ -87,7 +87,7 @@ public class ThreeMapTest {
         CG_StdEqualTiles commonGoal0 = new CG_StdEqualTiles( 0, "description0");
         Token token0 = new Token(7);
         ArrayList<Player> players = new ArrayList<>();
-        Game game0 = new Game(0);
+        Game game0 = new Game(0,2);
         State state = new State() {};
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);
@@ -106,7 +106,7 @@ public class ThreeMapTest {
         threeMap.addKey(commonGoal0, token0);
         threeMap.addKey(commonGoal1, token1);
         ArrayList<Player> players = new ArrayList<>();
-        Game game0 = new Game(0);
+        Game game0 = new Game(0,2);
         State state = new State() {};
         TileType[][] matrix = {{TileType.PLANT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         PersonalGoal personalGoal0 = new PersonalGoal(matrix);

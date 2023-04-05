@@ -12,7 +12,7 @@ class GameTest {
     @Test
     public void assignPersonalGoal() {
 
-        Game game1 = new Game(0);
+        Game game1 = new Game(0,2);
         game1.addPlayer(new Player(true, new Shelf(), "player1", null, game1));
         game1.addPlayer(new Player(false, new Shelf(), "player2", null, game1));
         game1.assignPersonalGoal();
@@ -36,7 +36,7 @@ class GameTest {
     @Test
     public void addCommonGoals_correctBehavior(){
 
-        Game game1 = new Game(0);
+        Game game1 = new Game(0,2);
         game1.addPlayer(new Player(true, new Shelf(), "player1", null, game1));
         game1.addPlayer(new Player(false, new Shelf(), "player2", null, game1));
         game1.startGame();
@@ -47,7 +47,7 @@ class GameTest {
     @Test
     public void startGame_correctInput_correctBehavior(){
 
-        Game game1 = new Game(0);
+        Game game1 = new Game(0,2);
         game1.addPlayer(new Player(true, new Shelf(), "player1", null, game1));
         game1.addPlayer(new Player(false, new Shelf(), "player2", null, game1));
         game1.startGame();
@@ -56,7 +56,7 @@ class GameTest {
     @Test
     public void startGame_only1player_correctBehavior_throwIllegalArgumentException(){
         assertThrows(IllegalArgumentException.class, () -> {
-            Game game1 = new Game(0);
+            Game game1 = new Game(0,2);
             game1.addPlayer(new Player(true, new Shelf(), "player1", null, game1));
             game1.startGame();
         });
@@ -65,7 +65,7 @@ class GameTest {
     @Test
     public void updateCommonGoal_correctBehavior(){
 
-        Game game1 = new Game(0);
+        Game game1 = new Game(0,2);
         Player player1 = new Player(true, new Shelf(), "player1", null, game1);
         game1.addPlayer(player1);
 
@@ -83,7 +83,7 @@ class GameTest {
     @Test
     public void fileTest_AssertEquals(){
 
-        Game game1 = new Game(456);
+        Game game1 = new Game(456,2);
         Player player1 = new Player(true, new Shelf(), "player1", null, game1);
         game1.addPlayer(player1);
         game1.addPlayer(new Player(true, new Shelf(), "player2", null, game1));
@@ -103,7 +103,7 @@ class GameTest {
     @Test
     public void nextPhaseText() {
 
-        Game game = new Game(400);
+        Game game = new Game(400,2);
         Shelf shelf = new Shelf();
         for (int i = 0; i<4; i++) {
             String nickname = "Player" + i;
