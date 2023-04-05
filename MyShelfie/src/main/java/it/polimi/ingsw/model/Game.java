@@ -19,6 +19,7 @@ import java.util.Random;
 public class Game implements Serializable{
     int id;
     private ArrayList<Player> players;
+    private int playersNumber;
     private Board board;
     private GameState state;
     private Player firstToEnd;
@@ -32,8 +33,9 @@ public class Game implements Serializable{
      * @param id is the ID of the game instance
      * @throws NullPointerException if participants is null
      */
-    public Game(int id) throws NullPointerException{
+    public Game(int id, int playersNumber) throws NullPointerException{
         this.id = id;
+        this.playersNumber = playersNumber;
         this.players = new ArrayList<>();
         this.board = null;
         this.state = GameState.WAITING_FOR_PLAYERS;
@@ -345,6 +347,18 @@ public class Game implements Serializable{
      */
     public it.polimi.ingsw.model.Board getBoard() {
         return this.board;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state){
+        this.state = state;
+    }
+
+    public int getPlayersNumber() {
+        return playersNumber;
     }
 }
 
