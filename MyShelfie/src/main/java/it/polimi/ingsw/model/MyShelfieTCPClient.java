@@ -8,7 +8,11 @@ import java.util.Scanner;
  * @author  Nunzio Logallo
  * Client class
  */
-public class MyShelfieClient {
+public class MyShelfieTCPClient {
+    /**
+     * This method handle the client before, during and after connection to the server
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         System.out.println("Welcome to MyShelfie!");
         System.out.println("Connecting to server...");
@@ -20,11 +24,12 @@ public class MyShelfieClient {
             //socket.setSoTimeout(5000);
             if(socket.isConnected()){
                 System.out.println("Connected! :)");
+                socket.setKeepAlive(true);
                 try {
                     InputStream input = socket.getInputStream();
                     OutputStream output = socket.getOutputStream();
                     Scanner sc= new Scanner(System.in);
-                    byte[] buffer = new byte[1024];
+                    byte[] buffer = new byte[4096];
 
                     System.out.print("Enter your nickname: "); //inserisce nickname
                     String str= sc.nextLine();
@@ -48,15 +53,18 @@ public class MyShelfieClient {
                     }
                     command = new String(buffer, 0, input.read(buffer));
                     System.out.println(command);
-////
-                    while(!command.equals("START_GAME")) {
+
+                    while(true){
                         command = new String(buffer, 0, input.read(buffer));
                         if (command.equals("START_GAME")) {
                             System.out.println("GAME STARTED!");
+                            break;
                         }
-                    }
+                    }//while(!command.equals("START_GAME"));
                 } catch (SocketTimeoutException e) {
                     System.err.println("Socket timed out");
+                } catch (StringIndexOutOfBoundsException e) {
+                    System.err.println("Server went offline!");
                 } finally {
                     socket.close();
                 }
