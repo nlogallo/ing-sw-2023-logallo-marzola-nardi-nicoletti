@@ -105,7 +105,7 @@ class GameTest {
     @Test
     public void nextPhaseText() {
 
-        Game game = new Game(400,2);
+        Game game = new Game(400,4);
         Shelf shelf = new Shelf();
         for (int i = 0; i<4; i++) {
             String nickname = "Player" + i;

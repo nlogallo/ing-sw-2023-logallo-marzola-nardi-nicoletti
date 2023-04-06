@@ -17,20 +17,21 @@ import java.util.Random;
  * This class represents the single game started by the server
  */
 public class Game implements Serializable {
+
     int id;
-    private ArrayList<Player> players;
-    private int playersNumber;
+    private final ArrayList<Player> players;
+    private final int playersNumber;
     private Board board;
     private GameState state;
     private Player firstToEnd;
     private Player currentPlayer;
     private ThreeMap commonGoals;
     private final File gameFile;
+    private final ArrayList<Chat> chats = new ArrayList<>();
 
 
     /**
      * Class constructor
-     *
      * @param id is the ID of the game instance
      * @throws NullPointerException if participants is null
      */
@@ -44,7 +45,9 @@ public class Game implements Serializable {
         this.currentPlayer = null;
         this.commonGoals = null;
         this.gameFile = new File("data/savedGame/game" + this.id + ".bin");
+        this.chats.add(startGlobalChat());
     }
+
 
     /**
      * This method allows to start a new game
@@ -67,6 +70,7 @@ public class Game implements Serializable {
         //saveGame();
     }
 
+
     /**
      * This method ends the game
      */
@@ -79,6 +83,7 @@ public class Game implements Serializable {
             throw new RuntimeException(e);
         }
     }
+
 
     /**
      * This method saves the game infos in a binary file
@@ -94,6 +99,7 @@ public class Game implements Serializable {
             throw new RuntimeException(e);
         }
     }
+
 
     /**
      * This method restore the infos of the game
@@ -114,6 +120,7 @@ public class Game implements Serializable {
         return (Game) object;
     }
 
+
     /**
      * This method serialize an Object
      *
@@ -128,12 +135,14 @@ public class Game implements Serializable {
         return byteArrayOutputStream.toByteArray();
     }
 
+
     /**
      * This method deserialize in an Object
      *
      * @param data is an array of byte
      * @return an Object
      * @throws IOException
+     * @throws ClassNotFoundException
      */
     private Object deserializeObject(byte[] data) throws IOException, ClassNotFoundException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
@@ -141,10 +150,12 @@ public class Game implements Serializable {
         return objectInputStream.readObject();
     }
 
+
     /**
      * Makes the assignation of the personalGoal to each player
      */
     public void assignPersonalGoal() {
+
         ArrayList<Integer> personalGoalsIndex = new ArrayList<>();
         for (int i = 0; i < 12; i++)
             personalGoalsIndex.add(i);
@@ -159,10 +170,12 @@ public class Game implements Serializable {
         }
     }
 
+
     /**
      * This method picks two random commonGoals and saved them in the ThreeMap
      */
     public void chooseCommonGoals() {
+
         ArrayList<Integer> commonGoalIndex = new ArrayList<>();
         for (int i = 0; i < 12; i++)
             commonGoalIndex.add(i);
@@ -179,6 +192,7 @@ public class Game implements Serializable {
         }
     }
 
+
     /**
      * This method calls the board for the refill
      */
@@ -186,6 +200,7 @@ public class Game implements Serializable {
     if(board.checkRefill())
             board.refillBoard();
     }
+
 
     /**
      * This tells the board which tiles to pick
@@ -209,7 +224,7 @@ public class Game implements Serializable {
      */
     public Token updateCommonGoal(CommonGoal commonGoal, TileType[][] playerShelf, Player player) throws Exception, NullPointerException, IllegalStateException {
         if(commonGoal == null)
-            throw new NullPointerException("The commongoal cannot be null");
+            throw new NullPointerException("The commonGoal cannot be null");
         if(playerShelf == null)
             throw new NullPointerException("The shelf cannot be null");
         if(player == null)
@@ -225,9 +240,14 @@ public class Game implements Serializable {
     }
 
 
+    /**
+     * Getter method
+     * @return the common goals
+     */
     public ArrayList<CommonGoal> getCommonGoals(){
         return commonGoals.getCommonGoals();
     }
+
 
     /**
      * This private method reads the PersonalGoals matrix from the personalGoals.json file
@@ -247,6 +267,7 @@ public class Game implements Serializable {
         return wrapper.getMatrix(id);
     }
 
+
     /**
      * This private method reads the CommonGoal descriptions from the commonGoalDescriptions.json file
      * @param id is the id of the CommonGoals card
@@ -264,6 +285,7 @@ public class Game implements Serializable {
         }
         return wrapper.getDescription(id);
     }
+
 
     /**
      * This private method calls the constructor of proper CommonGoal card
@@ -289,6 +311,12 @@ public class Game implements Serializable {
             default -> throw new IllegalStateException("Unexpected id value: " + id);
         }
     }
+
+
+    /**
+     * Getter method
+     * @return the id of the Game instance
+     */
     public int getId() {
         return id;
     }
@@ -304,7 +332,7 @@ public class Game implements Serializable {
 
 
     /**
-     * This method adds a new player in the game, and if the list is empty it associates the
+     * This method adds a new player in the game and in the global Chat, and if the list is empty it associates the
      * first player that has been added to the current player
      * @param player is the new player
      * @throws IllegalArgumentException if the game has already the maximum number of players
@@ -315,6 +343,7 @@ public class Game implements Serializable {
         }
         if (players.size() <= 3) {
             this.players.add(player);
+            this.chats.get(0).addPlayerToChat(player);
         } else throw new IllegalArgumentException("The game has already the max number of players");
     }
 
@@ -322,9 +351,10 @@ public class Game implements Serializable {
     /**
      * This method changes the order of the players in the players' ArrayList and set the new current player
      * The player's position in the list represents the remaining turns he will have to wait before his turn
-     * @return the next player who will play
+     * @return the current player
+     * @throws IllegalArgumentException if no phase remained
      */
-    public Player nextPhase() throws IllegalArgumentException{
+    public Player nextPhase() throws IllegalStateException{
         Player delete = players.remove(0);
         players.add(delete);
         this.currentPlayer = players.get(0);
@@ -332,6 +362,7 @@ public class Game implements Serializable {
             throw new IllegalStateException("No phase remained");
         return this.currentPlayer;
     }
+
 
     /**
      * This method decrees the winner of the game
@@ -349,8 +380,9 @@ public class Game implements Serializable {
         return winner;
     }
 
+
     /**
-     * This method check if the firstToEnd token is still available, and gives it to the player
+     * This method checks if the firstToEnd token is still available, and gives it to the player
      * @param player the player that asks for the token
      */
     public void giveFirstToEndToken (Player player) {
@@ -369,20 +401,75 @@ public class Game implements Serializable {
         return this.board;
     }
 
+
+    /**
+     * Getter method
+     * @return the current state of the Game
+     */
     public GameState getState() {
         return state;
     }
 
+
+    /**
+     * Setter method
+     * @param state is the new value of Game state
+     */
     public void setState(GameState state){
         this.state = state;
     }
 
+
+    /**
+     * Getter method
+     * @return the players number in the Game
+     */
     public int getPlayersNumber() {
         return playersNumber;
     }
 
+
+    /**
+     * Getter method
+     * @return the current player
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+
+    /**
+     * This method initializes the global Chat
+     * @return the global Chat
+     */
+    private Chat startGlobalChat() {
+        return new Chat(0, this.players);
+    }
+
+
+    /**
+     * This method starts a new duo chat between two players in the Game
+     * @param player1 is the first player out of two
+     * @param player2 is the second player out of two
+     */
+    public void startDuoChat(Player player1, Player player2) {
+
+        ArrayList<Player> chatMembers = new ArrayList<>();
+        chatMembers.add(player1);
+        chatMembers.add(player2);
+
+        Chat chat = new Chat(this.chats.size(), chatMembers);
+        this.chats.add(chat);
+
+    }
+
+
+    /**
+     * Getter method
+     * @return an arrayList containing all open chats in the Game
+     */
+    public ArrayList<Chat> getChats () {
+        return this.chats;
     }
 }
 
