@@ -172,10 +172,10 @@ public class Player implements Serializable {
     /**
      * Takes the tiles from the board and put them in the player shelf
      * @param column the column to put the tiles in
-     * @param positions list of the positions of tiles to take from the board
+     * @param tiles list of tiles taken from the board
      */
-    public void makeMove(int column, ArrayList<Position> positions){
-        shelf.insertTiles(column, game.requestForTiles(positions));
+    public void makeMove(int column, ArrayList<Tile> tiles){
+        shelf.insertTiles(column, tiles);
     }
 
     /**
@@ -208,6 +208,10 @@ public class Player implements Serializable {
         this.state = state;
     }
 
+    public void setSeat(boolean seat) {
+        this.seat = seat;
+    }
+
     /**
      * Getter
      */
@@ -225,6 +229,10 @@ public class Player implements Serializable {
      */
     public Shelf getShelf() {
         return shelf;
+    }
+
+    public ArrayList<Token> getTokenCards() {
+        return tokenCards;
     }
 }
 

@@ -60,13 +60,11 @@ public class Game implements Serializable {
         this.state = GameState.STARTED;
         try {
             this.commonGoals = new ThreeMap(players.size());
-        } catch (IllegalArgumentException ex) {
-            System.out.println("Now you have to wait a player");
-            /*here we have to do something*/
-        }
+        } catch (IllegalArgumentException ex) {}
         chooseCommonGoals();
         assignPersonalGoal();
         board = new Board(players.size());
+        players.get(0).setSeat(true);
         //saveGame();
     }
 
@@ -196,7 +194,7 @@ public class Game implements Serializable {
     /**
      * This method calls the board for the refill
      */
-    void boardRefill() {
+    private void boardRefill() {
     if(board.checkRefill())
             board.refillBoard();
     }
@@ -341,7 +339,7 @@ public class Game implements Serializable {
         if (players.size() == 0) {
             this.currentPlayer = player;
         }
-        if (players.size() <= 3) {
+        if (players.size() <= playersNumber) {
             this.players.add(player);
             this.chats.get(0).addPlayerToChat(player);
         } else throw new IllegalArgumentException("The game has already the max number of players");
@@ -351,7 +349,7 @@ public class Game implements Serializable {
     /**
      * This method changes the order of the players in the players' ArrayList and set the new current player
      * The player's position in the list represents the remaining turns he will have to wait before his turn
-     * @return the current player
+     * @return the next player
      * @throws IllegalArgumentException if no phase remained
      */
     public Player nextPhase() throws IllegalStateException{
