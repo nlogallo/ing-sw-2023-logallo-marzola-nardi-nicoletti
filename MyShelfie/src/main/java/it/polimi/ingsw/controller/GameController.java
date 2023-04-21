@@ -70,4 +70,6 @@ public class GameController {
         return this.game.getPlayers();
     }
 
+    public Game getGame() { return this.game; }
+
 }
