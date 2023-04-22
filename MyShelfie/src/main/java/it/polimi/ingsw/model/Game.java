@@ -194,7 +194,7 @@ public class Game implements Serializable {
     /**
      * This method calls the board for the refill
      */
-    private void boardRefill() {
+    public void boardRefill() {
     if(board.checkRefill())
             board.refillBoard();
     }
