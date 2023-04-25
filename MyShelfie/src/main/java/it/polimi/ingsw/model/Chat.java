@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -6,7 +7,7 @@ import java.util.ArrayList;
  * This class represents a chat instance of the Game
  */
 
-public class Chat {
+public class Chat implements Serializable {
 
     private final ArrayList <Message> chat = new ArrayList<>();
     private final int id;
