@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.commonGoal.CommonGoal;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents the controller of the game
+ */
 public class GameController {
 
     private Game game;
@@ -12,6 +15,12 @@ public class GameController {
         this.game = game;
     }
 
+
+    /**
+     * Class constructor
+     *
+     * @return a String
+     */
     public String startGame(){
         try{
             game.startGame();
@@ -21,6 +30,12 @@ public class GameController {
         return "Game is starting...";
     }
 
+
+    /**
+     * Set the game for the next player's turn
+     *
+     * @return a String
+     */
     public String nextPhase(){
         String nextPlayer;
         try{
@@ -34,6 +49,18 @@ public class GameController {
         return nextPlayer + "is your turn";
     }
 
+
+    /**
+     * Takes tiles from the board and put the in the player shelf.
+     * After the move the board is refilled if needed.
+     * It also checked if the player can get the first to end token.
+     *
+     * @param positions list of positions of the tiles to take from the board
+     * @param player current player
+     * @param column column of the player's shelf to put the tiles in
+     *
+     * @return a String
+     */
     public String moveTiles(ArrayList<Position> positions, Player player, int column){
         ArrayList<Tile> tiles;
         if (player.getShelf().freeRows(column) < positions.size())
@@ -49,6 +76,16 @@ public class GameController {
         return "Tiles moved";
     }
 
+
+    /**
+     * Give the correct token if the player has achieved the commonGoal
+     *
+     * @param commonGoal common goal to check
+     * @param playerShelf player's shelf
+     * @param player current player
+     *
+     * @return a String
+     */
     public String updateToken(CommonGoal commonGoal, TileType[][] playerShelf, Player player){
         Token token;
         try {
@@ -62,8 +99,17 @@ public class GameController {
         return "Congratulations, you've have earned a new Token" + commonGoal.getId();
     }
 
+
+    /**
+     * Return a player based on their nickname
+     *
+     * @param nickname player's nickname
+     *
+     * @return a Player
+     */
     public Player nicknameToPlayer  (String nickname) {
-        for (Player p : game.getPlayers()){
+        ArrayList<Player> players = game.getPlayers();
+        for (Player p : players){
             if (nickname.equals(p.getNickname()))
                 return p;
         }
@@ -71,20 +117,47 @@ public class GameController {
         return null;
     }
 
+
+    /**
+     * Start a chat between two players
+     *
+     * @param player1 first player of the chat
+     * @param player2 second player of the chat
+     */
     public void startDuoChat(Player player1, Player player2) {
         game.startDuoChat(player1, player2);
     }
 
+
+    /**
+     * Getter method
+     * @return the common goals
+     */
     public ArrayList<CommonGoal> getCommonGoal(){
         return game.getCommonGoals();
     }
 
+
+    /**
+     * Getter method
+     * @return the current Board of the game
+     */
     public Board getBoard() { return game.getBoard(); }
 
+
+    /**
+     * Getter method
+     * @return the current players list
+     */
     public ArrayList<Player> getPlayers(){
         return this.game.getPlayers();
     }
 
+
+    /**
+     * Getter method
+     * @return the current game
+     */
     public Game getGame() { return this.game; }
 
 }
