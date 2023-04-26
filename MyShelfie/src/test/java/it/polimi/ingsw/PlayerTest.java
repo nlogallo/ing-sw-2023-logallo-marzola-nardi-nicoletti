@@ -18,7 +18,7 @@ class PlayerTest {
     }
 
     @Test
-    void adiacentTilesPoints() {
+    void adjacentTilesPoints_CorrectBehavior() {
         setUp();
         TileType[][] playerShelf1 = {{TileType.PLANT, TileType.PLANT, TileType.EMPTY, TileType.GAME, TileType.EMPTY},
                                     {TileType.PLANT, TileType.PLANT, TileType.PLANT, TileType.PLANT, TileType.CAT},
@@ -41,7 +41,7 @@ class PlayerTest {
     }
 
     @Test
-    void calculatePoints() {
+    void calculatePointsTest() {
         setUp();
         player.calculatePoints();
         assertSame(0, player.getPoints());

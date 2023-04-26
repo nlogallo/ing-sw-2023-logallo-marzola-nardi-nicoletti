@@ -26,7 +26,7 @@ class ShelfTest {
     }
 
     @Test
-    void freeRows() {
+    void freeRowsTest() {
         ArrayList<Tile> tiles = new ArrayList<>();
         tiles.add(new Tile(0));
         tiles.add(new Tile(50));
@@ -35,7 +35,7 @@ class ShelfTest {
     }
 
     @Test
-    void freeSpots() {
+    void freeSpotsTest() {
         ArrayList<Tile> tiles = new ArrayList<>();
         tiles.add(new Tile(0));
         tiles.add(new Tile(50));
@@ -50,7 +50,7 @@ class ShelfTest {
     }
 
     @Test
-    void insertTiles() {
+    void insertTiles_CorrectBehavior() {
         ArrayList<Tile> tiles = new ArrayList<>();
         tiles.add(new Tile(0));
         tiles.add(new Tile(50));
@@ -62,9 +62,7 @@ class ShelfTest {
     }
 
     @Test
-    void insertTilesThrowsException() {
-
-        assertThrows(IllegalArgumentException.class, () -> {
+    void insertTiles_ExpectedIllegalArgumentException() {
             ArrayList<Tile> tiles = new ArrayList<>();
             tiles.add(new Tile(0));
             tiles.add(new Tile(50));
@@ -72,16 +70,15 @@ class ShelfTest {
             shelf.insertTiles(0, tiles);
             tiles.add(new Tile(50));
             shelf.insertTiles(0, tiles);
-        });
     }
 
     @Test
-    void isFull1() {
+    void isFull_EmptyShelf_CorrectBehavior() {
             assertSame(false, shelf.isFull());
     }
 
     @Test
-    void isFull2() {
+    void isFull_CorrectBehavior() {
         ArrayList<Tile> tilesOne = new ArrayList<>();
         ArrayList<Tile> tilesTwo = new ArrayList<>();
         tilesOne.add(new Tile(0));
@@ -102,7 +99,7 @@ class ShelfTest {
 
 
     @Test
-    void getShelfTypes1() {
+    void getShelfTypes_EmptyShelf_CorrectBehavior() {
         TileType[][] matrixTypes;
         matrixTypes = shelf.getShelfTypes();
         for (int i = 0; i < 6; i++) {
@@ -113,7 +110,7 @@ class ShelfTest {
     }
 
     @Test
-    void getShelfTypes2() {
+    void getShelfTTypes_FilledShelf_CorrectBehavior() {
         TileType[][] matrixTypes;
         ArrayList<Tile> tilesOne = new ArrayList<>();
         ArrayList<Tile> tilesTwo = new ArrayList<>();

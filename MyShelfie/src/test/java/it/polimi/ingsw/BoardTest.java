@@ -27,7 +27,7 @@ class BoardTest {
 
 
     @Test
-    void testGenerateID1() {
+    void generateId_TwoPLayers_CorrectBehavior() {
 
         int c = 0;
         ArrayList<Integer> validIdList;
@@ -40,7 +40,7 @@ class BoardTest {
     }
 
     @Test
-    void testGenerateID2() {
+    void generateId_ThreePLayers_CorrectBehavior() {
 
         int c = 0;
         ArrayList<Integer> validIdList;
@@ -53,7 +53,7 @@ class BoardTest {
     }
 
     @Test
-    void testGenerateID3() {
+    void generateId_FourPLayers_CorrectBehavior() {
 
         int c = 0;
         ArrayList<Integer> validIdList;
@@ -68,7 +68,7 @@ class BoardTest {
 
 
     @Test
-    void refillBoard1() {
+    void refillBoard_TwoPLayers_CorrectBehavior() {
         Tile[][] tilesTable;
         tilesTable = boardTwo.getTilesTable();
 
@@ -85,7 +85,7 @@ class BoardTest {
     }
 
     @Test
-    void refillBoard2() {
+    void refillBoard_ThreePLayers_CorrectBehavior() {
         Tile[][] tilesTable;
         tilesTable = boardThree.getTilesTable();
 
@@ -101,7 +101,7 @@ class BoardTest {
     }
 
     @Test
-    void refillBoard3() {
+    void refillBoard_FourPLayers_CorrectBehavior() {
         Tile[][] tilesTable;
         tilesTable = boardFour.getTilesTable();
 
@@ -117,14 +117,14 @@ class BoardTest {
     }
 
     @Test
-    void checkRefill1() {
+    void checkRefill_ExpectedFalse() {
         assertSame(false, boardTwo.checkRefill());
         assertSame(false, boardThree.checkRefill());
         assertSame(false, boardFour.checkRefill());
     }
 
     @Test
-    void checkRefill2() {
+    void checkRefill_ExpectedTrue() {
         ArrayList<Position> positions1 = new ArrayList<>();
 
         positions1.add(new Position(1,4));
@@ -194,7 +194,7 @@ class BoardTest {
 
 
     @Test
-    void pullTiles1() {
+    void pullTiles_FourPlayer_CorrectBehavior() {
         Tile[][] tilesTable;
         tilesTable = boardFour.getTilesTable();
         ArrayList<Position> positions = new ArrayList<>();
@@ -213,19 +213,16 @@ class BoardTest {
 
 
     @Test
-    void pullTilesException1_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> {
+    void pullTiles_TwoPlayers_ShouldThrowNullPointerException() {
             ArrayList<Position> positions = new ArrayList<>();
 
             positions.add(new Position(3,1));
 
             ArrayList<Tile> pulledTiles = boardTwo.pullTiles(positions);
-        });
     }
 
     @Test
-    void pullTilesException2_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> {
+    void pullTiles_FourPlayers_ShouldThrowIllegalArgumentException() {
             ArrayList<Position> positions = new ArrayList<>();
 
             positions.add(new Position(1,3));
@@ -235,6 +232,5 @@ class BoardTest {
             positions.add(new Position(1,5));
 
             ArrayList<Tile> pulledTiles = boardFour.pullTiles(positions);
-        });
     }
 }

@@ -96,11 +96,6 @@ class GameTest {
 
 
     @Test
-    public void winnerTest() {
-        //To be implemented after complete PlayerClass
-    }
-
-    @Test
     public void nextPhaseText() {
 
         Game game = new Game(400,4);

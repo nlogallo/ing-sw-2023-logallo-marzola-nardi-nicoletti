@@ -17,7 +17,7 @@ class PersonalGoalTest {
     }
 
     @Test
-    void checkPersonalGoal() {
+    void checkPersonalGoal_CorrectBehavior() {
         setUp();
         TileType[][] playerShelf1 = {{TileType.PLANT, TileType.FRAME, TileType.FRAME, TileType.CAT, TileType.EMPTY},{TileType.EMPTY, TileType.CAT, TileType.PLANT, TileType.EMPTY, TileType.CAT},{TileType.CAT, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.PLANT},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};
         TileType[][] playerShelf2 = {{TileType.CAT, TileType.EMPTY, TileType.FRAME, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.CAT},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.BOOK, TileType.EMPTY},{TileType.EMPTY, TileType.GAME, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY},{TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY, TileType.EMPTY}, {TileType.EMPTY, TileType.EMPTY, TileType.TROPHY, TileType.EMPTY, TileType.EMPTY}};

@@ -29,14 +29,14 @@ public class ChatTest {
     }
 
     @Test
-    public void test1_checkCorrectStartOfGlobalChat_correctOutput() {
+    public void startOfGlobalChat_CorrectBehavior() {
 
         assertEquals(game.getChats().get(0).getChatMembers(), game.getPlayers());
 
     }
 
     @Test
-    public void test2_newDuoChat_correctOutput() {
+    public void newDuoChat_CorrectBehavior() {
 
         ArrayList<Player> playersList = new ArrayList<>();
         playersList.add(player1);
@@ -52,7 +52,7 @@ public class ChatTest {
 
 
     @Test
-    public void test3_newMessagesInChat () {
+    public void newMessagesInChat_CorrectBehavior () {
 
 
         ArrayList<Player> chatMembers = new ArrayList<>();
@@ -84,7 +84,7 @@ public class ChatTest {
     }
 
     @Test
-    public void Test3_checkMessagesReceivedByPlayerX_correctOutput () {
+    public void messagesReceivedByPlayerX_CorrectBehavior () {
 
 
         ArrayList<Player> chatMembers = new ArrayList<>();
@@ -114,7 +114,7 @@ public class ChatTest {
 
 
     @Test
-    public void Test4_checkGetLastMessage_correctOutput() {
+    public void getLastMessage_CorrectBehavior() {
 
         ArrayList<Player> chatMembers = new ArrayList<>();
         chatMembers.add(player1);

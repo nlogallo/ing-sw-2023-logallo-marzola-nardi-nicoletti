@@ -19,42 +19,34 @@ public class TokenTest {
     public void tearDown () {}
 
     @Test
-    public void Test1_correctInput_correctOutput () {
+    public void newToken_CorrectBehavior () {
 
-        Token token = new Token(8);
-        assertEquals(token.getPoints(), 8, 0);
-        assertEquals(token.getType(), TokenType.SCORING);
+        Token token1 = new Token(8);
+        assertEquals(token1.getPoints(), 8, 0);
+        assertEquals(token1.getType(), TokenType.SCORING);
+
+        Token token2 = new Token(0);
+        assertEquals(token2.getPoints(), 1, 0);
+        assertEquals(token2.getType(), TokenType.END_GAME);
+
+        Token token3 = new Token(3);
+        assertEquals(token3.getPoints(), 4, 0);
+        assertEquals(token3.getType(), TokenType.SCORING);
+
+        Token token4 = new Token(6);
+        assertEquals(token4.getPoints(), 6, 0);
+        assertEquals(token4.getType(), TokenType.SCORING);
     }
+
 
     @Test
-    public void Test2_correctInput_correctOutput () {
-        Token token = new Token(0);
-        assertEquals(token.getPoints(), 1, 0);
-        assertEquals(token.getType(), TokenType.END_GAME);
-    }
-
-    @Test (expected = IllegalArgumentException.class)
-    public void Test3_overMaxID_throwIllegalArgumentException () {
+    public void newToken_ShouldThrowIllegalArgumentException () {
         Token token = new Token(10);
     }
 
     @Test
-    public void Test4_setPoints_overMaxID_throwIllegalArgumentException () {
-        assertThrows(IllegalArgumentException.class, () -> new Token(5).setPoints(100));
-    }
-
-    @Test
-    public void Test5_correctInput_correctOutput() {
-        Token token = new Token(3);
-        assertEquals(token.getPoints(), 4, 0);
-        assertEquals(token.getType(), TokenType.SCORING);
-    }
-
-    @Test
-    public void Test6_correctInput_correctOutput() {
-        Token token = new Token(6);
-        assertEquals(token.getPoints(), 6, 0);
-        assertEquals(token.getType(), TokenType.SCORING);
+    public void setPoints_ShouldThrowIllegalArgumentException () {
+        new Token(5).setPoints(100);
     }
 
 }

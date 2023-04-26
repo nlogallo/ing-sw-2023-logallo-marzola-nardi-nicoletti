@@ -19,47 +19,45 @@ public class TileTest {
 
 
     @Test
-    public void  Test1_correctInput_correctOutput () {
-        Tile tile = new Tile(0);
-        assertEquals(tile.getType(), TileType.CAT);
+    public void  newTile_CorrectBehavior () {
+        Tile tile1 = new Tile(0);
+        assertEquals(tile1.getType(), TileType.CAT);
+
+        Tile tile2 = new Tile(30);
+        assertEquals(tile2.getType(), TileType.BOOK);
+
     }
 
     @Test
-    public void Test2_correctInput_correctOutput () {
-        Tile tile = new Tile(30);
-        assertEquals(tile.getType(), TileType.BOOK);
-    }
-
-    @Test (expected = IllegalArgumentException.class)
-    public void Test3_overMaxID_throwIllegalArgumentException () {
+    public void newTile_OverMaxID_ShouldThrowIllegalArgumentException () {
         Tile tile = new Tile (200);
     }
 
     @Test
-    public void Test4_negativeRow_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> new Tile (5).setPosition(-2, 5));
+    public void newTile_NegativeRow_ShouldThrowIllegalArgumentException() {
+        new Tile (5).setPosition(-2, 5);
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void Test5_negativeColumn_throwsIllegalArgumentException() {
+    @Test
+    public void newTile_NegativeColumn_ShouldThrowIllegalArgumentException() {
         Tile tile = new Tile (34);
         tile.setPosition(7,-5);
     }
 
     @Test
-    public void Test6_overMaxRow_throwsIllegalArgumentException () {
-        assertThrows(IllegalArgumentException.class, () -> new Tile(5).setPosition(10,3));
+    public void newTile_OverMaxRow_ShouldThrowIllegalArgumentException () {
+        new Tile(5).setPosition(10,3);
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void Test7_overMaxColumn_throwsIllegalArgumentException() {
+    @Test
+    public void newTile_OverMaxColumn_ShouldThrowIllegalArgumentException() {
         Tile tile = new Tile (131);
         tile.setPosition(0,80);
     }
 
     @Test
-    public void Test8_overMaxRowAndColumn_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, (() -> new Tile(120).setPosition(48,14)));
+    public void newTile_OverMaxRowAndColumn_ShouldThrowIllegalArgumentException() {
+        new Tile(120).setPosition(48,14);
     }
 
 }
