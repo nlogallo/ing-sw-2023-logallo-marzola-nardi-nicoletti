@@ -40,13 +40,15 @@ public class TokenTest {
 
 
     @Test
-    public void newToken_ShouldThrowIllegalArgumentException () {
-        Token token = new Token(10);
+    public void newToken_ThrowsIllegalArgumentException () {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Token token = new Token(10);
+        });
     }
 
     @Test
-    public void setPoints_ShouldThrowIllegalArgumentException () {
-        new Token(5).setPoints(100);
+    public void setPoints_ThrowsIllegalArgumentException () {
+        assertThrows(IllegalArgumentException.class, () -> new Token(5).setPoints(100));
     }
 
 }

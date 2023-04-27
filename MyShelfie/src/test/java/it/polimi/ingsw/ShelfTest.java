@@ -62,7 +62,8 @@ class ShelfTest {
     }
 
     @Test
-    void insertTiles_ExpectedIllegalArgumentException() {
+    void insertTiles_ThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> {
             ArrayList<Tile> tiles = new ArrayList<>();
             tiles.add(new Tile(0));
             tiles.add(new Tile(50));
@@ -70,6 +71,7 @@ class ShelfTest {
             shelf.insertTiles(0, tiles);
             tiles.add(new Tile(50));
             shelf.insertTiles(0, tiles);
+        });
     }
 
     @Test

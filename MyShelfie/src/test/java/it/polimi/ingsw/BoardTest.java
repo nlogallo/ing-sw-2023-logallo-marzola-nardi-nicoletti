@@ -213,24 +213,28 @@ class BoardTest {
 
 
     @Test
-    void pullTiles_TwoPlayers_ShouldThrowNullPointerException() {
+    void pullTiles_TwoPlayers_ThrowsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> {
             ArrayList<Position> positions = new ArrayList<>();
 
             positions.add(new Position(3,1));
 
             ArrayList<Tile> pulledTiles = boardTwo.pullTiles(positions);
+        });
     }
 
     @Test
-    void pullTiles_FourPlayers_ShouldThrowIllegalArgumentException() {
+    void pullTiles_FourPlayers_ThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> {
             ArrayList<Position> positions = new ArrayList<>();
 
-            positions.add(new Position(1,3));
+            positions.add(new Position(1, 3));
 
-            positions.add(new Position(1,4));
+            positions.add(new Position(1, 4));
 
-            positions.add(new Position(1,5));
+            positions.add(new Position(1, 5));
 
             ArrayList<Tile> pulledTiles = boardFour.pullTiles(positions);
+        });
     }
 }
