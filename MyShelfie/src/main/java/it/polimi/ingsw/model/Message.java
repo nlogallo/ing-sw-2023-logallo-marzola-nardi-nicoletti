@@ -50,7 +50,7 @@ public class Message {
 
     /**
      * Getter method
-     * @return the receiver of the message instance
+     * @return the receivers of the message instance
      */
     public ArrayList<Player> getReceiver() {
         return this.receivers;

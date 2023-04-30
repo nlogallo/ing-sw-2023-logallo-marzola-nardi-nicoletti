@@ -72,7 +72,7 @@ public class Chat implements Serializable {
 
         ArrayList<Message> messageReceived = new ArrayList<>();
         for (Message message : this.chat) {
-            if (message.getReceiver().equals(player)){
+            if (message.getReceiver().contains(player)){
                 messageReceived.add(message);
             }
         }
@@ -82,7 +82,7 @@ public class Chat implements Serializable {
 
     /**
      * Getter method
-     * @return an arrayList with inside all players' nickname in the chat instance
+     * @return an arrayList with inside all player's nicknames in the chat instance
      */
     public ArrayList<String> getNameChatMembers() {
         ArrayList<String> names = new ArrayList<>();
