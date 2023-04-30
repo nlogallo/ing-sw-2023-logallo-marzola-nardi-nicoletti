@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * @author Nunzio Logallo
  * This class represents the in game Player
  */
 public class Player implements Serializable {

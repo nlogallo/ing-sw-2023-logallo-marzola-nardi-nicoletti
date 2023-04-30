@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import java.io.Serializable;
 
 /**
- * @author Andrea Nardi
  * This class represents the Tile class of the game
  */
 

@@ -7,7 +7,6 @@ import java.util.*;
 
 /**
  * Custom Map created for saving the tokens (for each CommonGoal) taken by players
- * @author Emanuele Nicoletti
  */
 
 public class ThreeMap implements Serializable {

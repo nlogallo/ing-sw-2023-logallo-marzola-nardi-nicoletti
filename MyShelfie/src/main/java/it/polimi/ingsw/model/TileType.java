@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 /**
- * @author Andrea Nardi
  * This enum represents the possible Tile types
  */
 

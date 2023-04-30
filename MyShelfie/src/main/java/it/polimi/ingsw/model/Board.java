@@ -6,7 +6,6 @@ import java.util.Random;
 
 /**
  * This class represents the game's board
- * @author Pier Matteo Marzola
  */
 public class Board implements Serializable {
     /**

@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import java.io.Serializable;
 
 /**
- * @author Andrea Nardi
  * This class extends Card Class and represents the Token of the game.
  */
 public class Token implements Serializable {

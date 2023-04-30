@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 /**
  * This class represents the player's shelf
- * @author Pier Matteo Marzola
  */
 public class Shelf implements Serializable {
 
