@@ -469,6 +469,13 @@ public class Game implements Serializable {
     public ArrayList<Chat> getChats () {
         return this.chats;
     }
+
+
+    /**
+     * Getter method
+     * @return the ThreeMap of the game
+     */
+    public ThreeMap getThreeMap () { return this.commonGoals;}
 }
 
 
