@@ -16,6 +16,7 @@ public class GameController {
     }
 
 
+    //da sistemare (eliminazione: opzionale)
     /**
      * Class constructor
      *
@@ -96,7 +97,7 @@ public class GameController {
             return "";
         }
         player.giveToken(token);
-        return "Congratulations, you've have earned a new Token" + commonGoal.getId();
+        return "Congratulations, you've have earned a new Token: " + commonGoal.getId();
     }
 
 

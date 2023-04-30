@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  * This class represents a single message in a Chat
@@ -9,7 +10,7 @@ public class Message {
 
     private final String message;
     private final Player sender;
-    private final Player receiver;
+    private final ArrayList<Player> receivers = new ArrayList<>();
     private final Timestamp timestamp;
 
 
@@ -17,13 +18,13 @@ public class Message {
      * Class constructor
      * @param message is the string of the message
      * @param sender is the sender of the message
-     * @param receiver is the receiver of the message
+     * @param receivers is the receivers of the message
      */
-    public Message (String message, Player sender, Player receiver ) {
+    public Message (String message, Player sender, ArrayList<Player> receivers ) {
 
         this.message = message;
         this.sender = sender;
-        this.receiver = receiver;
+        this.receivers.addAll(receivers);
         this.timestamp = new Timestamp(System.currentTimeMillis());
 
     }
@@ -51,8 +52,8 @@ public class Message {
      * Getter method
      * @return the receiver of the message instance
      */
-    public Player getReceiver() {
-        return receiver;
+    public ArrayList<Player> getReceiver() {
+        return this.receivers;
     }
 
 
