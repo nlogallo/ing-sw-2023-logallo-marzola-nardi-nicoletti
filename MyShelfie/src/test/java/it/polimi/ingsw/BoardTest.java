@@ -237,4 +237,67 @@ class BoardTest {
             ArrayList<Tile> pulledTiles = boardFour.pullTiles(positions);
         });
     }
+
+    @Test
+    void areAligned_ThreeTilesCheck() {
+        ArrayList<Position> positions1 = new ArrayList<>();
+
+        Position p1 = new Position(1,3);
+        positions1.add(p1);
+        Position p2 = new Position(1,2);
+        positions1.add(p2);
+        Position p3 = new Position(1,1);
+        positions1.add(p3);
+        assertSame(true, boardTwo.areAligned(positions1));
+
+        //---------------------------------------------------------
+
+        ArrayList<Position> positions2 = new ArrayList<>();
+
+        Position p11 = new Position(1,3);
+        positions2.add(p11);
+        Position p12 = new Position(1,0);
+        positions2.add(p12);
+        Position p13 = new Position(1,1);
+        positions2.add(p13);
+        assertSame(false, boardTwo.areAligned(positions2));
+    }
+
+    @Test
+    void areAligned_TwoTilesCheck() {
+        ArrayList<Position> positions1 = new ArrayList<>();
+
+        Position p1 = new Position(1,3);
+        positions1.add(p1);
+        Position p2 = new Position(1,2);
+        positions1.add(p2);
+        assertSame(true, boardTwo.areAligned(positions1));
+
+        //---------------------------------------------------------
+
+        ArrayList<Position> positions2 = new ArrayList<>();
+
+        Position p11 = new Position(1,3);
+        positions2.add(p11);
+        Position p13 = new Position(1,1);
+        positions2.add(p13);
+        assertSame(false, boardTwo.areAligned(positions2));
+    }
+
+    @Test
+    void areAligned_OneTilesCheck() {
+        ArrayList<Position> positions1 = new ArrayList<>();
+
+        Position p1 = new Position(1,3);
+        positions1.add(p1);
+        assertSame(true, boardTwo.areAligned(positions1));
+
+        //---------------------------------------------------------
+
+        ArrayList<Position> positions2 = new ArrayList<>();
+
+        Position p13 = new Position(1,1);
+        positions2.add(p13);
+        assertSame(true, boardTwo.areAligned(positions2));
+    }
 }

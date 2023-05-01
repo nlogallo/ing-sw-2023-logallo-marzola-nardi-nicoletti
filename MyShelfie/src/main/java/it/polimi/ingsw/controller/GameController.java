@@ -64,8 +64,6 @@ public class GameController {
      */
     public String moveTiles(ArrayList<Position> positions, Player player, int column){
         ArrayList<Tile> tiles;
-        if (player.getShelf().freeRows(column) < positions.size())
-            return "Not enough free spots in this column";
         try{
             tiles = game.requestForTiles(positions);
         }catch (IllegalArgumentException ex){

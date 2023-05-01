@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 
@@ -170,7 +171,7 @@ public class Board implements Serializable {
      *
      * @return true if the tile can be pulled
      */
-    private boolean canPull (int r, int c)
+    public boolean canPull (int r, int c)
     {
         boolean canBePulled = false;
         if (r == 0 || r == 8 || c == 0 || c == 8) {
@@ -213,4 +214,55 @@ public class Board implements Serializable {
         }
         return matrixTypes;
     }
+
+    /**
+     * This method checks if some tiles are aligned
+     * @param positions ArrayList of positions to check if aligned
+     * @return true if the tiles are aligned
+     */
+    public boolean areAligned (ArrayList<Position> positions) {
+        ArrayList<Integer> rows = new ArrayList<>();
+        ArrayList<Integer> columns = new ArrayList<>();
+
+        for (int i = 0; i < positions.size(); i++) {
+            rows.add((positions.get(i)).getRow());
+            columns.add((positions.get(i)).getColumn());
+        }
+
+        Collections.sort(rows);
+        Collections.sort(columns);
+
+        if (positions.size() == 1)
+            return true;
+
+        if (positions.size() == 2) {
+            if (rows.get(0) == rows.get(1)) {
+                if ((columns.get(1) - columns.get(0)) == 1)
+                    return true;
+            }
+            else if (columns.get(0) == columns.get(1)) {
+                if ((rows.get(1) - rows.get(0)) == 1)
+                    return true;
+            } else {return false;}
+
+        }
+
+        if (positions.size() == 3) {
+            if ((rows.get(0) == rows.get(1)) && (rows.get(1) == rows.get(2))) {
+                if (((columns.get(2) - columns.get(1)) == 1 ) && ((columns.get(1) - columns.get(0)) == 1)) {
+                    return true;
+                }
+            }
+            if ((columns.get(0) == columns.get(1)) && (columns.get(1) == columns.get(2))) {
+                if (((rows.get(2) - rows.get(1)) == 1) && ((rows.get(1) - rows.get(0)) == 1)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return false;
+    }
+
 }
