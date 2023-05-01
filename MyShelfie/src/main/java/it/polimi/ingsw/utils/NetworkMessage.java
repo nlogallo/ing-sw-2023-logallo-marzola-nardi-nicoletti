@@ -31,7 +31,7 @@ public class NetworkMessage implements Serializable {
     public NetworkMessage(){
         this.requestId = null;
         this.textMessage = null;
-        this.content = null;
+        this.content = new ArrayList<Object>();
     }
 
     /**

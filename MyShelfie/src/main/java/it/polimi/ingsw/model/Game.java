@@ -28,6 +28,7 @@ public class Game implements Serializable {
     private ThreeMap commonGoals;
     private final File gameFile;
     private final ArrayList<Chat> chats = new ArrayList<>();
+    private ArrayList<Boolean> mutex = new ArrayList<Boolean>();
 
 
     /**
@@ -46,6 +47,8 @@ public class Game implements Serializable {
         this.commonGoals = null;
         this.gameFile = new File("data/savedGame/game" + this.id + ".bin");
         this.chats.add(startGlobalChat());
+        for(int i = 0; i < playersNumber; i++)
+            mutex.add(false);
     }
 
 
@@ -476,6 +479,21 @@ public class Game implements Serializable {
      * @return the ThreeMap of the game
      */
     public ThreeMap getThreeMap () { return this.commonGoals;}
+
+    /**
+     * This method creates mutexes at true. It is necessary to say that a Client has modified the game objets. We need it for multithreading purpose.
+     */
+    public void revertMutex(){
+        mutex.replaceAll(ignored -> true);
+    }
+
+    /**
+     * This method allows to set false the mutex in a certain position
+     * @param position is the position where to put false
+     */
+    public void setMutexFalseAtIndex(int position){
+        mutex.set(position, false);
+    }
 }
 
 

@@ -13,6 +13,7 @@ public class GameController {
     private Game game;
 
     private String nextPhaseMessage;
+    private String player;
     public GameController(Game game){
         this.game = game;
         this.nextPhaseMessage = null;
@@ -34,6 +35,7 @@ public class GameController {
             this.nextPhaseMessage = game.winner().getNickname() + " has won";
         }
         this.nextPhaseMessage = nextPlayer + "is your turn";
+        this.player = nextPlayer;
     }
 
 
@@ -58,6 +60,7 @@ public class GameController {
         player.makeMove(column, tiles);
         player.checkFirstToEnd();
         game.boardRefill();
+        game.revertMutex();
         return "Tiles moved";
     }
 
@@ -151,6 +154,10 @@ public class GameController {
      */
     public String getNextPhaseMessage(){
         return this.nextPhaseMessage;
+    }
+
+    public String getPlayer(){
+        return this.player;
     }
 
 }

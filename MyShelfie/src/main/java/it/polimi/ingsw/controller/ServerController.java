@@ -274,6 +274,7 @@ public class ServerController {
     public NetworkMessage updateResult(){
         NetworkMessage networkMessage = new NetworkMessage();
         networkMessage.setTextMessage(gameController.getNextPhaseMessage());
+        networkMessage.addContent(gameController.getPlayer());
         return networkMessage;
     }
 }
