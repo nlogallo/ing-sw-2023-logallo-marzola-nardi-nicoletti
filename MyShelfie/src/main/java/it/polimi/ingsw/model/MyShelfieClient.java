@@ -1,5 +1,11 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.ClientController;
+import it.polimi.ingsw.utils.NetworkMessage;
+import it.polimi.ingsw.view.CLIView;
+import it.polimi.ingsw.view.ClientViewObservable;
+import org.apache.commons.lang3.SerializationUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,6 +18,10 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class MyShelfieClient {
+
+    static Socket socket;
+
+
     public static void main(String args[]) throws IOException {
         System.out.println("Welcome to MyShelfie!");
         System.out.println("Choose your connection protocol:\n1. TCP\n2. RMI\n3. Quit\n");
@@ -26,7 +36,7 @@ public class MyShelfieClient {
             System.out.println("Connecting to TCP server...");
             String host = "localhost";
             int port = 12345;
-            Socket socket;
+            //Socket socket;
             try {
                 socket = new Socket(host, port);
                 //socket.setSoTimeout(5000);
@@ -42,6 +52,7 @@ public class MyShelfieClient {
                         System.out.print("Enter your nickname: "); //inserisce nickname
                         String str = sc.nextLine();
 
+                        String nickname = str;
                         output.write(str.getBytes());
                         output.flush();
 
@@ -66,6 +77,7 @@ public class MyShelfieClient {
                             command = new String(buffer, 0, input.read(buffer));
                             if (command.equals("START_GAME")) {
                                 System.out.println("GAME STARTED!");
+                                new MyShelfieClient().handleGameTCP(nickname, socket);
                                 break;
                             }
                         }//while(!command.equals("START_GAME"));
@@ -102,7 +114,7 @@ public class MyShelfieClient {
                             System.err.println("Players number must be 2, 3 or 4");
                         }
                     } while (playersNumber > 4);
-                    game = server.handleGameCreation(playersNumber, nickname);
+                    game = server.RMIHandleGameCreation(playersNumber, nickname);
                 }
                 System.out.println("Hi " + nickname + "!\nYou have been added to game with id " + game.getId() + "\nYour game will start when the players number is fulfilled");
                 while (true) {
@@ -111,16 +123,60 @@ public class MyShelfieClient {
                     }
                 }
                 System.out.println("GAME STARTED!");
+                //new MyShelfieClient().handleGameTCP(nickname, 2);
             } catch (Exception e) {
                 System.err.println("Connection failed!" + e);
                 //System.err.println("Exception in main: " + e);
             }
         }
     }
+
+    private void handleGameTCP(String nickname, Socket socket){
+        ClientViewObservable view = new ClientViewObservable(new CLIView());
+        ClientController controller = new ClientController(view, this, nickname);
+        try {
+            InputStream in = socket.getInputStream();
+            OutputStream out = socket.getOutputStream();
+            NetworkMessage nm = SerializationUtils.deserialize(in.readAllBytes());
+            controller.playerSetup(nm);
+            NetworkMessage currentPlayer = SerializationUtils.deserialize(in.readAllBytes());
+            controller.updateResults(currentPlayer);
+            while (true) {
+                if(!currentPlayer.getContent().get(0).equals(nickname)){
+                    NetworkMessage board = SerializationUtils.deserialize(in.readAllBytes());
+                    controller.updateBoard(board);
+                }
+                NetworkMessage token = SerializationUtils.deserialize(in.readAllBytes());
+                controller.updateGameTokens(token);
+                NetworkMessage result = SerializationUtils.deserialize(in.readAllBytes());
+                controller.updateResults(result);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public NetworkMessage sendMessage(NetworkMessage networkMessage){
+        InputStream input = null;
+        OutputStream output = null;
+        try {
+            input = socket.getInputStream();
+            output = socket.getOutputStream();
+            if(networkMessage.getRequestId().equals("MT")){
+                output.write(SerializationUtils.serialize(networkMessage));
+                NetworkMessage resp = new NetworkMessage();
+                resp = SerializationUtils.deserialize(input.readAllBytes());
+                return resp;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
 
 interface MyShelfieRMIInterface extends Remote {
     Game checkforAvailableGame(String message) throws RemoteException;
-    Game handleGameCreation(int playersNumber, String nickname) throws RemoteException;
+    Game RMIHandleGameCreation(int playersNumber, String nickname) throws RemoteException;
     boolean checkForStart(int gameId) throws RemoteException;
 }

@@ -494,6 +494,14 @@ public class Game implements Serializable {
     public void setMutexFalseAtIndex(int position){
         mutex.set(position, false);
     }
+
+    /**
+     * This method allows to get mutex value in a certain position
+     * @param position is the position
+     */
+    public boolean getMutexAtIndex(int position) {
+        return mutex.get(position);
+    }
 }
 
 

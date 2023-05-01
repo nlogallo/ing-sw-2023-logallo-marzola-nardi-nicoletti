@@ -90,6 +90,7 @@ public class ClientController {
         networkMessage.addContent(column);
         networkMessage.setRequestId("MT");
         //send it to MyShelfieClient (method to send the message to the server)
+        NetworkMessage resp = client.sendMessage(networkMessage);
     }
 
     /**
@@ -107,7 +108,6 @@ public class ClientController {
         networkMessage.addContent(receiver);
         networkMessage.addContent(text);
         networkMessage.setRequestId("SM");
-        //send it to MyShelfieClient (method to send the message to the server)
     }
 
     /**
