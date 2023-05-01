@@ -11,43 +11,29 @@ import java.util.ArrayList;
 public class GameController {
 
     private Game game;
+
+    private String nextPhaseMessage;
     public GameController(Game game){
         this.game = game;
+        this.nextPhaseMessage = null;
     }
-
-
-    //da sistemare (eliminazione: opzionale)
-    /**
-     * Class constructor
-     *
-     * @return a String
-     */
-    public String startGame(){
-        try{
-            game.startGame();
-        }catch (IllegalArgumentException ex){
-            System.out.println("-Server- Game: " + this.game.getId() + "has not reach the correct number of players");
-        }
-        return "Game is starting...";
-    }
-
 
     /**
      * Set the game for the next player's turn
      *
      * @return a String
      */
-    public String nextPhase(){
-        String nextPlayer;
+    public void nextPhase(){
+        String nextPlayer = " ";
         try{
             nextPlayer = game.nextPhase().getNickname();
             game.saveGame();
         }catch (IllegalStateException ex){
             game.endGame();
             System.out.println("-Server- Game: " + this.game.getId() +" has ended");
-            return game.winner().getNickname() + " has won";
+            this.nextPhaseMessage = game.winner().getNickname() + " has won";
         }
-        return nextPlayer + "is your turn";
+        this.nextPhaseMessage = nextPlayer + "is your turn";
     }
 
 
@@ -158,5 +144,13 @@ public class GameController {
      * @return the current game
      */
     public Game getGame() { return this.game; }
+
+    /**
+     * Getter method
+     * @return the current next phase message, that is who is playing in this phase or the winner of the game
+     */
+    public String getNextPhaseMessage(){
+        return this.nextPhaseMessage;
+    }
 
 }

@@ -91,7 +91,7 @@ public class VirtualView {
      * @return the NetworkMessage with the info
      */
    public NetworkMessage updateResult(){
-       return serverController.nextPhase();
+       return serverController.updateResult();
    }
 
 }

@@ -88,6 +88,7 @@ public class ClientController {
         networkMessage.addContent(listPosition.size());
         networkMessage.addContent(listPosition);
         networkMessage.addContent(column);
+        networkMessage.setRequestId("MT");
         //send it to MyShelfieClient (method to send the message to the server)
     }
 
@@ -105,6 +106,7 @@ public class ClientController {
         networkMessage.addContent(this.playerNickname);
         networkMessage.addContent(receiver);
         networkMessage.addContent(text);
+        networkMessage.setRequestId("SM");
         //send it to MyShelfieClient (method to send the message to the server)
     }
 

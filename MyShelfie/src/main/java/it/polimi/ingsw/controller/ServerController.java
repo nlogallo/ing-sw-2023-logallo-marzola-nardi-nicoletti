@@ -18,19 +18,6 @@ public class ServerController {
         isTokenChange = false;
     }
 
-
-    /**
-     * This method calls the Game Controller to start the game
-     * @return a message with confirmation of the start of the game
-     */
-    public NetworkMessage startGame() {
-        NetworkMessage networkMessage = new NetworkMessage();
-        networkMessage.setTextMessage(gameController.startGame());
-        networkMessage.setRequestId("UR");
-        return networkMessage;
-    }
-
-
     /**
      * This method checks if the player isn't null and then checks if the player has done one or both Common Goal
      *
@@ -55,6 +42,7 @@ public class ServerController {
             return networkMessage;
         }
         stringToSend = gameController.moveTiles(positions, player, column);
+        gameController.nextPhase();
         if (!stringToSend.equals("Tiles cannot be pulled")) {
             String stringPart2 = null;
 
@@ -93,20 +81,6 @@ public class ServerController {
         networkMessage.setTextMessage(stringToSend);
         return networkMessage;
     }
-
-
-    /**
-     * This method starts a new phase of the Game
-     * @return a message with the confirmation of the start of a new Game phase,
-     * also if there is a winner this message says the name of the winner of the Game
-     */
-    public NetworkMessage nextPhase() {
-        NetworkMessage networkMessage = new NetworkMessage();
-        networkMessage.setTextMessage(gameController.nextPhase());
-        networkMessage.setRequestId("UR");
-        return networkMessage;
-    }
-
 
     /**
      * This method finds the corresponding chat from the incoming message and then adds the message to the chat
@@ -290,6 +264,16 @@ public class ServerController {
             networkMessage.addContent(token);
         }
         networkMessage.setRequestId("PS");
+        return networkMessage;
+    }
+
+    /**
+     * This method returns a NetworkMessage with the current player (as a Stirng) or the result of the match
+     * @return the NetworkMessage
+     */
+    public NetworkMessage updateResult(){
+        NetworkMessage networkMessage = new NetworkMessage();
+        networkMessage.setTextMessage(gameController.getNextPhaseMessage());
         return networkMessage;
     }
 }
