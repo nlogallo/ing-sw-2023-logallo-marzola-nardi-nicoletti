@@ -130,7 +130,7 @@ public class MyShelfieClient {
     }
 
     private void handleGameTCP(String nickname){
-        ClientViewObservable view = new ClientViewObservable(new CLIView());
+        ClientViewObservable view = new ClientViewObservable(new CLIView(nickname));
         ClientController controller = new ClientController(view, this, nickname);
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());

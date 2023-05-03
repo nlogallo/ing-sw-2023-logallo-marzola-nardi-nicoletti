@@ -30,6 +30,7 @@ public class CLIFormatter {
         //fifth line
         System.out.print(ANSI_RESET + "\n" + view.getScreenMessage() + String.format("%-" + calculateSpacing(68, 0, view.getScreenMessage()) +"s", " ") + ANSI_RESET + "+---".repeat(5) + "+" + String.format("%-28s", " ") + "+---".repeat(5) + "+" + String.format("%-20s", " "));
         //sixth line
+        System.out.print(ANSI_RESET + "\n" )
     }
 
     private int calculateSpacing(int emptyLength, int fixedTextLength, String dynamicTextToAdd){

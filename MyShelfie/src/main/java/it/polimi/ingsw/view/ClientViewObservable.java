@@ -107,8 +107,20 @@ public class ClientViewObservable {
         view.updatePlayersNickname(playersNickname);
     }
 
+    /**
+     * This method set the nickname of current player
+     * @param nickname is the nickname
+     */
     public void setCurrentPlayer(String nickname){
         view.updateCurrentPlayer(nickname);
+    }
+
+    /**
+     * This method set the nickname of the client in the view
+     * @param nickname is the nickname
+     */
+    public void setClientNicknameOnView(String nickname){
+
     }
 
     /**
