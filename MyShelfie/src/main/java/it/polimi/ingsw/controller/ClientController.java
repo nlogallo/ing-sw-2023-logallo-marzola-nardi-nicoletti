@@ -133,6 +133,7 @@ public class ClientController {
         for(int i = 0; i < numberOfGameTokens; i++)
             listOfGameTokens.add((Token) content.get(8 + numberOfOtherPlayer + i));
         clientViewObservable.setGameTokens(listOfGameTokens);
+        clientViewObservable.refreshCLI();
     }
 
     /**
@@ -185,6 +186,8 @@ public class ClientController {
      */
     public void updateResults(NetworkMessage networkMessage){
         clientViewObservable.setScreenMessage(networkMessage.getTextMessage());
+        clientViewObservable.setCurrentPlayer((String) networkMessage.getContent().get(0));
+        clientViewObservable.refreshCLI();
     }
 
 }

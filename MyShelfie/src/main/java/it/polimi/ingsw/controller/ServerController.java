@@ -248,9 +248,11 @@ public class ServerController {
         Integer numOfGameToken = (gameController.getPlayers().size() * 2) + 1;
         ArrayList<CommonGoal> commonGoals = gameController.getCommonGoal();
         ArrayList<Token> remainingTokenList = gameController.getGame().getThreeMap().getRemainingTokenList(commonGoals, numOfPlayer);
+        gameController.setNextPhaseMessage(gameController.getCurrentPlayer() + " is your turn!");
 
-        networkMessage.setTextMessage(nickName + "Welcome to the Game, Enjoy");
+        networkMessage.setTextMessage(nickName + ", welcome to the Game. Enjoy it!");
         networkMessage.addContent(gameController.getBoard());
+        networkMessage.addContent(gameController.nicknameToPlayer(nickName).getShelf());
         networkMessage.addContent(gameController.nicknameToPlayer(nickName).getPersonalGoal());
         networkMessage.addContent(gameController.getCommonGoal().get(0));
         networkMessage.addContent(gameController.getCommonGoal().get(1));
@@ -268,13 +270,14 @@ public class ServerController {
     }
 
     /**
-     * This method returns a NetworkMessage with the current player (as a Stirng) or the result of the match
+     * This method returns a NetworkMessage with the current player (as a String) or the result of the match
      * @return the NetworkMessage
      */
     public NetworkMessage updateResult(){
         NetworkMessage networkMessage = new NetworkMessage();
         networkMessage.setTextMessage(gameController.getNextPhaseMessage());
-        networkMessage.addContent(gameController.getPlayer());
+        networkMessage.addContent(gameController.getCurrentPlayer());
+        networkMessage.setRequestId("UR");
         return networkMessage;
     }
 }

@@ -106,4 +106,15 @@ public class ClientViewObservable {
     public void setPlayersNickname(ArrayList<String> playersNickname){
         view.updatePlayersNickname(playersNickname);
     }
+
+    public void setCurrentPlayer(String nickname){
+        view.updateCurrentPlayer(nickname);
+    }
+
+    /**
+     * This method refresh the CLI interface
+     */
+    public void refreshCLI(){
+        view.refreshCLI();
+    }
 }

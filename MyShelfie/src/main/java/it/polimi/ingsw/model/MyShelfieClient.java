@@ -6,9 +6,7 @@ import it.polimi.ingsw.view.CLIView;
 import it.polimi.ingsw.view.ClientViewObservable;
 import org.apache.commons.lang3.SerializationUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -77,7 +75,7 @@ public class MyShelfieClient {
                             command = new String(buffer, 0, input.read(buffer));
                             if (command.equals("START_GAME")) {
                                 System.out.println("GAME STARTED!");
-                                new MyShelfieClient().handleGameTCP(nickname, socket);
+                                new MyShelfieClient().handleGameTCP(nickname);
                                 break;
                             }
                         }//while(!command.equals("START_GAME"));
@@ -131,27 +129,29 @@ public class MyShelfieClient {
         }
     }
 
-    private void handleGameTCP(String nickname, Socket socket){
+    private void handleGameTCP(String nickname){
         ClientViewObservable view = new ClientViewObservable(new CLIView());
         ClientController controller = new ClientController(view, this, nickname);
         try {
-            InputStream in = socket.getInputStream();
-            OutputStream out = socket.getOutputStream();
-            NetworkMessage nm = SerializationUtils.deserialize(in.readAllBytes());
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            NetworkMessage nm = (NetworkMessage) objectInputStream.readObject();
             controller.playerSetup(nm);
-            NetworkMessage currentPlayer = SerializationUtils.deserialize(in.readAllBytes());
+            NetworkMessage currentPlayer = (NetworkMessage) objectInputStream.readObject();
             controller.updateResults(currentPlayer);
             while (true) {
                 if(!currentPlayer.getContent().get(0).equals(nickname)){
-                    NetworkMessage board = SerializationUtils.deserialize(in.readAllBytes());
+                    NetworkMessage board = (NetworkMessage) objectInputStream.readObject();
                     controller.updateBoard(board);
                 }
-                NetworkMessage token = SerializationUtils.deserialize(in.readAllBytes());
+                NetworkMessage token = (NetworkMessage) objectInputStream.readObject();
                 controller.updateGameTokens(token);
-                NetworkMessage result = SerializationUtils.deserialize(in.readAllBytes());
+                NetworkMessage result = (NetworkMessage) objectInputStream.readObject();
                 controller.updateResults(result);
             }
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

@@ -4,9 +4,7 @@ import it.polimi.ingsw.utils.NetworkMessage;
 import it.polimi.ingsw.view.VirtualView;
 import org.apache.commons.lang3.SerializationUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
@@ -177,18 +175,20 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 }
 
                 game.startGame();
-
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+                ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
+                objectOutputStream.flush();
                 VirtualView virtualView = new VirtualView(game);
                 NetworkMessage setup = virtualView.playerSetup(nickname);
-                output.write(SerializationUtils.serialize(setup));
+                objectOutputStream.writeObject(setup);
                 NetworkMessage firstPlayer = virtualView.updateResult();
-                output.write(SerializationUtils.serialize(firstPlayer));
+                objectOutputStream.writeObject(firstPlayer);
                 while(true) {
                     if(game.getCurrentPlayer().getNickname().equals(nickname)) {
                         NetworkMessage moveTiles = SerializationUtils.deserialize(input.readAllBytes());
                         if (moveTiles.getRequestId().equals("MT")) {
                             NetworkMessage resp = virtualView.moveTiles(moveTiles, player);
-                            output.write(SerializationUtils.serialize(resp));
+                            objectOutputStream.writeObject(resp);
                         }
                     }
                     while (!game.getMutexAtIndex(playerIndex)){}

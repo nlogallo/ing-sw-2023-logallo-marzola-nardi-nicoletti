@@ -13,10 +13,15 @@ public class GameController {
     private Game game;
 
     private String nextPhaseMessage;
-    private String player;
+    private String currentPlayer;
+
     public GameController(Game game){
         this.game = game;
         this.nextPhaseMessage = null;
+        for(Player p : game.getPlayers()){
+            if(p.hasSeat())
+                currentPlayer = p.getNickname();
+        }
     }
 
     /**
@@ -34,8 +39,8 @@ public class GameController {
             System.out.println("-Server- Game: " + this.game.getId() +" has ended");
             this.nextPhaseMessage = game.winner().getNickname() + " has won";
         }
-        this.nextPhaseMessage = nextPlayer + "is your turn";
-        this.player = nextPlayer;
+        this.nextPhaseMessage = nextPlayer + " is your turn";
+        this.currentPlayer = nextPlayer;
     }
 
 
@@ -156,8 +161,16 @@ public class GameController {
         return this.nextPhaseMessage;
     }
 
-    public String getPlayer(){
-        return this.player;
+    public String getCurrentPlayer(){
+        return this.currentPlayer;
+    }
+
+    /**
+     * Setter method
+     * @param message is the message to save
+     */
+    public void setNextPhaseMessage(String message){
+        this.nextPhaseMessage = message;
     }
 
 }

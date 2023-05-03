@@ -22,5 +22,7 @@ public interface Observer {
     public void updateSeat(boolean seat);
     public void updateScreenMessage(String text);
     public void updatePlayersNickname(ArrayList<String> playersNickname);
+    public void updateCurrentPlayer(String nickname);
+    public void refreshCLI();
 
 }

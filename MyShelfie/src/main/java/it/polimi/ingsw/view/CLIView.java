@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.controller.ClientController;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
+import it.polimi.ingsw.utils.CLIFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,23 +16,22 @@ public class CLIView implements Observer{
     private Board board;
     private Shelf shelf;
     private PersonalGoal personalGoal;
-    private ArrayList<CommonGoal> commonGoals;
-    private ArrayList<Chat> chats;
+    private ArrayList<CommonGoal> commonGoals = new ArrayList<>();
+    private ArrayList<Chat> chats = new ArrayList<>();
     private boolean seat;
-    private ArrayList<Token> personalTokens;
+    private ArrayList<Token> personalTokens = new ArrayList<>();
     private ArrayList<Token> gameTokens;
     private ArrayList<String> playersNickname;
+    private String currentPlayer;
     private String screenMessage;
     private ClientController clientController;
+    private CLIFormatter cliFormatter = new CLIFormatter(this);
 
     /**
      * Constructor method
      */
     public void CLIView(){
         this.screenMessage = null;
-        this.commonGoals = new ArrayList<CommonGoal>();
-        this.personalTokens = new ArrayList<Token>();
-        this.chats = new ArrayList<Chat>();
     }
 
     /**
@@ -58,7 +58,7 @@ public class CLIView implements Observer{
      */
     @Override
     public void updateCommonGoal(CommonGoal commonGoal){
-        commonGoals.add(commonGoal);
+        this.commonGoals.add(commonGoal);
     }
 
     /**
@@ -127,6 +127,15 @@ public class CLIView implements Observer{
         this.playersNickname = new ArrayList<>(playersNickname);
     }
 
+    /**
+     * This method update the current player
+     * @param nickname is the nickname of current player
+     */
+    @Override
+    public void updateCurrentPlayer(String nickname){
+        this.currentPlayer = nickname;
+    }
+
     public Board getBoard() {
         return board;
     }
@@ -159,6 +168,10 @@ public class CLIView implements Observer{
         return screenMessage;
     }
 
+    public String getCurrentPlayer(){
+        return this.currentPlayer;
+    }
+
     /**
      *
      * @param clientController
@@ -184,12 +197,14 @@ public class CLIView implements Observer{
 
     }
 
+
     /**
      * This method refresh the CLI with the updated objects
      */
-    private void refreshCLI(){
+    @Override
+    public void refreshCLI(){
         clearCLI();
-        //here to create the CLI interface
+        cliFormatter.createCLIInterface();
     }
 
     /**
