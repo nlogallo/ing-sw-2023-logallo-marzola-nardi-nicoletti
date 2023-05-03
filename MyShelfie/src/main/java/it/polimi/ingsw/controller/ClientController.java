@@ -91,6 +91,8 @@ public class ClientController {
         networkMessage.setRequestId("MT");
         //send it to MyShelfieClient (method to send the message to the server)
         NetworkMessage resp = client.sendMessage(networkMessage);
+        //unpack the message
+        clientViewObservable.setShelf((Shelf) resp.getContent().get(0));
     }
 
     /**

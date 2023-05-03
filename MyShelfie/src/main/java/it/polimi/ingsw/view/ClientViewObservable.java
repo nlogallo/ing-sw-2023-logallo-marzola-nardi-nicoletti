@@ -116,14 +116,6 @@ public class ClientViewObservable {
     }
 
     /**
-     * This method set the nickname of the client in the view
-     * @param nickname is the nickname
-     */
-    public void setClientNicknameOnView(String nickname){
-
-    }
-
-    /**
      * This method refresh the CLI interface
      */
     public void refreshCLI(){

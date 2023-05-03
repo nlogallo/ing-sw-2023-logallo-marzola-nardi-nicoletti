@@ -20,7 +20,7 @@ public class CLIFormatter {
 
     public void createCLIInterface(){
         //first line
-        System.out.print("\n" + ANSI_WHITE + "Status: " + ANSI_GREEN + "\u001B[1mConnected" + ANSI_RESET + String.format("%-55s", " ") + "+---".repeat(2) + "+" + String.format("%-36s", " ") + "+---".repeat(5) + "+" + String.format("%-20s", " ")  + isSeatAvailable());
+        System.out.print(ANSI_WHITE + "\nStatus: " + ANSI_GREEN + "\u001B[1mConnected" + ANSI_RESET + String.format("%-55s", " ") + "+---".repeat(2) + "+" + String.format("%-36s", " ") + "+---".repeat(5) + "+" + String.format("%-20s", " ")  + isSeatAvailable());
         //second line
         System.out.print(ANSI_WHITE + "\nCurrently playing: " + ANSI_RESET + view.getCurrentPlayer() + String.format("%-" + calculateSpacing(72, 19, view.getCurrentPlayer()) + "s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(0,3)  + ANSI_RESET + "|" + getBoardTilesAtPosition(0, 4) + ANSI_RESET + "|" + String.format("%36s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(0,0) + ANSI_RESET + "|" + getShelfTilesAtPosition(0,1)  + ANSI_RESET + "|" + getShelfTilesAtPosition(0,2) + ANSI_RESET + "|" + getShelfTilesAtPosition(0,3) + ANSI_RESET + "|"+  getShelfTilesAtPosition(0,4) + ANSI_RESET + "|");
         //third line
@@ -28,9 +28,10 @@ public class CLIFormatter {
         //fourth line
         System.out.print(ANSI_WHITE + "\nServer Message: " + String.format("%-56s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(1,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(1,4) + ANSI_RESET + "|" +  getBoardTilesAtPosition(1,5) + ANSI_RESET + "|" + String.format("%32s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(1,0) + ANSI_RESET + "|" + getShelfTilesAtPosition(1,1)  + ANSI_RESET + "|" +  getShelfTilesAtPosition(1,2) + ANSI_RESET + "|" + getShelfTilesAtPosition(1,3) + ANSI_RESET + "|"+  getShelfTilesAtPosition(1,4) + ANSI_RESET + "|");
         //fifth line
-        System.out.print(ANSI_RESET + "\n" + view.getScreenMessage() + String.format("%-" + calculateSpacing(68, 0, view.getScreenMessage()) +"s", " ") + ANSI_RESET + "+---".repeat(5) + "+" + String.format("%-28s", " ") + "+---".repeat(5) + "+" + String.format("%-20s", " "));
+        System.out.print(ANSI_RESET + "\n" + view.getScreenMessage() + String.format("%-" + calculateSpacing(68, 0, view.getScreenMessage()) + "s", " ") + ANSI_RESET + "+---".repeat(5) + "+" + String.format("%-28s", " ") + "+---".repeat(5) + "+" + String.format("%-20s", " "));
         //sixth line
-        System.out.print(ANSI_RESET + "\n" )
+        System.out.print(ANSI_RESET + "\n" + String.format("%-68s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(2,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,6) + ANSI_RESET + "|" + String.format("%-28s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,4) + ANSI_RESET + "|");
+        //seventh line
     }
 
     private int calculateSpacing(int emptyLength, int fixedTextLength, String dynamicTextToAdd){
@@ -87,7 +88,11 @@ public class CLIFormatter {
         return lineToPrint;
     }
 
-    /*private String canMakeHisMove(){
-        //if(view.getCurrentPlayer().equals())
-    }*/
+    private String canMakeHisMove(){
+        if(view.getCurrentPlayer() == null || !view.getCurrentPlayer().equals(view.getClientNickname())){
+            return ANSI_WHITE + "1.Make your move (disabled)";
+        }
+        else
+            return ANSI_RESET + "1.Make your move";
+    }
 }

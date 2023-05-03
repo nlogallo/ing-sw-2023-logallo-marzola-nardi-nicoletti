@@ -23,7 +23,7 @@ public class CLIView implements Observer{
     private ArrayList<Token> gameTokens;
     private ArrayList<String> playersNickname;
     private String currentPlayer;
-    private String clientNickname;
+    private final String clientNickname;
     private String screenMessage;
     private ClientController clientController;
     private CLIFormatter cliFormatter = new CLIFormatter(this);
@@ -172,6 +172,10 @@ public class CLIView implements Observer{
 
     public String getCurrentPlayer(){
         return this.currentPlayer;
+    }
+
+    public String getClientNickname(){
+        return this.clientNickname;
     }
 
     /**
