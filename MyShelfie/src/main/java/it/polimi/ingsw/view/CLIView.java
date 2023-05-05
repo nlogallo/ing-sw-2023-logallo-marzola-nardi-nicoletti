@@ -178,6 +178,10 @@ public class CLIView implements Observer{
         return this.clientNickname;
     }
 
+    public ArrayList<String> getPlayersNickname() {
+        return this.playersNickname;
+    }
+
     /**
      *
      * @param clientController
