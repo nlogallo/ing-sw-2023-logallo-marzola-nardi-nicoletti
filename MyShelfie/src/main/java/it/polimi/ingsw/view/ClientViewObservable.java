@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.controller.ClientController;
 import it.polimi.ingsw.model.Board;
 import it.polimi.ingsw.model.PersonalGoal;
 import it.polimi.ingsw.model.Shelf;
@@ -121,4 +122,9 @@ public class ClientViewObservable {
     public void refreshCLI(){
         view.refreshCLI();
     }
+
+    /**
+     * This method set the Controller Client side in the view
+     */
+    public void setClientController(ClientController clientController){view.setClientController(clientController);}
 }

@@ -191,7 +191,7 @@ public class Game implements Serializable {
             commonGoalIndex.add(i);
         Random random = new Random();
         int randomNum;
-        int tempIndex = 11;
+        int tempIndex = 12;
         boolean firstCommonGoal = true;
         for (int i = 0; i < 2; i++) {
             randomNum = random.nextInt(tempIndex);

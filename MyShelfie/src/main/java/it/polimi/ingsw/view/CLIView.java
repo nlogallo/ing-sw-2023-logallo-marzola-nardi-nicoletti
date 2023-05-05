@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.utils.CLIFormatter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -138,6 +137,11 @@ public class CLIView implements Observer{
         this.currentPlayer = nickname;
     }
 
+    @Override
+    public void setClientController(ClientController clientController){
+        this.clientController = clientController;
+    }
+
     public Board getBoard() {
         return board;
     }
@@ -184,19 +188,17 @@ public class CLIView implements Observer{
 
     /**
      *
-     * @param clientController
-     */
-    public void setClientController(ClientController clientController) {
-        this.clientController = clientController;
-    }
-
-    /**
-     *
      * @param positions
      * @param column
      */
     public void moveTiles(ArrayList<String> positions, int column){
-        clientController.moveTiles(positions, column, this.board, this.shelf);
+        //13 14
+        ArrayList<String> pos = new ArrayList<>();
+        pos.add("24");
+        pos.add("25");
+        int pickColumn = 1;
+        clientController.moveTiles(pos, pickColumn, this.board, this.shelf);
+        //clientController.moveTiles(positions, column, this.board, this.shelf);
     }
 
     /**
@@ -213,27 +215,11 @@ public class CLIView implements Observer{
      */
     @Override
     public void refreshCLI(){
-        clearCLI();
         cliFormatter.createCLIInterface();
-    }
-
-    /**
-     * This method clear the CLI for all the type of OS
-     */
-    private void clearCLI() {
-        final String OS = System.getProperty("os.name").toLowerCase();
-        if (OS.contains("win")) {
-            try {
-                Runtime.getRuntime().exec("cls");
-            } catch (IOException e) {
-                System.out.println("\nWe're sorry, but we cannot clear your console");
-            }
-        } else{
-            try {
-                Runtime.getRuntime().exec("clear");
-            } catch (IOException e) {
-                System.out.println("\nWe're sorry, but we cannot clear your console");
-            }
+        if(currentPlayer != null && currentPlayer.equals(clientNickname)){
+            moveTiles(null, 0);
+            System.out.println("send move Tiles");
         }
     }
+
 }

@@ -39,25 +39,29 @@ public class ClientController {
         Tile[][] tilesTable = board.getTilesTable();
 
         for(int i = 0; i < position.size(); i++){
-            int x = position.get(i).charAt(0) - 1 ;
-            int y = position.get(i).charAt(1) - 1;
+            int x = position.get(i).charAt(0) - 49;
+            int y = position.get(i).charAt(1) - 49;
 
             if (x < 0 || x > 8) {
                 clientViewObservable.setScreenMessage("Tile position out of board bounds.");
+                clientViewObservable.refreshCLI();
                 return;
             }
             if (y < 0 || y > 8) {
                 clientViewObservable.setScreenMessage("Tile position out of board bounds.");
+                clientViewObservable.refreshCLI();
                 return;
             }
 
             if (tilesTable[x][y] == null) {
                 clientViewObservable.setScreenMessage("You can't select a spot that doesn't contain a tile.");
+                clientViewObservable.refreshCLI();
                 return;
             }
 
             if (!board.canPull(x, y)) {
                 clientViewObservable.setScreenMessage("You can't pick tiles that don't have at least one free edge.");
+                clientViewObservable.refreshCLI();
                 return;
             }
 
@@ -67,21 +71,25 @@ public class ClientController {
 
         if (listPosition.size() < 1 || listPosition.size() > 3) {
             clientViewObservable.setScreenMessage("You have to pick between 1 and 3 tiles");
+            clientViewObservable.refreshCLI();
             return;
         }
 
         if (!board.areAligned(listPosition)) {
             clientViewObservable.setScreenMessage("You have to pick aligned tiles");
+            clientViewObservable.refreshCLI();
             return;
         }
 
         //check for column
         if (column  - 1 < 0 || column - 1 > 4) {
             clientViewObservable.setScreenMessage("You have to pick a column number between 1 and 5.");
+            clientViewObservable.refreshCLI();
             return;
         }
         if (shelf.freeRows(column - 1) < listPosition.size()) {
             clientViewObservable.setScreenMessage("You don't have enough free spots in this column.");
+            clientViewObservable.refreshCLI();
             return;
         }
         NetworkMessage networkMessage = new NetworkMessage();
@@ -89,10 +97,11 @@ public class ClientController {
         networkMessage.addContent(listPosition);
         networkMessage.addContent(column);
         networkMessage.setRequestId("MT");
-        //send it to MyShelfieClient (method to send the message to the server)
         NetworkMessage resp = client.sendMessage(networkMessage);
+        System.out.println("after send");
         //unpack the message
         clientViewObservable.setShelf((Shelf) resp.getContent().get(0));
+        clientViewObservable.refreshCLI();
     }
 
     /**

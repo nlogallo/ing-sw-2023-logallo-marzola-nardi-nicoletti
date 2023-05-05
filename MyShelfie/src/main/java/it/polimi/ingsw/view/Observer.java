@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.controller.ClientController;
 import it.polimi.ingsw.model.Board;
 import it.polimi.ingsw.model.PersonalGoal;
 import it.polimi.ingsw.model.Shelf;
@@ -24,5 +25,6 @@ public interface Observer {
     public void updatePlayersNickname(ArrayList<String> playersNickname);
     public void updateCurrentPlayer(String nickname);
     public void refreshCLI();
+    public void setClientController(ClientController clientController);
 
 }
