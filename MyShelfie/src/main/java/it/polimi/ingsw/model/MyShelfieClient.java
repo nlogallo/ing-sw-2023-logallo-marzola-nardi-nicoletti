@@ -18,6 +18,7 @@ import java.util.Scanner;
 public class MyShelfieClient {
 
     static Socket socket;
+    static MyShelfieRMIInterface server;
 
 
     public static void main(String args[]) throws IOException {
@@ -46,13 +47,18 @@ public class MyShelfieClient {
                         OutputStream output = socket.getOutputStream();
                         //Scanner sc= new Scanner(System.in);
                         byte[] buffer = new byte[4096];
-
-                        System.out.print("Enter your nickname: "); //inserisce nickname
-                        String str = sc.nextLine();
-
-                        String nickname = str;
-                        output.write(str.getBytes());
-                        output.flush();
+                        String nickname = "";
+                        int i = 0;
+                        do {
+                            if(i > 0){
+                                System.err.println("User with nickname '" + nickname + "' already exists. Choose another nickname.");
+                            }
+                            i++;
+                            System.out.println("Enter your nickname: "); //inserisce nickname
+                            nickname = sc.nextLine();
+                            output.write(nickname.getBytes());
+                            output.flush();
+                        } while (!(new String(buffer, 0, input.read(buffer)).equals("OKUSER")));
 
                         String command = new String(buffer, 0, input.read(buffer));
                         if (command.equals("newGame")) {
@@ -96,8 +102,7 @@ public class MyShelfieClient {
         } else if (protocol == 2) {
             try {
                 System.out.println("Connecting to RMI server...");
-                MyShelfieRMIInterface server = (MyShelfieRMIInterface) Naming.lookup("rmi://localhost:1099/Server");
-                //Scanner scanner = new Scanner(System.in);
+                server = (MyShelfieRMIInterface) Naming.lookup("rmi://localhost:1099/Server");
                 System.out.println("Connected! :)");
                 System.out.println("Enter your nickname: ");
                 String nickname = sc.nextLine();
@@ -116,15 +121,14 @@ public class MyShelfieClient {
                 }
                 System.out.println("Hi " + nickname + "!\nYou have been added to game with id " + game.getId() + "\nYour game will start when the players number is fulfilled");
                 while (true) {
-                    if (server.checkForStart(game.getId() - 1)) {
+                    if (server.RMICheckForStart(game.getId() - 1)) {
                         break;
                     }
                 }
                 System.out.println("GAME STARTED!");
-                //new MyShelfieClient().handleGameTCP(nickname, 2);
+                //new MyShelfieClient().handleGameRMI(nickname);
             } catch (Exception e) {
                 System.err.println("Connection failed!" + e);
-                //System.err.println("Exception in main: " + e);
             }
         }
     }
@@ -142,6 +146,10 @@ public class MyShelfieClient {
             while (true) {
                 if(!currentPlayer.getContent().get(0).equals(nickname)){
                     NetworkMessage board = (NetworkMessage) objectInputStream.readObject();
+                    if(board.getRequestId().equals("ER")){
+                        System.err.println("\n" + board.getTextMessage());
+                        break;
+                    }
                     controller.updateBoard(board);
                 }
                 NetworkMessage token = (NetworkMessage) objectInputStream.readObject();
@@ -150,10 +158,39 @@ public class MyShelfieClient {
                 controller.updateResults(result);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.err.println("\nConnection lost!");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void handleGameRMI(Game game, String nickname){
+        ClientViewObservable view = new ClientViewObservable(new CLIView(nickname));
+        ClientController controller = new ClientController(view, this, nickname);
+        try {
+            NetworkMessage nm = server.RMIHandlePlayerSetup(game, nickname);
+            controller.playerSetup(nm);
+            NetworkMessage currentPlayer = server.RMIGetFirstPlayer(nickname);
+            controller.updateResults(currentPlayer);
+            /*while (true) {
+                if(!currentPlayer.getContent().get(0).equals(nickname)){
+                    NetworkMessage board = (NetworkMessage) objectInputStream.readObject();
+                    if(board.getRequestId().equals("ER")){
+                        System.err.println("\n" + board.getTextMessage());
+                        break;
+                    }
+                    controller.updateBoard(board);
+                }
+                NetworkMessage token = (NetworkMessage) objectInputStream.readObject();
+                controller.updateGameTokens(token);
+                NetworkMessage result = (NetworkMessage) objectInputStream.readObject();
+                controller.updateResults(result);
+            }*/
+        } catch (IOException e) {
+            System.err.println("\nConnection lost!");
+        } /*catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }*/
     }
 
     public NetworkMessage sendMessage(NetworkMessage networkMessage){
@@ -178,5 +215,7 @@ public class MyShelfieClient {
 interface MyShelfieRMIInterface extends Remote {
     Game checkforAvailableGame(String message) throws RemoteException;
     Game RMIHandleGameCreation(int playersNumber, String nickname) throws RemoteException;
-    boolean checkForStart(int gameId) throws RemoteException;
+    boolean RMICheckForStart(int gameId) throws RemoteException;
+    NetworkMessage RMIHandlePlayerSetup(Game game, String nickname) throws RemoteException;
+    NetworkMessage RMIGetFirstPlayer(String nickname) throws RemoteException;
 }

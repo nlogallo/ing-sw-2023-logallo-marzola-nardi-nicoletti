@@ -29,6 +29,7 @@ public class Game implements Serializable {
     private final File gameFile;
     private final ArrayList<Chat> chats = new ArrayList<>();
     private ArrayList<Boolean> mutex = new ArrayList<Boolean>();
+    private boolean setupFinished = false;
 
 
     /**
@@ -68,9 +69,17 @@ public class Game implements Serializable {
         assignPersonalGoal();
         board = new Board(players.size());
         players.get(0).setSeat(true);
+        setupFinished = true;
         //saveGame();
     }
 
+    /**
+     * This method checks if the setup is finished
+     * @return a boolean value
+     */
+    public boolean isSetupFinished() {
+        return this.setupFinished;
+    }
 
     /**
      * This method ends the game
