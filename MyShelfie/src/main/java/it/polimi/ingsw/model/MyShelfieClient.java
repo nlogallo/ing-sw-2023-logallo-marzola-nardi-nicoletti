@@ -15,12 +15,21 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+/**
+ * Client class for RMI and TCP connection
+ */
 public class MyShelfieClient {
 
     static Socket socket;
     static MyShelfieRMIInterface server;
+    static ObjectOutputStream outputStream;
+    static ObjectInputStream inputStream;
 
-
+    /**
+     * Main method: Asks to the user to choose between TCP and RMI connection and establishes the connection with the chosen protocol.
+     * @param args
+     * @throws IOException
+     */
     public static void main(String args[]) throws IOException {
         System.out.println("Welcome to MyShelfie!");
         System.out.println("Choose your connection protocol:\n1. TCP\n2. RMI\n3. Quit\n");
@@ -42,25 +51,30 @@ public class MyShelfieClient {
                 if (socket.isConnected()) {
                     System.out.println("Connected! :)");
                     socket.setKeepAlive(true);
+                    outputStream = new ObjectOutputStream(socket.getOutputStream());
+                    inputStream = new ObjectInputStream(socket.getInputStream());
                     try {
-                        InputStream input = socket.getInputStream();
-                        OutputStream output = socket.getOutputStream();
                         //Scanner sc= new Scanner(System.in);
                         byte[] buffer = new byte[4096];
                         String nickname = "";
+                        String serverAnswer = "";
                         int i = 0;
                         do {
                             if(i > 0){
-                                System.err.println("User with nickname '" + nickname + "' already exists. Choose another nickname.");
+                                if(serverAnswer.equals("EXNICKNAME"))
+                                    System.err.println("User with nickname '" + nickname + "' already exists. Choose another nickname.");
+                                if(serverAnswer.equals("WRNICKNAME"))
+                                    System.err.println("Wrong nickname pattern! You nickname cannot contain spaces and must have between 3 and 15 characters!");
                             }
                             i++;
                             System.out.println("Enter your nickname: "); //inserisce nickname
                             nickname = sc.nextLine();
-                            output.write(nickname.getBytes());
-                            output.flush();
-                        } while (!(new String(buffer, 0, input.read(buffer)).equals("OKUSER")));
+                            outputStream.writeObject(nickname);
+                            outputStream.flush();
+                            serverAnswer = (String) inputStream.readObject();
+                        } while (!serverAnswer.equals("OKUSER"));
 
-                        String command = new String(buffer, 0, input.read(buffer));
+                        String command = (String) inputStream.readObject();
                         if (command.equals("newGame")) {
                             System.out.println("No games available, creating a new one...");
                             int playersNumber;
@@ -71,14 +85,14 @@ public class MyShelfieClient {
                                     System.out.println("Players number must be 2, 3 or 4");
                                 }
                             } while (playersNumber > 4 || playersNumber < 2);
-                            output.write(String.valueOf(playersNumber).getBytes());
-                            output.flush();
+                            outputStream.writeObject(playersNumber);
+                            outputStream.flush();
                         }
-                        command = new String(buffer, 0, input.read(buffer));
+                        command = (String) inputStream.readObject();
                         System.out.println(command);
 
                         while (true) {
-                            command = new String(buffer, 0, input.read(buffer));
+                            command = (String) inputStream.readObject();
                             if (command.equals("START_GAME")) {
                                 System.out.println("GAME STARTED!");
                                 new MyShelfieClient().handleGameTCP(nickname);
@@ -89,6 +103,8 @@ public class MyShelfieClient {
                         System.err.println("Socket timed out");
                     } catch (StringIndexOutOfBoundsException e) {
                         System.err.println("Server went offline!");
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
                     } finally {
                         socket.close();
                     }
@@ -133,28 +149,31 @@ public class MyShelfieClient {
         }
     }
 
+    /**
+     * This methods handles the Game with TCP connection
+     * @param nickname
+     */
     private void handleGameTCP(String nickname){
         ClientViewObservable view = new ClientViewObservable(new CLIView(nickname));
         ClientController controller = new ClientController(view, this, nickname);
+        view.setClientController(controller);
         try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-            NetworkMessage nm = (NetworkMessage) objectInputStream.readObject();
+            NetworkMessage nm = (NetworkMessage) inputStream.readObject();
             controller.playerSetup(nm);
-            NetworkMessage currentPlayer = (NetworkMessage) objectInputStream.readObject();
+            NetworkMessage currentPlayer = (NetworkMessage) inputStream.readObject();
             controller.updateResults(currentPlayer);
             while (true) {
                 if(!currentPlayer.getContent().get(0).equals(nickname)){
-                    NetworkMessage board = (NetworkMessage) objectInputStream.readObject();
+                    NetworkMessage board = (NetworkMessage) inputStream.readObject();
                     if(board.getRequestId().equals("ER")){
                         System.err.println("\n" + board.getTextMessage());
                         break;
                     }
                     controller.updateBoard(board);
                 }
-                NetworkMessage token = (NetworkMessage) objectInputStream.readObject();
+                NetworkMessage token = (NetworkMessage) inputStream.readObject();
                 controller.updateGameTokens(token);
-                NetworkMessage result = (NetworkMessage) objectInputStream.readObject();
+                NetworkMessage result = (NetworkMessage) inputStream.readObject();
                 controller.updateResults(result);
             }
         } catch (IOException e) {
@@ -164,6 +183,11 @@ public class MyShelfieClient {
         }
     }
 
+    /**
+     * This method handles the game with RMI connection
+     * @param game
+     * @param nickname
+     */
     private void handleGameRMI(Game game, String nickname){
         ClientViewObservable view = new ClientViewObservable(new CLIView(nickname));
         ClientController controller = new ClientController(view, this, nickname);
@@ -193,25 +217,34 @@ public class MyShelfieClient {
         }*/
     }
 
+    /**
+     * This methods handles the communication between controller and server by client
+     * @param networkMessage
+     * @return
+     */
     public NetworkMessage sendMessage(NetworkMessage networkMessage){
-        InputStream input = null;
-        OutputStream output = null;
         try {
-            input = socket.getInputStream();
-            output = socket.getOutputStream();
+            socket.setKeepAlive(true);
+            outputStream.flush();
+            System.out.println(socket.isConnected());
             if(networkMessage.getRequestId().equals("MT")){
-                output.write(SerializationUtils.serialize(networkMessage));
+                outputStream.writeObject(networkMessage);
                 NetworkMessage resp = new NetworkMessage();
-                resp = SerializationUtils.deserialize(input.readAllBytes());
+                resp = (NetworkMessage) inputStream.readObject();
                 return resp;
             }
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         return null;
     }
 }
 
+/**
+ * RMI interface for server methods to call
+ */
 interface MyShelfieRMIInterface extends Remote {
     Game checkforAvailableGame(String message) throws RemoteException;
     Game RMIHandleGameCreation(int playersNumber, String nickname) throws RemoteException;

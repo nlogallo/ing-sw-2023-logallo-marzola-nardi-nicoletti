@@ -22,6 +22,10 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     private static ArrayList<String> nicknames = new ArrayList<>();
     private static HashMap<String, VirtualView> RMIVirtualViews = new HashMap<>();
 
+    /**
+     * Constructor method
+     * @throws RemoteException
+     */
     public MyShelfieServer() throws RemoteException{
         super();
     }
@@ -91,6 +95,12 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return game;
     }
 
+    /**
+     * RMI method which handles the player setup
+     * @param game
+     * @param nickname
+     * @return
+     */
     public synchronized NetworkMessage RMIHandlePlayerSetup(Game game, String nickname){
         VirtualView virtualView = new VirtualView(game);
         RMIVirtualViews.put(nickname, virtualView);
@@ -98,6 +108,11 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return setup;
     }
 
+    /**
+     * RMI method which gets the first player to play
+     * @param nickname
+     * @return
+     */
     public synchronized NetworkMessage RMIGetFirstPlayer(String nickname){
         NetworkMessage firstPlayer = RMIVirtualViews.get(nickname).updateResult();
         return firstPlayer;
@@ -152,38 +167,47 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         public void run() {
             String nickname = "";
             Game game = new Game(-1, 0);
-            ObjectOutputStream objectOutputStream = null;
-            ObjectInputStream objectInputStream = null;
+            ObjectOutputStream output = null;
+            ObjectInputStream input = null;
             try {
-                InputStream input = clientSocket.getInputStream();
-                OutputStream output = clientSocket.getOutputStream();
-                byte[] buffer = new byte[1024];
+                output = new ObjectOutputStream(this.clientSocket.getOutputStream());
+                input = new ObjectInputStream(this.clientSocket.getInputStream());
+                boolean accept = true;
                 do{
-                    int bytesRead = input.read(buffer);
-                    nickname = new String(buffer, 0, bytesRead);
+                    accept = true;
+                    nickname = (String) input.readObject();
                     if(nicknames.contains(nickname)){
-                        output.write("EXUSER".getBytes());
+                        accept = false;
+                        output.writeObject("EXNICKNAME");
+                        output.flush();
+                    }else if(nickname.contains(" ") || nickname.length() > 15 || nickname.length() < 3){
+                        accept = false;
+                        output.writeObject("WRNICKNAME");
+                        output.flush();
                     }
-                }while (nicknames.contains(nickname));
-                output.write("OKUSER".getBytes());
+                }while (!accept);
+                output.writeObject("OKUSER");
+                output.flush();
                 nicknames.add(nickname);
                 boolean seat = false;
                 game = findAvailableGame();
                 if (game == null) {
-                    output.write("newGame".getBytes());
-                    int playersNumber = Integer.parseInt(new String(buffer, 0, input.read(buffer)));
+                    output.writeObject("newGame");
+                    output.flush();
+                    int playersNumber = (Integer) input.readObject();
                     game = createNewGame(playersNumber);
                     games.add(game);
                     System.out.println("New game created with id " + game.getId() + " for " + game.getPlayersNumber() + " players");
                     seat = true;
                 } else {
-                    output.write("addedToGame".getBytes());
+                    output.writeObject("addedToGame");
+                    output.flush();
                 }
                 Player player = new Player(seat, new Shelf(), nickname, game);
                 game.addPlayer(player);
                 System.out.println("Added " + nickname + " to game with id " + game.getId());
                 String message = "Hi " + nickname + "!\nYou have been added to game with id " + game.getId() + "\nYour game will start when the players number is fulfilled";
-                output.write(message.getBytes());
+                output.writeObject(message);
                 output.flush();
 
                 while (true) {
@@ -193,7 +217,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         if(seat) {
                             System.out.println("Game with id " + game.getId() + " started!");
                         }
-                        output.write("START_GAME".getBytes());
+                        output.writeObject("START_GAME");
                         output.flush();
                         break;
                     }
@@ -221,22 +245,23 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     }
                 }
 
-                objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-                objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
-                objectOutputStream.flush();
+                output.flush();
                 VirtualView virtualView = new VirtualView(game);
                 NetworkMessage setup = virtualView.playerSetup(nickname);
-                objectOutputStream.writeObject(setup);
+                output.writeObject(setup);
+                output.flush();
                 NetworkMessage firstPlayer = virtualView.updateResult();
-                objectOutputStream.writeObject(firstPlayer);
+                output.writeObject(firstPlayer);
+                output.flush();
                 while (true) {
+                    this.clientSocket.setKeepAlive(true);
                     if(games.get(game.getId() - 1).getState() == GameState.STARTED) {
                         if(game.getCurrentPlayer().getNickname().equals(nickname)) {
-                            NetworkMessage netMessage = (NetworkMessage) objectInputStream.readObject();
+                            NetworkMessage netMessage = (NetworkMessage) input.readObject();
                             if (netMessage.getRequestId().equals("MT")) {
                                 if (game.getCurrentPlayer().getNickname().equals(nickname)) {
                                     NetworkMessage resp = virtualView.moveTiles(netMessage, player);
-                                    objectOutputStream.writeObject(resp);
+                                    output.writeObject(resp);
                                 }
                             }
                         }
@@ -247,7 +272,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         NetworkMessage errMessage = new NetworkMessage();
                         errMessage.setRequestId("ER");
                         errMessage.setTextMessage("A player left the game. Game end here.");
-                        objectOutputStream.writeObject(errMessage);
+                        output.writeObject(errMessage);
                     }
                     /*while (!game.getMutexAtIndex(playerIndex)){}
                     game.setMutexFalseAtIndex(playerIndex);
@@ -260,11 +285,14 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 System.err.println("User " + nickname + " left the server.");
                 System.err.println("Game with id " + game.getId() + " has been terminated.");
                 games.get(game.getId() - 1).setState(GameState.ENDED);
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException e) {
                 System.err.println("User " + nickname + " left the server.");
             } catch (StringIndexOutOfBoundsException e) {
                 System.err.println("Communication error. User disconnected.");
+            } catch (ClassNotFoundException e) {
+                System.err.println("Errore interno: " + e);
             }
+            nicknames.remove(nickname);
         }
     }
 }
