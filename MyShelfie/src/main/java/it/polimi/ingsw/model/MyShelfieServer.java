@@ -167,48 +167,48 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         public void run() {
             String nickname = "";
             Game game = new Game(-1, 0);
-            ObjectOutputStream output = null;
-            ObjectInputStream input = null;
+            ObjectOutputStream outputStream = null;
+            ObjectInputStream inputStream = null;
             try {
-                output = new ObjectOutputStream(this.clientSocket.getOutputStream());
-                input = new ObjectInputStream(this.clientSocket.getInputStream());
+                outputStream = new ObjectOutputStream(this.clientSocket.getOutputStream());
+                inputStream = new ObjectInputStream(this.clientSocket.getInputStream());
                 boolean accept = true;
                 do{
                     accept = true;
-                    nickname = (String) input.readObject();
+                    nickname = (String) inputStream.readObject();
                     if(nicknames.contains(nickname)){
                         accept = false;
-                        output.writeObject("EXNICKNAME");
-                        output.flush();
+                        outputStream.writeObject("EXNICKNAME");
+                        outputStream.flush();
                     }else if(nickname.contains(" ") || nickname.length() > 15 || nickname.length() < 3){
                         accept = false;
-                        output.writeObject("WRNICKNAME");
-                        output.flush();
+                        outputStream.writeObject("WRNICKNAME");
+                        outputStream.flush();
                     }
                 }while (!accept);
-                output.writeObject("OKUSER");
-                output.flush();
+                outputStream.writeObject("OKUSER");
+                outputStream.flush();
                 nicknames.add(nickname);
                 boolean seat = false;
                 game = findAvailableGame();
                 if (game == null) {
-                    output.writeObject("newGame");
-                    output.flush();
-                    int playersNumber = (Integer) input.readObject();
+                    outputStream.writeObject("newGame");
+                    outputStream.flush();
+                    int playersNumber = (Integer) inputStream.readObject();
                     game = createNewGame(playersNumber);
                     games.add(game);
                     System.out.println("New game created with id " + game.getId() + " for " + game.getPlayersNumber() + " players");
                     seat = true;
                 } else {
-                    output.writeObject("addedToGame");
-                    output.flush();
+                    outputStream.writeObject("addedToGame");
+                    outputStream.flush();
                 }
                 Player player = new Player(seat, new Shelf(), nickname, game);
                 game.addPlayer(player);
                 System.out.println("Added " + nickname + " to game with id " + game.getId());
                 String message = "Hi " + nickname + "!\nYou have been added to game with id " + game.getId() + "\nYour game will start when the players number is fulfilled";
-                output.writeObject(message);
-                output.flush();
+                outputStream.writeObject(message);
+                outputStream.flush();
 
                 while (true) {
                     this.clientSocket.setKeepAlive(true);
@@ -217,8 +217,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         if(seat) {
                             System.out.println("Game with id " + game.getId() + " started!");
                         }
-                        output.writeObject("START_GAME");
-                        output.flush();
+                        outputStream.writeObject("START_GAME");
+                        outputStream.flush();
                         break;
                     }
                 }
@@ -245,23 +245,23 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     }
                 }
 
-                output.flush();
+                outputStream.flush();
                 VirtualView virtualView = new VirtualView(game);
                 NetworkMessage setup = virtualView.playerSetup(nickname);
-                output.writeObject(setup);
-                output.flush();
+                outputStream.writeObject(setup);
+                outputStream.flush();
                 NetworkMessage firstPlayer = virtualView.updateResult();
-                output.writeObject(firstPlayer);
-                output.flush();
+                outputStream.writeObject(firstPlayer);
+                outputStream.flush();
                 while (true) {
                     this.clientSocket.setKeepAlive(true);
                     if(games.get(game.getId() - 1).getState() == GameState.STARTED) {
                         if(game.getCurrentPlayer().getNickname().equals(nickname)) {
-                            NetworkMessage netMessage = (NetworkMessage) input.readObject();
+                            NetworkMessage netMessage = (NetworkMessage) inputStream.readObject();
                             if (netMessage.getRequestId().equals("MT")) {
                                 if (game.getCurrentPlayer().getNickname().equals(nickname)) {
                                     NetworkMessage resp = virtualView.moveTiles(netMessage, player);
-                                    output.writeObject(resp);
+                                    outputStream.writeObject(resp);
                                 }
                             }
                         }
@@ -272,7 +272,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         NetworkMessage errMessage = new NetworkMessage();
                         errMessage.setRequestId("ER");
                         errMessage.setTextMessage("A player left the game. Game end here.");
-                        output.writeObject(errMessage);
+                        outputStream.writeObject(errMessage);
                     }
                     /*while (!game.getMutexAtIndex(playerIndex)){}
                     game.setMutexFalseAtIndex(playerIndex);

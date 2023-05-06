@@ -226,7 +226,6 @@ public class MyShelfieClient {
         try {
             socket.setKeepAlive(true);
             outputStream.flush();
-            System.out.println(socket.isConnected());
             if(networkMessage.getRequestId().equals("MT")){
                 outputStream.writeObject(networkMessage);
                 NetworkMessage resp = new NetworkMessage();
