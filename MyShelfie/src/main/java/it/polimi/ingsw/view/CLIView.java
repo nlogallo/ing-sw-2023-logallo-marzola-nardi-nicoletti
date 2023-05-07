@@ -225,9 +225,11 @@ public class CLIView implements Observer{
     @Override
     public void refreshCLI(){
         cliFormatter.createCLIInterface();
-        if(currentPlayer != null && currentPlayer.equals(clientNickname)){
-            inputOutputHandler.userPressButton();
-        }
+    }
+
+    @Override
+    public void enableInput(){
+        inputOutputHandler.userPressButton();
     }
 
 }

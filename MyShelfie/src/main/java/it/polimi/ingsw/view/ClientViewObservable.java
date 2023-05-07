@@ -129,4 +129,8 @@ public class ClientViewObservable {
     public void setClientController(ClientController clientController){view.setClientController(clientController);}
 
     public void setIsOccurredAnError (boolean var) {view.setIsOccurredAnError(var); }
+
+    public void enableInput(){
+        view.enableInput();
+    }
 }

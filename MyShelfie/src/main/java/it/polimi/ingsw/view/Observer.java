@@ -27,5 +27,5 @@ public interface Observer {
     public void refreshCLI();
     public void setClientController(ClientController clientController);
     public void setIsOccurredAnError(boolean var);
-
+    public void enableInput();
 }

@@ -162,18 +162,23 @@ public class MyShelfieClient {
             controller.playerSetup(nm);
             NetworkMessage currentPlayer = (NetworkMessage) inputStream.readObject();
             controller.updateResults(currentPlayer);
+            if(currentPlayer.getContent().get(0).equals(nickname)){
+                controller.enableInput();
+            }
+            NetworkMessage result = null;
             while (true) {
-                //if(!currentPlayer.getContent().get(0).equals(nickname)){
-                    NetworkMessage board = (NetworkMessage) inputStream.readObject();
-                    if(board.getRequestId().equals("ER")){
-                        System.err.println("\n" + board.getTextMessage());
-                        break;
-                    }
-                    controller.updateBoard(board);
-                //}
+                if(result != null && result.getContent().get(0).equals(nickname)){
+                    controller.enableInput();
+                }
+                NetworkMessage board = (NetworkMessage) inputStream.readObject();
+                if(board.getRequestId().equals("ER")){
+                    System.err.println("\n" + board.getTextMessage());
+                    break;
+                }
+                controller.updateBoard(board);
                 NetworkMessage token = (NetworkMessage) inputStream.readObject();
                 controller.updateGameTokens(token);
-                NetworkMessage result = (NetworkMessage) inputStream.readObject();
+                result = (NetworkMessage) inputStream.readObject();
                 System.out.println(result.getContent().get(0));
                 controller.updateResults(result);
             }

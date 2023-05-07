@@ -13,6 +13,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Server class
@@ -263,23 +265,21 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                 //if (game.getCurrentPlayer().getNickname().equals(nickname)) {
                                     NetworkMessage resp = virtualView.moveTiles(netMessage, player);
                                     game = virtualView.getGame();
-                                    System.out.println("ANNASOR " + game.getCurrentPlayer().getNickname());
                                     outputStream.reset();
                                     outputStream.writeObject(resp);
                                     games.set(game.getId() - 1, game);
                                 //}
                             }
                         }
-                        if(games.get(game.getId() - 1).getMutexAtIndex(playerIndex)) {
-                            System.out.println("AHAJSJ " + games.get(game.getId() - 1).getCurrentPlayer().getNickname());
-                            virtualView = new VirtualView(games.get(game.getId() - 1));
+                        ArrayList<Game> temp = new ArrayList<>();
+                        if(temp.get(game.getId() - 1).getMutexAtIndex(playerIndex)) {
+                            virtualView = new VirtualView(temp.get(game.getId() - 1));
                             outputStream.reset();
                             outputStream.writeObject(virtualView.updateBoard());
                             outputStream.reset();
                             outputStream.writeObject(virtualView.updateGameTokens());
                             outputStream.reset();
                             NetworkMessage nj = virtualView.updateResult();
-                            System.out.println("UAUUA " + nj.getContent().get(0));
                             outputStream.writeObject(nj);
                             game.setMutexFalseAtIndex(playerIndex);
                             games.set(game.getId() - 1, game);

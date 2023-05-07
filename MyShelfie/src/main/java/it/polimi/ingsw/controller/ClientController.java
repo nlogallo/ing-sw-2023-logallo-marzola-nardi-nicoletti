@@ -211,4 +211,8 @@ public class ClientController {
         clientViewObservable.refreshCLI();
     }
 
+    public void enableInput() {
+        clientViewObservable.enableInput();
+    }
+
 }
