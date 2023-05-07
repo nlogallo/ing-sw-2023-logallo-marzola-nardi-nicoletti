@@ -18,8 +18,8 @@ public class VirtualView {
      * Class constuctor
      * @param game is the game to which this virtual view refers
      */
-   public VirtualView(Game game){
-       this.serverController = new ServerController(game);
+   public VirtualView(Game game, String nickname){
+       this.serverController = new ServerController(game, nickname);
    }
 
     /**

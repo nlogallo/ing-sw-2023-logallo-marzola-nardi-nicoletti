@@ -13,8 +13,8 @@ public class ServerController {
      * Class constructor
      * @param game is the game associate with the gameController instance
      */
-    public ServerController(Game game) {
-        gameController = new GameController(game);
+    public ServerController(Game game, String nickname) {
+        gameController = new GameController(game, nickname);
         isTokenChange = false;
     }
 

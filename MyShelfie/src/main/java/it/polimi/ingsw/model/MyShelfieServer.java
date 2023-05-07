@@ -2,9 +2,11 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.utils.NetworkMessage;
 import it.polimi.ingsw.view.VirtualView;
-import org.apache.commons.lang3.SerializationUtils;
 
-import java.io.*;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
@@ -13,14 +15,13 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Server class
  */
 public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMIInterface {
-    private static ArrayList<Game> games = new ArrayList<>();
+    private static CopyOnWriteArrayList<Game> games = new CopyOnWriteArrayList<>();
     private static ArrayList<String> nicknames = new ArrayList<>();
     private static HashMap<String, VirtualView> RMIVirtualViews = new HashMap<>();
 
@@ -104,7 +105,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @return
      */
     public synchronized NetworkMessage RMIHandlePlayerSetup(Game game, String nickname){
-        VirtualView virtualView = new VirtualView(game);
+        VirtualView virtualView = new VirtualView(game, game.getCurrentPlayer().getNickname());
         RMIVirtualViews.put(nickname, virtualView);
         NetworkMessage setup = RMIVirtualViews.get(nickname).playerSetup(nickname);
         return setup;
@@ -248,7 +249,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 }
 
                 outputStream.flush();
-                VirtualView virtualView = new VirtualView(game);
+                VirtualView virtualView = new VirtualView(game, game.getCurrentPlayer().getNickname());
                 NetworkMessage setup = virtualView.playerSetup(nickname);
                 outputStream.writeObject(setup);
                 outputStream.flush();
@@ -271,9 +272,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                 //}
                             }
                         }
-                        ArrayList<Game> temp = new ArrayList<>();
-                        if(temp.get(game.getId() - 1).getMutexAtIndex(playerIndex)) {
-                            virtualView = new VirtualView(temp.get(game.getId() - 1));
+                        if(games.get(game.getId() - 1).getMutexAtIndex(playerIndex)) {
+                            virtualView = new VirtualView(games.get(game.getId() - 1), game.getCurrentPlayer().getNickname());
                             outputStream.reset();
                             outputStream.writeObject(virtualView.updateBoard());
                             outputStream.reset();

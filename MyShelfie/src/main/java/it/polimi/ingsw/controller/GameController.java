@@ -11,17 +11,13 @@ import java.util.ArrayList;
 public class GameController {
 
     private Game game;
-
     private String nextPhaseMessage;
     private String currentPlayer;
 
-    public GameController(Game game){
+    public GameController(Game game, String nickname){
         this.game = game;
         this.nextPhaseMessage = null;
-        for(Player p : game.getPlayers()){
-            if(p.hasSeat())
-                currentPlayer = p.getNickname();
-        }
+        this.currentPlayer = nickname;
     }
 
     /**
