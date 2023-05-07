@@ -29,11 +29,8 @@ public class VirtualView {
      * @return the response NetworkMessage at the request
      */
    public NetworkMessage moveTiles(NetworkMessage networkMessage, Player player){
-       ArrayList<Position> tilesPositions = new ArrayList<Position>();
-       Integer numberOfTilesToMove = (Integer) networkMessage.getContent().get(0);
-       for(int i = 0; i < numberOfTilesToMove; i++)
-           tilesPositions.add((Position) networkMessage.getContent().get(1 + i));
-       Integer columnToConvert = (Integer) networkMessage.getContent().get(numberOfTilesToMove + 1);
+       ArrayList<Position> tilesPositions = (ArrayList<Position>) networkMessage.getContent().get(0);
+       Integer columnToConvert = (Integer) networkMessage.getContent().get(1);
        return serverController.makeMove(tilesPositions, player, columnToConvert);
    }
 
@@ -92,6 +89,14 @@ public class VirtualView {
      */
    public NetworkMessage updateResult(){
        return serverController.updateResult();
+   }
+
+    /**
+     * Getter method
+     * @return the updated game
+     */
+   public Game getGame(){
+       return serverController.getGame();
    }
 
 }

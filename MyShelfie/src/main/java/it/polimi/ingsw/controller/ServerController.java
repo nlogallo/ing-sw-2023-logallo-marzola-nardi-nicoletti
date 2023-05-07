@@ -196,6 +196,7 @@ public class ServerController {
         int numOfPlayer = gameController.getPlayers().size();
         ArrayList<CommonGoal> commonGoals = gameController.getCommonGoal();
         ArrayList<Token> remainingTokenList = gameController.getGame().getThreeMap().getRemainingTokenList(commonGoals, numOfPlayer);
+        networkMessage.addContent(remainingTokenList.size());
 
         for (Token token : remainingTokenList) {
             networkMessage.addContent(token);
@@ -279,5 +280,9 @@ public class ServerController {
         networkMessage.addContent(gameController.getCurrentPlayer());
         networkMessage.setRequestId("UR");
         return networkMessage;
+    }
+
+    public Game getGame(){
+        return gameController.getGame();
     }
 }

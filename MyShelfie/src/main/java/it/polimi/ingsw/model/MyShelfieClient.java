@@ -163,17 +163,18 @@ public class MyShelfieClient {
             NetworkMessage currentPlayer = (NetworkMessage) inputStream.readObject();
             controller.updateResults(currentPlayer);
             while (true) {
-                if(!currentPlayer.getContent().get(0).equals(nickname)){
+                //if(!currentPlayer.getContent().get(0).equals(nickname)){
                     NetworkMessage board = (NetworkMessage) inputStream.readObject();
                     if(board.getRequestId().equals("ER")){
                         System.err.println("\n" + board.getTextMessage());
                         break;
                     }
                     controller.updateBoard(board);
-                }
+                //}
                 NetworkMessage token = (NetworkMessage) inputStream.readObject();
                 controller.updateGameTokens(token);
                 NetworkMessage result = (NetworkMessage) inputStream.readObject();
+                System.out.println(result.getContent().get(0));
                 controller.updateResults(result);
             }
         } catch (IOException e) {
@@ -228,9 +229,7 @@ public class MyShelfieClient {
             outputStream.flush();
             if(networkMessage.getRequestId().equals("MT")){
                 outputStream.writeObject(networkMessage);
-                NetworkMessage resp = new NetworkMessage();
-                resp = (NetworkMessage) inputStream.readObject();
-                return resp;
+                return (NetworkMessage) inputStream.readObject();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

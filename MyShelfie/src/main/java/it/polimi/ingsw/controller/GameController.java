@@ -161,8 +161,12 @@ public class GameController {
         return this.nextPhaseMessage;
     }
 
+    /**
+     * Getter method
+     * @return the current player
+     */
     public String getCurrentPlayer(){
-        return this.currentPlayer;
+        return game.getCurrentPlayer().getNickname();
     }
 
     /**

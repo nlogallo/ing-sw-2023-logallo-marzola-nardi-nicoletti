@@ -230,6 +230,9 @@ public class Player implements Serializable {
         return shelf;
     }
 
+    /**
+     * Getter
+     */
     public ArrayList<Token> getTokenCards() {
         return tokenCards;
     }

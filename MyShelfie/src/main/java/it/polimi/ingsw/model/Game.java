@@ -31,7 +31,6 @@ public class Game implements Serializable {
     private ArrayList<Boolean> mutex = new ArrayList<Boolean>();
     private boolean setupFinished = false;
 
-
     /**
      * Class constructor
      * @param id is the ID of the game instance

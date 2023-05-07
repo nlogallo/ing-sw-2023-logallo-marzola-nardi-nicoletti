@@ -93,14 +93,16 @@ public class ClientController {
             return;
         }
         NetworkMessage networkMessage = new NetworkMessage();
-        networkMessage.addContent(listPosition.size());
         networkMessage.addContent(listPosition);
         networkMessage.addContent(column);
         networkMessage.setRequestId("MT");
         NetworkMessage resp = client.sendMessage(networkMessage);
-        System.out.println("after send");
         //unpack the message
         clientViewObservable.setShelf((Shelf) resp.getContent().get(0));
+        clientViewObservable.setBoard((Board) resp.getContent().get(1));
+        for(Token t : (ArrayList<Token>) resp.getContent().get(2)){
+            clientViewObservable.setPersonalTokens(t);
+        }
         clientViewObservable.refreshCLI();
     }
 
