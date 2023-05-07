@@ -26,5 +26,6 @@ public interface Observer {
     public void updateCurrentPlayer(String nickname);
     public void refreshCLI();
     public void setClientController(ClientController clientController);
+    public void setIsOccurredAnError(boolean var);
 
 }

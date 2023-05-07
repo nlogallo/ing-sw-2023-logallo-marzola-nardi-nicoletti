@@ -44,23 +44,27 @@ public class ClientController {
 
             if (x < 0 || x > 8) {
                 clientViewObservable.setScreenMessage("Tile position out of board bounds.");
+                clientViewObservable.setIsOccurredAnError(true);
                 clientViewObservable.refreshCLI();
                 return;
             }
             if (y < 0 || y > 8) {
                 clientViewObservable.setScreenMessage("Tile position out of board bounds.");
+                clientViewObservable.setIsOccurredAnError(true);
                 clientViewObservable.refreshCLI();
                 return;
             }
 
             if (tilesTable[x][y] == null) {
                 clientViewObservable.setScreenMessage("You can't select a spot that doesn't contain a tile.");
+                clientViewObservable.setIsOccurredAnError(true);
                 clientViewObservable.refreshCLI();
                 return;
             }
 
             if (!board.canPull(x, y)) {
                 clientViewObservable.setScreenMessage("You can't pick tiles that don't have at least one free edge.");
+                clientViewObservable.setIsOccurredAnError(true);
                 clientViewObservable.refreshCLI();
                 return;
             }
@@ -71,12 +75,14 @@ public class ClientController {
 
         if (listPosition.size() < 1 || listPosition.size() > 3) {
             clientViewObservable.setScreenMessage("You have to pick between 1 and 3 tiles");
+            clientViewObservable.setIsOccurredAnError(true);
             clientViewObservable.refreshCLI();
             return;
         }
 
         if (!board.areAligned(listPosition)) {
             clientViewObservable.setScreenMessage("You have to pick aligned tiles");
+            clientViewObservable.setIsOccurredAnError(true);
             clientViewObservable.refreshCLI();
             return;
         }
@@ -84,17 +90,19 @@ public class ClientController {
         //check for column
         if (column  - 1 < 0 || column - 1 > 4) {
             clientViewObservable.setScreenMessage("You have to pick a column number between 1 and 5.");
+            clientViewObservable.setIsOccurredAnError(true);
             clientViewObservable.refreshCLI();
             return;
         }
         if (shelf.freeRows(column - 1) < listPosition.size()) {
             clientViewObservable.setScreenMessage("You don't have enough free spots in this column.");
+            clientViewObservable.setIsOccurredAnError(true);
             clientViewObservable.refreshCLI();
             return;
         }
         NetworkMessage networkMessage = new NetworkMessage();
         networkMessage.addContent(listPosition);
-        networkMessage.addContent(column);
+        networkMessage.addContent(column-1);
         networkMessage.setRequestId("MT");
         NetworkMessage resp = client.sendMessage(networkMessage);
         //unpack the message

@@ -164,7 +164,7 @@ public class Board implements Serializable {
 
 
     /**
-     * Check if a tile can be pulled form the board
+     * Check if a tile can be pulled from the board
      *
      * @param r         the number of the row to pull the tile from
      * @param c         the number of the column to pull the tile from

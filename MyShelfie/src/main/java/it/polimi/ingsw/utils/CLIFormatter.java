@@ -144,9 +144,7 @@ public class CLIFormatter {
 
         //forty-third line
         System.out.print("\n" + String.format("%-36s", " " ) + "3.Read the description" + String.format("%-28s", " " ) + "4.Read the description" + "\n");
-
-        for (int i = 0; i < view.getGameTokens().size(); i++)
-            System.out.println(view.getGameTokens().get(i).getId());
+        
         System.out.print("\n\n" + "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         System.out.print("\n\n");
 

@@ -4,11 +4,12 @@ import it.polimi.ingsw.controller.ClientController;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.utils.CLIFormatter;
+import it.polimi.ingsw.utils.InputOutputHandler;
 
 import java.util.ArrayList;
 
 /**
- * This class is the CLI View that is used to exploit the Observer Pattern. In addition it contains all the info
+ * This class is the CLI View that is used to exploit the Observer Pattern. In addiction, it contains all the info
  * of the Client to show at the user.
  */
 public class CLIView implements Observer{
@@ -26,6 +27,8 @@ public class CLIView implements Observer{
     private String screenMessage;
     private ClientController clientController;
     private CLIFormatter cliFormatter = new CLIFormatter(this);
+    private InputOutputHandler inputOutputHandler = new InputOutputHandler(this);
+    private boolean isOccurredAnError = false;
 
     /**
      * Constructor method
@@ -142,6 +145,14 @@ public class CLIView implements Observer{
         this.clientController = clientController;
     }
 
+
+    /**
+     * This method updates the boolean variable isOccurredAnError.
+     * The variable isOccurredAnError becomes true if there was an error.
+     */
+    @Override
+    public void setIsOccurredAnError (boolean isOccurredAnError) { this.isOccurredAnError = isOccurredAnError; }
+
     public Board getBoard() {
         return board;
     }
@@ -186,19 +197,17 @@ public class CLIView implements Observer{
         return this.playersNickname;
     }
 
+    public boolean getOccurredAnError () {
+        return this.isOccurredAnError;
+    }
+
     /**
      *
      * @param positions
      * @param column
      */
     public void moveTiles(ArrayList<String> positions, int column){
-        //13 14
-        ArrayList<String> pos = new ArrayList<>();
-        pos.add("24");
-        pos.add("25");
-        int pickColumn = 1;
-        clientController.moveTiles(pos, pickColumn, this.board, this.shelf);
-        //clientController.moveTiles(positions, column, this.board, this.shelf);
+        clientController.moveTiles(positions, column, this.board, this.shelf);
     }
 
     /**
@@ -217,8 +226,7 @@ public class CLIView implements Observer{
     public void refreshCLI(){
         cliFormatter.createCLIInterface();
         if(currentPlayer != null && currentPlayer.equals(clientNickname)){
-            moveTiles(null, 0);
-            System.out.println("send move Tiles");
+            inputOutputHandler.userPressButton();
         }
     }
 

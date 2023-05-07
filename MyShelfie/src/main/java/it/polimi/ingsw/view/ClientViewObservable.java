@@ -127,4 +127,6 @@ public class ClientViewObservable {
      * This method set the Controller Client side in the view
      */
     public void setClientController(ClientController clientController){view.setClientController(clientController);}
+
+    public void setIsOccurredAnError (boolean var) {view.setIsOccurredAnError(var); }
 }
