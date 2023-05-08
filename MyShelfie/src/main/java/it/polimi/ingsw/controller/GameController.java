@@ -31,7 +31,7 @@ public class GameController {
             nextPlayer = game.nextPhase().getNickname();
             //game.saveGame();
         }catch (IllegalStateException ex){
-            //game.endGame();
+            game.endGame();
             System.out.println("-Server- Game: " + this.game.getId() +" has ended");
             this.nextPhaseMessage = game.winner().getNickname() + " has won";
         }
