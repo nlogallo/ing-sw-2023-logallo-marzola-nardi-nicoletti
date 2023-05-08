@@ -23,55 +23,55 @@ public class CLIFormatter {
         System.out.print(ANSI_WHITE + "\nStatus: " + ANSI_GREEN + "\u001B[1mConnected" + ANSI_RESET + String.format("%-55s", " ") + "+---".repeat(2) + "+" + String.format("%-36s", " ") + "+---".repeat(5) + "+" + String.format("%-12s", " ")  + isSeatAvailable());
 
         //second line
-        System.out.print(ANSI_WHITE + "\nCurrently playing: " + ANSI_RESET + view.getCurrentPlayer() + isYouPlaying() + String.format("%-" + calculateSpacing(72, 19, view.getCurrentPlayer() + isYouPlaying()) + "s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(0,3)  + ANSI_RESET + "|" + getBoardTilesAtPosition(0, 4) + ANSI_RESET + "|" + String.format("%36s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(0,0) + ANSI_RESET + "|" + getShelfTilesAtPosition(0,1)  + ANSI_RESET + "|" + getShelfTilesAtPosition(0,2) + ANSI_RESET + "|" + getShelfTilesAtPosition(0,3) + ANSI_RESET + "|"+  getShelfTilesAtPosition(0,4) + ANSI_RESET + "|");
+        System.out.print(ANSI_WHITE + "\nCurrently playing: " + ANSI_RESET + view.getCurrentPlayer() + isYouPlaying() + String.format("%-" + calculateSpacing(72, 19, view.getCurrentPlayer() + isYouPlaying()) + "s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(0,3)  + ANSI_RESET + "|" + getBoardTilesAtPosition(0, 4) + ANSI_RESET + "|" + String.format("%18s", " ")+ "1" + String.format("%17s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(0,0) + ANSI_RESET + "|" + getShelfTilesAtPosition(0,1)  + ANSI_RESET + "|" + getShelfTilesAtPosition(0,2) + ANSI_RESET + "|" + getShelfTilesAtPosition(0,3) + ANSI_RESET + "|"+  getShelfTilesAtPosition(0,4) + ANSI_RESET + "|");
 
         //third line
         System.out.print(ANSI_WHITE + "\nTime left to play: " + ANSI_YELLOW + "1:25" + ANSI_RESET + String.format("%-49s", " ") + ANSI_RESET + "+---".repeat(3) + "+" + String.format("%-32s", " ") + "+---".repeat(5) + "+" + String.format("%12s", " ") + ANSI_WHITE + "Your tokens:");
 
         //fourth line
-        System.out.print(ANSI_WHITE + "\nServer Message: " + String.format("%-56s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(1,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(1,4) + ANSI_RESET + "|" +  getBoardTilesAtPosition(1,5) + ANSI_RESET + "|" + String.format("%32s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(1,0) + ANSI_RESET + "|" + getShelfTilesAtPosition(1,1)  + ANSI_RESET + "|" +  getShelfTilesAtPosition(1,2) + ANSI_RESET + "|" + getShelfTilesAtPosition(1,3) + ANSI_RESET + "|"+  getShelfTilesAtPosition(1,4) + ANSI_RESET + "|");
+        System.out.print(ANSI_WHITE + "\nServer Message: " + String.format("%-56s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(1,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(1,4) + ANSI_RESET + "|" +  getBoardTilesAtPosition(1,5) + ANSI_RESET + "|" + String.format("%14s", " ")+ "2" + String.format("%17s", " ")+ ANSI_RESET + "|" +  getShelfTilesAtPosition(1,0) + ANSI_RESET + "|" + getShelfTilesAtPosition(1,1)  + ANSI_RESET + "|" +  getShelfTilesAtPosition(1,2) + ANSI_RESET + "|" + getShelfTilesAtPosition(1,3) + ANSI_RESET + "|"+  getShelfTilesAtPosition(1,4) + ANSI_RESET + "|");
 
         //fifth line
         System.out.print(ANSI_RESET + "\n" + view.getScreenMessage() + String.format("%-" + calculateSpacing(68, 0, view.getScreenMessage()) + "s", " ") + ANSI_RESET + "+---".repeat(5) + "+" + String.format("%-28s", " ") + "+---".repeat(5) + "+" + String.format("%-12s", " ") + buildTokensPerLine(0));
 
         //sixth line
-        System.out.print(ANSI_RESET + "\n" + String.format("%-68s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(2,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,6) + ANSI_RESET + "|" + String.format("%-28s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,4) + ANSI_RESET + "|"  + String.format("%-12s", " ") + buildTokensPerLine(1));
+        System.out.print(ANSI_RESET + "\n" + String.format("%-68s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(2,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,6) + ANSI_RESET + "|" + String.format("%-10s", " ")+ "3" + String.format("%-17s", " ")+ ANSI_RESET + "|" +  getShelfTilesAtPosition(2,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,4) + ANSI_RESET + "|"  + String.format("%-12s", " ") + buildTokensPerLine(1));
 
         //seventh line
         System.out.print(ANSI_RESET + "\n" + canMakeHisMove() + ANSI_RESET + String.format("%-" + calculateSpacing(69, 0, canMakeHisMove()) + "s", " ") + "+---".repeat(8) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+"  + String.format("%-12s", " ") + buildTokensPerLine(2));
 
         //eighth line
-        System.out.print(ANSI_RESET + "\n2.Open chats" + String.format("%-52s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(3,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,7) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,8) + ANSI_RESET + "|" + String.format("%-20s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,4)+ ANSI_RESET + "|");
+        System.out.print(ANSI_RESET + "\n2.Open chats" + String.format("%-52s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(3,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,7) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,8) + ANSI_RESET + "|" + String.format("%-2s", " ")+ "4"  + String.format("%-17s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,4)+ ANSI_RESET + "|");
 
         //ninth line
         System.out.print(ANSI_RESET + "\n" + String.format("%-60s", " ") + ANSI_RESET + "+---".repeat(9) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+");
 
         //tenth line
-        System.out.print(ANSI_RESET + "\n" + String.format("%-60s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(4,0) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,7) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,8 ) + ANSI_RESET + "|" + String.format("%-20s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,4) + ANSI_RESET + "|");
+        System.out.print(ANSI_RESET + "\n" + String.format("%-60s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(4,0) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,7) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,8 ) + ANSI_RESET + "|" + String.format("%-2s", " ")+ "5" + String.format("%-17s", " ")+ ANSI_RESET + "|" +  getShelfTilesAtPosition(4,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,4) + ANSI_RESET + "|");
 
         //eleventh
         System.out.print(ANSI_RESET + "\n+--------------------------------------+" + String.format("%-20s", " " ) + "+---".repeat(9) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+");
 
         //twelfth line
-        System.out.print(ANSI_RESET + "\n|" + ANSI_WHITE + " Last message:" + String.format("%-24s", " ") + ANSI_RESET + "|" + String.format("%-20s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,0) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,7) + ANSI_RESET + "|" + String.format("%-24s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,4) + ANSI_RESET + "|");
+        System.out.print(ANSI_RESET + "\n|" + ANSI_WHITE + " Last message:" + String.format("%-24s", " ") + ANSI_RESET + "|" + String.format("%-20s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,0) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,7) + ANSI_RESET + "|" +  String.format("%-6s", " ")+ "6"  + String.format("%-17s", " ")  + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,4) + ANSI_RESET + "|");
 
         //thirteenth line
         System.out.print(ANSI_RESET + "\n|" + "'HERE GOES LAST CHAT MESSAGE'" + String.format("%-9s", " ") + ANSI_RESET + "|" + String.format("%-20s", " " ) + "+---".repeat(8) + "+" + String.format("%-24s", " ") + "+---".repeat(5) + "+");
 
         //fourteenth line
-        System.out.print( ANSI_RESET + "\n|" + ANSI_WHITE + "------by " + ANSI_RESET + "PLAYER'S NAME" + String.format("%-16s", " ") + ANSI_RESET + "|" + String.format("%-28s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,6) + ANSI_RESET + "|");
+        System.out.print(ANSI_RESET + "\n|" + ANSI_WHITE + "------by " + ANSI_RESET + "PLAYER'S NAME" + String.format("%-16s", " ") + ANSI_RESET + "|" + String.format("%-28s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,6) + ANSI_RESET + "|" + String.format("%-10s", " ")+ "7" + String.format("%-17s", " "));
 
         //fifteenth line
         System.out.print(ANSI_RESET + "\n|" + ANSI_WHITE + "------on " + ANSI_RESET + "WHICH CHAT" + String.format("%-19s", " ") + ANSI_RESET + "|" + String.format("%-28s", " " ) +  "+---".repeat(5) + "+" + String.format("%-28s", " ") + ANSI_WHITE + "Adjacent Item Tiles");
 
         //sixteenth line
-        System.out.print(ANSI_RESET + "\n+--------------------------------------+" + String.format("%-32s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,5) + ANSI_RESET + "|" + String.format("%-32s", " " ) + "+------------------------------------+");
+        System.out.print(ANSI_RESET + "\n+--------------------------------------+" + String.format("%-32s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,5) + ANSI_RESET + "|" + String.format("%-14s", " ")+ "8" + String.format("%-17s", " ")+ "+------------------------------------+");
 
         //seventeenth line
         System.out.print(ANSI_RESET + "\n" + String.format("%-72s", " ") + "+---".repeat(3) + "+" + String.format("%-32s", " ") + "|    " + ANSI_WHITE + "  " + ANSI_RESET + "+---+             +---+       " + ANSI_RESET + "|");
 
         //eighteenth line
-        System.out.print(ANSI_RESET + "\n+--------------------------------------+" + String.format("%-36s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(8,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(8,5) + ANSI_RESET + "|" + String.format("%-32s", " " ) + ANSI_RESET +"| " + ANSI_WHITE +"  3x " + ANSI_RESET + "| = |" + ANSI_WHITE + " : 2      5x " + ANSI_RESET + "| = |" + ANSI_WHITE + " : 5 " + ANSI_RESET + "  |");
+        System.out.print(ANSI_RESET + "\n+--------------------------------------+" + String.format("%-36s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(8,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(8,5) + ANSI_RESET + "|" + String.format("%14s", " ")+ "9" + String.format("%17s", " ")+ ANSI_RESET +"| " + ANSI_WHITE +"  3x " + ANSI_RESET + "| = |" + ANSI_WHITE + " : 2      5x " + ANSI_RESET + "| = |" + ANSI_WHITE + " : 5 " + ANSI_RESET + "  |");
 
         //nineteenth line
         System.out.print(ANSI_RESET + "\n|" + ANSI_WHITE + " Players:" + String.format("%-29s", " " ) + ANSI_RESET + "|" + String.format("%-36s", " " ) + "+---".repeat(2) + "+" + String.format("%-32s", " ") + ANSI_RESET +"|      +---+             +---+       |");
@@ -80,7 +80,7 @@ public class CLIFormatter {
         System.out.print(ANSI_RESET + "\n|" + putPlayerName(1) + String.format("%-" + calculateSpacing(44, 1, putPlayerName(1)) + "s", " ") + "|" + String.format("%-77s", " " ) + "|                                    |");
 
         //twenty-second line
-        System.out.print(ANSI_RESET + "\n|" + putPlayerName(2) + String.format("%-" + calculateSpacing(39, 1, putPlayerName(2)) + "s", " ") + "|" + String.format("%-77s", " " ) + "|      +---+             +---+       |");
+        System.out.print(ANSI_RESET + "\n|" + putPlayerName(2) + String.format("%-" + calculateSpacing(39, 1, putPlayerName(2)) + "s", " ") + "|" + String.format("%-20s", " " ) + "  1   2   3   4   5   6   7   8   9" + String.format("%-22s", " " ) + "|      +---+             +---+       |");
 
         //twenty-third line
         System.out.print(ANSI_RESET + "\n|" + putPlayerName(3) + String.format("%-" + calculateSpacing(39, 1, putPlayerName(3)) + "s", " ") + "|" + String.format("%-77s", " " ) +  "|   " + ANSI_WHITE + "4x " + ANSI_RESET + "| = | " + ANSI_WHITE + ": 3      6+ " + ANSI_RESET + "| = |" + ANSI_WHITE + " : 8 " + ANSI_RESET +"  |");
@@ -146,7 +146,7 @@ public class CLIFormatter {
         System.out.print("\n" + String.format("%-36s", " " ) + "3.Read the description" + String.format("%-28s", " " ) + "4.Read the description" + "\n");
         
         System.out.print("\n\n" + "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-        System.out.print("\n\n");
+        System.out.print("\n");
 
     }
 
@@ -174,7 +174,7 @@ public class CLIFormatter {
             return ANSI_RED + "\u001B[1m  NOT ACHIEVED";
 
         for (int i = 0; i< view.getPersonalTokens().size(); i++) {
-            if ((view.getPersonalTokens().get(i).getId() % 2) == 1)
+            if ((view.getPersonalTokens().get(i).getId() != 0) && ((view.getPersonalTokens().get(i).getId() % 2) == 0))
                 return ANSI_GREEN + "\u001B[1m  ACHIEVED    ";
         }
         return ANSI_RED + "\u001B[1m  NOT ACHIEVED";
@@ -185,7 +185,7 @@ public class CLIFormatter {
             return ANSI_RED + "\u001B[1m  NOT ACHIEVED";
 
         for (int i = 0; i< view.getPersonalTokens().size(); i++) {
-            if ((view.getPersonalTokens().get(i).getId() != 0) && ((view.getPersonalTokens().get(i).getId() % 2) == 0))
+            if ((view.getPersonalTokens().get(i).getId() % 2) == 1)
                 return ANSI_GREEN + "\u001B[1m  ACHIEVED    ";
         }
         return ANSI_RED + "\u001B[1m  NOT ACHIEVED";
@@ -240,7 +240,7 @@ public class CLIFormatter {
     }
 
     /* id = 0 -> end token check
-       id = 1 -> first common goal token check
+       id = 1 -> second common goal token check
        id = 2 -> first common goal token check
      */
     private String buildTokenAvailable (int id, int line) {
@@ -266,7 +266,7 @@ public class CLIFormatter {
                 }
             }
 
-            case 1 -> {
+            case 2 -> {
                 int maxToken = 0;
 
                 for (int i = 0; i < view.getGameTokens().size(); i++) {
@@ -292,7 +292,7 @@ public class CLIFormatter {
 
             }
 
-            case 2 -> {
+            case 1 -> {
                 int maxToken = 0;
 
                 for (int i = 0; i < view.getGameTokens().size(); i++) {
