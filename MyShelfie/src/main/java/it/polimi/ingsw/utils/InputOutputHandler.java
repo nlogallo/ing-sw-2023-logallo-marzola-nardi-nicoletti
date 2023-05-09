@@ -13,6 +13,8 @@ public class InputOutputHandler {
 
     private final CLIView view;
     private final Scanner scanner = new Scanner(System.in);
+    public static final String ANSI_RESET = "\u001B[00m";
+    public static final String ANSI_RED = "\u001B[31m";
 
     public InputOutputHandler (CLIView view) {
         this.view = view;
@@ -30,11 +32,12 @@ public class InputOutputHandler {
 
         while (view.getCurrentPlayer() == null || !view.getCurrentPlayer().equals(view.getClientNickname())) {
 
+            System.out.println("Button allowed: 2: Open Chat");
             String input = scanner.nextLine();
             if (input.equals("2")) {
 
                 System.out.println("To exit from the chat press Q and the click enter");
-                //apri visuale chat
+                //chatHandler
 
                 while (true) {
                     String button = scanner.nextLine().toUpperCase();
@@ -45,7 +48,7 @@ public class InputOutputHandler {
                     }
                 }
             } else {
-                System.out.println("Value is incorrect. You can type only 2 to open the chat. Retry!");
+                System.out.println(ANSI_RED + "Value is incorrect. You can type only 2 to open the chat. Retry!" + ANSI_RESET);
             }
         }
 
@@ -53,13 +56,16 @@ public class InputOutputHandler {
 
             while(true) {
 
+                System.out.println("Buttons allowed:     1: Make your move ");
+                System.out.println("                     2: Open Chat");
+                System.out.print("... : ");
+
                 String input = scanner.nextLine();
                 if(input.equals("1") || input.equals("2")) {
 
                     if (input.equals("1")) {
 
                         inputToMoveTile();
-                        //dire se è finito il turno oppure no?
                         break;
 
                     } else {
@@ -69,6 +75,8 @@ public class InputOutputHandler {
 
                         while (true) {
 
+                            // chatHandler
+
                             String button = scanner.nextLine().toUpperCase();
                             if (button.equals("Q")) {
 
@@ -77,13 +85,14 @@ public class InputOutputHandler {
 
                             } else {
 
-                                //manda messaggio da controllare
+                                //manda messaggio
+                                //da finire
                             }
                         }
                     }
                 } else {
-                    System.out.println("Incorrect value. You can type 1 if you want to take the Tiles " +
-                            "or 2 if you want to open the chat. Retry!");
+                    System.out.println(ANSI_RED + "Incorrect value. You can type 1 if you want to take the Tiles " +
+                            "or 2 if you want to open the chat. Retry!" + ANSI_RESET);
                 }
             }
         }
@@ -107,11 +116,11 @@ public class InputOutputHandler {
         String stringRow = scanner.nextLine();
         rowPosition.add(stringRow);
 
-        System.out.print("\nType the column: ");
+        System.out.print("Type the column: ");
         String stringColumn = scanner.nextLine();
         columnPosition.add(stringColumn);
 
-        System.out.println("\nIf you want take an other tile press Y otherwise press N: ");
+        System.out.print("If you want take an other tile press Y otherwise press N: ");
         String s = scanner.nextLine().toUpperCase();
         String will = checkContinueString(s);
 
@@ -125,7 +134,7 @@ public class InputOutputHandler {
                 stringRow = scanner.nextLine();
                 rowPosition.add(stringRow);
 
-                System.out.print("\nType the column: ");
+                System.out.print("Type the column: ");
                 stringColumn = scanner.nextLine();
                 columnPosition.add(stringColumn);
 
@@ -133,7 +142,7 @@ public class InputOutputHandler {
 
                 if (cont != 0) {
 
-                    System.out.println("\nIf you want take an other tile press Y otherwise press N: ");
+                    System.out.print("If you want take an other tile press Y otherwise press N: ");
                     s = scanner.nextLine().toUpperCase();
                     will = checkContinueString(s);
 
@@ -145,11 +154,11 @@ public class InputOutputHandler {
 
         }
 
-        System.out.print("\nType the Shelf's column where you want to insert the tile: ");
+        System.out.print("Type the Shelf's column where you want to insert the tile: ");
         stringColumnShelf = scanner.nextLine();
 
         if (!(checkInput(rowPosition, columnPosition, stringColumnShelf))) {
-            System.out.println("\nThe numbers are incorrect. Retry!");
+            System.out.println(ANSI_RED + "The numbers are incorrect. Retry!" + ANSI_RESET);
             inputToMoveTile();
         }
 
@@ -165,7 +174,8 @@ public class InputOutputHandler {
         view.moveTiles(tilePositions, Integer.parseInt(stringColumnShelf));
         boolean isOccurredAnError = view.getOccurredAnError();
         if(isOccurredAnError) {
-            System.out.println("\nThe numbers are incorrect. Retry!");
+            System.out.println(ANSI_RED + "The numbers are incorrect. Retry!" + ANSI_RESET);
+            view.setIsOccurredAnError(false);
             inputToMoveTile();
         }
     }
@@ -205,12 +215,17 @@ public class InputOutputHandler {
      * @return tue if the String is composed only by number characters
      */
     private boolean checkFor(String val) {
-        for (int i = 0; i < val.length(); i++) {
-            if(!Character.isDigit(val.charAt(i))) {
-                return false;
+
+        if (val.equals("")) {
+            return false;
+        } else {
+            for (int i = 0; i < val.length(); i++) {
+                if(!Character.isDigit(val.charAt(i))) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
     }
 
 
@@ -222,39 +237,42 @@ public class InputOutputHandler {
      */
     private ArrayList<String> adjustShelfColumnOrder (ArrayList<String> oldTilePositions, String stringShelfColumn) {
 
-        int cont = 1;
         Scanner scanner = new Scanner(System.in);
         ArrayList<String> idAlreadyTaken = new ArrayList<>();
         ArrayList<String> newTilePositions = new ArrayList<>();
 
-        System.out.println("You have chosen these tiles: ");
-        for(int i = 0; i < oldTilePositions.size(); i++) {
-            System.out.println("ID: " + (i+1) + "; row: " + oldTilePositions.get(i).charAt(0) + "; column: "
-                    + oldTilePositions.get(i).charAt(1));
-        }
+        if (oldTilePositions.size() != 1 && oldTilePositions.size() != 0) {
 
-        System.out.println("Sort the Tile IDs according to the order you want " +
-                "the Tiles to be placed in the column(" + stringShelfColumn + "): ");
-
-        for (int i = 0; i < oldTilePositions.size(); i++) {
-            switch (i) {
-                case 0:
-                    System.out.print("\nType First Tile ID: ");
-                    break;
-                case 1:
-                    System.out.print("\nType Second Tile ID: ");
-                    break;
-                case 2:
-                    System.out.print("\nType Third Tile ID: ");
-                    break;
+            System.out.println("You have chosen these tiles: ");
+            for(int i = 0; i < oldTilePositions.size(); i++) {
+                System.out.println("ID: " + (i+1) + "; row: " + oldTilePositions.get(i).charAt(0) + "; column: "
+                        + oldTilePositions.get(i).charAt(1));
             }
-            String input = scanner.nextLine();
-            input = checkIDTile(input, cont, idAlreadyTaken);
-            newTilePositions.add(oldTilePositions.get(Integer.parseInt(input)-1));
-            cont++;
-        }
-        System.out.println("-".repeat(174));
 
+            System.out.println("Sort the Tile IDs according to the order you want " +
+                    "the Tiles to be placed in the column(" + stringShelfColumn + "): ");
+
+            for (int i = 0; i < oldTilePositions.size(); i++) {
+                switch (i) {
+                    case 0:
+                        System.out.print("Type First Tile ID: ");
+                        break;
+                    case 1:
+                        System.out.print("Type Second Tile ID: ");
+                        break;
+                    case 2:
+                        System.out.print("Type Third Tile ID: ");
+                        break;
+                }
+                String input = scanner.nextLine();
+                input = checkIDTile(input, i+1, idAlreadyTaken, oldTilePositions.size());
+                idAlreadyTaken.add(input);
+                newTilePositions.add(oldTilePositions.get(Integer.parseInt(input)-1));
+            }
+        } else {
+            newTilePositions.addAll(oldTilePositions);
+        }
+        System.out.println("-".repeat(300));
         return newTilePositions;
     }
 
@@ -274,7 +292,7 @@ public class InputOutputHandler {
             boolean isStringIncorrect = true;
             while (isStringIncorrect) {
 
-                System.out.println("\nThe entry is incorrect!");
+                System.out.println(ANSI_RED + "The entry is incorrect!" + ANSI_RESET);
                 System.out.print("If you want take an other tile press Y otherwise press N: ");
                 String newString = scanner.nextLine().toUpperCase();
                 if (newString.equals("Y") || newString.equals("N")) {
@@ -295,36 +313,40 @@ public class InputOutputHandler {
      * @param val is the value to check
      * @param cont is a simply counter to choose the correct case in the switch
      * @param idAlreadyTaken is the list of the IDs already chosen by the Player
+     * @param size is the size of oldTilePositions
      * @return the correct ID value
      */
-    private String checkIDTile (String val, int cont, ArrayList<String> idAlreadyTaken) {
+    private String checkIDTile (String val, int cont, ArrayList<String> idAlreadyTaken, int size) {
 
         Scanner scanner = new Scanner(System.in);
         String outputString = val;
 
-        if (!(val.equals("1") || val.equals("2") || val.equals("3")) || idAlreadyTaken.contains(val)) {
+        if (!(val.compareTo("0") > 0 && String.valueOf(size+1).compareTo(val) > 0) || idAlreadyTaken.contains(val)) {
 
             boolean isIncorrect = true;
             while (isIncorrect) {
-                System.out.println("\nIncorrect Value. Retry!");
+                System.out.println(ANSI_RED + "Incorrect Value. Retry!" + ANSI_RESET);
+
                 switch (cont) {
-                        case 1:
-                            System.out.print("\nType First Tile ID: ");
-                            break;
-                        case 2:
-                            System.out.print("\nType Second Tile ID: ");
-                            break;
-                        case 3:
-                            System.out.print("\nType Third Tile ID: ");
-                            break;
-                    }
+                    case 1:
+                        System.out.print("Type First Tile ID: ");
+                        break;
+                    case 2:
+                        System.out.print("Type Second Tile ID: ");
+                        break;
+                    case 3:
+                        System.out.print("Type Third Tile ID: ");
+                        break;
+                }
+
                 String input = scanner.nextLine();
-                if ((input.equals("1") || input.equals("2") || input.equals("3") && (!idAlreadyTaken.contains(input)))) {
-                    outputString = input;
-                    isIncorrect = false;
+                if((input.equals("1")) || input.equals("2") || input.equals("3")) {
+                    if ((Integer.parseInt(input) <= size) && (!idAlreadyTaken.contains(input))) {
+                        outputString = input;
+                        isIncorrect = false;
+                    }
                 }
             }
-            System.out.println("-".repeat(174));
         }
         return outputString;
     }
