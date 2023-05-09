@@ -242,19 +242,14 @@ public class InputOutputHandler {
                     "the Tiles to be placed in the column(" + stringShelfColumn + "): ");
 
             for (int i = 0; i < oldTilePositions.size(); i++) {
+
                 switch (i) {
-                    case 0:
-                        System.out.print("Type First Tile ID: ");
-                        break;
-                    case 1:
-                        System.out.print("Type Second Tile ID: ");
-                        break;
-                    case 2:
-                        System.out.print("Type Third Tile ID: ");
-                        break;
+                    case 0 -> System.out.print("Type First Tile ID: ");
+                    case 1 -> System.out.print("Type Second Tile ID: ");
+                    case 2 -> System.out.print("Type Third Tile ID: ");
                 }
-                String input = scanner.nextLine();
-                input = checkIDTile(input, i+1, idAlreadyTaken, oldTilePositions.size());
+
+                String input = checkIDTile(i, idAlreadyTaken, oldTilePositions.size());
                 idAlreadyTaken.add(input);
                 newTilePositions.add(oldTilePositions.get(Integer.parseInt(input)-1));
             }
@@ -299,40 +294,47 @@ public class InputOutputHandler {
      * player wants to insert them in the Shelf column, is a correct value or not.
      * To be a correct value it must be equal to 1, 2 or 3 and must not have already been chosen previously.
      * If the ID is incorrect this method continues to request a new ID.
-     * @param val is the value to check
      * @param cont is a simply counter to choose the correct case in the switch
      * @param idAlreadyTaken is the list of the IDs already chosen by the Player
      * @param size is the size of oldTilePositions
      * @return the correct ID value
      */
-    private String checkIDTile (String val, int cont, ArrayList<String> idAlreadyTaken, int size) {
+    private String checkIDTile (int cont, ArrayList<String> idAlreadyTaken, int size) {
 
         Scanner scanner = new Scanner(System.in);
-        String outputString = val;
+        String outputString = null;
+        String val = scanner.nextLine();
+        boolean isDigit = true;
 
-        if (!(val.compareTo("0") > 0 && String.valueOf(size+1).compareTo(val) > 0) || idAlreadyTaken.contains(val)) {
+        for (int i = 0; i < val.length(); i++) {
+            if (!Character.isDigit(val.charAt(i))) {
+                isDigit = false;
+            }
+        }
 
-            boolean isIncorrect = true;
-            while (isIncorrect) {
-                System.out.println(ANSI_RED + "Incorrect Value. Retry!" + ANSI_RESET);
+        if (!isDigit) {
+            checkIDTile(cont, idAlreadyTaken, size);
+        } else {
 
-                switch (cont) {
-                    case 1:
-                        System.out.print("Type First Tile ID: ");
-                        break;
-                    case 2:
-                        System.out.print("Type Second Tile ID: ");
-                        break;
-                    case 3:
-                        System.out.print("Type Third Tile ID: ");
-                        break;
-                }
+            outputString = val;
+            if (!(0 < Integer.parseInt(val) && Integer.parseInt(val) <= size) || idAlreadyTaken.contains(val)) {
 
-                String input = scanner.nextLine();
-                if((input.equals("1")) || input.equals("2") || input.equals("3")) {
-                    if ((Integer.parseInt(input) <= size) && (!idAlreadyTaken.contains(input))) {
-                        outputString = input;
-                        isIncorrect = false;
+                boolean isIncorrect = true;
+                while (isIncorrect) {
+                    System.out.println(ANSI_RED + "Incorrect Value. Retry!" + ANSI_RESET);
+
+                    switch (cont) {
+                        case 0 -> System.out.print("Type First Tile ID: ");
+                        case 1 -> System.out.print("Type Second Tile ID: ");
+                        case 2 -> System.out.print("Type Third Tile ID: ");
+                    }
+
+                    String input = scanner.nextLine();
+                    if ((input.equals("1")) || input.equals("2") || input.equals("3")) {
+                        if ((Integer.parseInt(input) <= size) && (!idAlreadyTaken.contains(input))) {
+                            outputString = input;
+                            isIncorrect = false;
+                        }
                     }
                 }
             }
