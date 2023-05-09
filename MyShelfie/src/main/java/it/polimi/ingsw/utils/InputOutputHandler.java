@@ -14,7 +14,14 @@ public class InputOutputHandler {
     private final CLIView view;
     private final Scanner scanner = new Scanner(System.in);
     public static final String ANSI_RESET = "\u001B[00m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_CYAN = "\u001B[38;5;14m";
+    public static final String ANSI_MAGENTA = "\u001B[38;5;13m";
+    public static final String ANSI_BLUE = "\u001B[38;5;33m";
+    public static final String ANSI_CREAM = "\u001B[38;5;229m";
 
     public InputOutputHandler (CLIView view) {
         this.view = view;
@@ -43,7 +50,7 @@ public class InputOutputHandler {
                     String button = scanner.nextLine().toUpperCase();
                     if (button.equals("Q")) {
 
-                        //torna a visuale normale
+                        //return to normal view
                         break;
                     }
                 }
@@ -71,7 +78,7 @@ public class InputOutputHandler {
                     } else {
 
                         System.out.println("To exit from the chat press Q and the click enter");
-                        //apri visuale chat
+                        //open chat view
 
                         while (true) {
 
@@ -80,13 +87,14 @@ public class InputOutputHandler {
                             String button = scanner.nextLine().toUpperCase();
                             if (button.equals("Q")) {
 
-                                //torna a visuale normale
-                                break; // da contollare
+                                //return to normal view
+                                break;
 
                             } else {
 
-                                //manda messaggio
-                                //da finire
+                                //chatHandler
+                                //send messages
+
                             }
                         }
                     }
@@ -111,69 +119,47 @@ public class InputOutputHandler {
         ArrayList<String> columnPosition = new ArrayList<>();
         String stringColumnShelf = null;
 
-        System.out.print("You can take 3 more tiles.\n" +
-                    "Type the row: ");
-        String stringRow = scanner.nextLine();
-        rowPosition.add(stringRow);
+        int cont = 3;
+        boolean inWhile = true;
+        while (inWhile && cont != 0) {
 
-        System.out.print("Type the column: ");
-        String stringColumn = scanner.nextLine();
-        columnPosition.add(stringColumn);
+            System.out.println("You can take " + cont + " more tiles.");
+            String stringRow = generateCorrectNumberString("Type the row: ");
+            rowPosition.add(stringRow);
 
-        System.out.print("If you want take an other tile press Y otherwise press N: ");
-        String s = scanner.nextLine().toUpperCase();
-        String will = checkContinueString(s);
+            String stringColumn = generateCorrectNumberString("Type the column: ");
+            columnPosition.add(stringColumn);
 
-        if (will.equals("Y")) {
-            int cont = 2;
-            boolean inWhile = true;
-            while (inWhile && cont != 0) {
+            cont--;
 
-                System.out.print("You can take " + cont + " more tiles.\n" +
-                        "Type the row: ");
-                stringRow = scanner.nextLine();
-                rowPosition.add(stringRow);
+            if (cont != 0) {
 
-                System.out.print("Type the column: ");
-                stringColumn = scanner.nextLine();
-                columnPosition.add(stringColumn);
+                System.out.print("If you want take an other tile press Y otherwise press N: ");
+                String s = scanner.nextLine().toUpperCase();
+                String will = checkContinueString(s);
 
-                cont--;
-
-                if (cont != 0) {
-
-                    System.out.print("If you want take an other tile press Y otherwise press N: ");
-                    s = scanner.nextLine().toUpperCase();
-                    will = checkContinueString(s);
-
-                    if (will.equals("N")) {
-                        inWhile = false;
-                    }
+                if (will.equals("N")) {
+                    inWhile = false;
                 }
             }
-
         }
 
-        System.out.print("Type the Shelf's column where you want to insert the tile: ");
-        stringColumnShelf = scanner.nextLine();
-
-        if (!(checkInput(rowPosition, columnPosition, stringColumnShelf))) {
-            System.out.println(ANSI_RED + "The numbers are incorrect. Retry!" + ANSI_RESET);
-            inputToMoveTile();
-        }
+        stringColumnShelf = generateCorrectNumberString("Type the Shelf's column where you want to insert the tile: ");
 
         String tilePosition = null;
 
-        for (int i = 0; i<rowPosition.size(); i++) {
+        for (int i = 0; i < rowPosition.size(); i++) {
             tilePosition = rowPosition.get(i) + columnPosition.get(i);
             tilePositions.add(tilePosition);
         }
 
         tilePositions = adjustShelfColumnOrder(tilePositions, stringColumnShelf);
 
+        //to be fixed as soon as change the controls on the Controller
+        //to also have numerical control immediately
         view.moveTiles(tilePositions, Integer.parseInt(stringColumnShelf));
         boolean isOccurredAnError = view.getOccurredAnError();
-        if(isOccurredAnError) {
+        if (isOccurredAnError) {
             System.out.println(ANSI_RED + "The numbers are incorrect. Retry!" + ANSI_RESET);
             view.setIsOccurredAnError(false);
             inputToMoveTile();
@@ -182,30 +168,25 @@ public class InputOutputHandler {
 
 
     /**
-     * This private method checks if the parameter is a number or not.
-     * @param rowPositions is the rows' ArrayList of the Tiles that the player picks up
-     * @param columnPositions is the column's ArrayList of the Tiles that the player picks up
-     * @param columnShelf is the column in which the player has decided to insert the collected tiles
-     * @return true if all strings are String of number, otherwise false
+     * This method checks if user's enter is a number
+     * @param name can be:
+     *             - Type the row:
+     *             - Type the column:
+     *             - Type the Shelf's column where you want to insert the tile:
+     * @return the correct string
      */
-    private boolean checkInput(ArrayList<String> rowPositions, ArrayList<String> columnPositions, String columnShelf) {
+    private String generateCorrectNumberString(String name) {
 
-        boolean isCorrect = true;
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
 
-        for (String s : rowPositions) {
-            isCorrect = checkFor(s);
-            if (!isCorrect) {
-                return false;
+            System.out.print(name);
+            String val = scanner.nextLine();
+            if (checkFor(val)) {
+                return val;
             }
+            System.out.println(ANSI_RED + "The enter isn't a number!" + ANSI_RESET);
         }
-        for (String s : columnPositions) {
-            isCorrect = checkFor(s);
-            if (!isCorrect) {
-                return false;
-            }
-        }
-        isCorrect = checkFor(columnShelf);
-        return isCorrect;
     }
 
 
@@ -243,10 +224,18 @@ public class InputOutputHandler {
 
         if (oldTilePositions.size() != 1 && oldTilePositions.size() != 0) {
 
+            int intTileRow;
+            int intTileColumn;
+
             System.out.println("You have chosen these tiles: ");
             for(int i = 0; i < oldTilePositions.size(); i++) {
-                System.out.println("ID: " + (i+1) + "; row: " + oldTilePositions.get(i).charAt(0) + "; column: "
-                        + oldTilePositions.get(i).charAt(1));
+
+                intTileRow = Character.getNumericValue(oldTilePositions.get(i).charAt(0));
+                intTileColumn = Character.getNumericValue(oldTilePositions.get(i).charAt(1));
+
+                System.out.println(getBoardTilesAtPosition(intTileRow - 1, intTileColumn - 1) + "ID: " + (i+1)
+                        + "; row: " + intTileRow + "; column: " + intTileColumn + ANSI_RESET);
+
             }
 
             System.out.println("Sort the Tile IDs according to the order you want " +
@@ -349,5 +338,24 @@ public class InputOutputHandler {
             }
         }
         return outputString;
+    }
+
+
+    /**
+     * This method finds the correct Tile colour
+     * @param x is the Tile's row
+     * @param y is the Tile's column
+     * @return the correct Tile colour
+     */
+    private String getBoardTilesAtPosition(int x, int y){
+        return switch (view.getBoard().getTilesType()[x][y]) {
+            case TROPHY ->  ANSI_CYAN;
+            case PLANT ->  ANSI_MAGENTA;
+            case FRAME ->  ANSI_BLUE ;
+            case GAME ->  ANSI_YELLOW ;
+            case BOOK ->  ANSI_CREAM ;
+            case CAT ->  ANSI_GREEN ;
+            case EMPTY -> ANSI_WHITE ;
+        };
     }
 }
