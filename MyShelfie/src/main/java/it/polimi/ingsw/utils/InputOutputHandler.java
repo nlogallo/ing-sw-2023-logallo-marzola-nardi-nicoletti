@@ -182,9 +182,10 @@ public class InputOutputHandler {
 
             System.out.print(name);
             String val = scanner.nextLine();
-            if (checkFor(val)) {
+            if (checkIfIsANumberString(val)) {
                 return val;
             }
+            
             System.out.println(ANSI_RED + "The enter isn't a number!" + ANSI_RESET);
         }
     }
@@ -195,7 +196,7 @@ public class InputOutputHandler {
      * @param val is the String to check
      * @return tue if the String is composed only by number characters
      */
-    private boolean checkFor(String val) {
+    private boolean checkIfIsANumberString(String val) {
 
         if (val.equals("")) {
             return false;
@@ -218,7 +219,6 @@ public class InputOutputHandler {
      */
     private ArrayList<String> adjustShelfColumnOrder (ArrayList<String> oldTilePositions, String stringShelfColumn) {
 
-        Scanner scanner = new Scanner(System.in);
         ArrayList<String> idAlreadyTaken = new ArrayList<>();
         ArrayList<String> newTilePositions = new ArrayList<>();
 
@@ -302,39 +302,26 @@ public class InputOutputHandler {
     private String checkIDTile (int cont, ArrayList<String> idAlreadyTaken, int size) {
 
         Scanner scanner = new Scanner(System.in);
-        String outputString = null;
         String val = scanner.nextLine();
-        boolean isDigit = true;
+        String outputString = val;
 
-        for (int i = 0; i < val.length(); i++) {
-            if (!Character.isDigit(val.charAt(i))) {
-                isDigit = false;
-            }
-        }
+        if (!checkIfIsANumberString(val) || idAlreadyTaken.contains(val) || (Integer.parseInt(val) < 0 || Integer.parseInt(val) > size)) {
 
-        if (!isDigit) {
-            checkIDTile(cont, idAlreadyTaken, size);
-        } else {
+            boolean isIncorrect = true;
+            while (isIncorrect) {
+                System.out.println(ANSI_RED + "Incorrect Value. Retry!" + ANSI_RESET);
 
-            outputString = val;
-            if (!(0 < Integer.parseInt(val) && Integer.parseInt(val) <= size) || idAlreadyTaken.contains(val)) {
+                switch (cont) {
+                    case 0 -> System.out.print("Type First Tile ID: ");
+                    case 1 -> System.out.print("Type Second Tile ID: ");
+                    case 2 -> System.out.print("Type Third Tile ID: ");
+                }
 
-                boolean isIncorrect = true;
-                while (isIncorrect) {
-                    System.out.println(ANSI_RED + "Incorrect Value. Retry!" + ANSI_RESET);
-
-                    switch (cont) {
-                        case 0 -> System.out.print("Type First Tile ID: ");
-                        case 1 -> System.out.print("Type Second Tile ID: ");
-                        case 2 -> System.out.print("Type Third Tile ID: ");
-                    }
-
-                    String input = scanner.nextLine();
-                    if ((input.equals("1")) || input.equals("2") || input.equals("3")) {
-                        if ((Integer.parseInt(input) <= size) && (!idAlreadyTaken.contains(input))) {
-                            outputString = input;
-                            isIncorrect = false;
-                        }
+                String input = scanner.nextLine();
+                if ((input.equals("1")) || input.equals("2") || input.equals("3")) {
+                    if ((Integer.parseInt(input) <= size) && (!idAlreadyTaken.contains(input))) {
+                        outputString = input;
+                        isIncorrect = false;
                     }
                 }
             }
