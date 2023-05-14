@@ -30,20 +30,27 @@ public class SceneController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //activeSceneController = fmxlLoader.getController();
+        activeSceneController = fmxlLoader.getController();
         activeScene = new Scene(root);
         stage.setScene(activeScene);
         stage.setResizable(false);
-        stage.centerOnScreen();
         stage.show();
     }
 
     /**
-     * This method set the stage
+     * This method sets the stage
      * @param stage
      */
     public static void setStage(Stage stage){
         SceneController.stage = stage;
     }
+
+    /**
+     * This method closes the Stage
+     */
+    public static void closeStage(){
+        stage.close();
+    }
+
 
 }
