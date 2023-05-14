@@ -2,13 +2,13 @@ package it.polimi.ingsw.view.GUI;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * This method is the runnable application
+ */
 public class MyShelfieFX extends Application {
 
     public static void main(String[] args){
@@ -17,12 +17,10 @@ public class MyShelfieFX extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        GUIView gui = new GUIView();
-        Parent root = FXMLLoader.load(getClass().getResource("/fxmlFiles/LoadingScreen.fxml"));
         primaryStage.setTitle("My Shelfie");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
-
+        GUIView gui = new GUIView();
+        SceneController.setStage(primaryStage);
+        SceneController.changeScene(gui, "LoadingScreen.fxml");
     }
 
     @Override

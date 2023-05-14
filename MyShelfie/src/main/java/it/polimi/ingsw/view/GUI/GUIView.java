@@ -11,7 +11,10 @@ import it.polimi.ingsw.view.Observer;
 
 import java.util.ArrayList;
 
-
+/**
+ * This class is the GUI View that is used to exploit the Observer Pattern. In addiction, it contains all the info
+ * of the Client to show at the user.
+ */
 public class GUIView  implements Observer {
 
     public GUIView() {}

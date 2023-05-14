@@ -1,10 +1,10 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.CLI;
 
 import it.polimi.ingsw.controller.ClientController;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
-import it.polimi.ingsw.utils.CLIFormatter;
 import it.polimi.ingsw.utils.InputOutputHandler;
+import it.polimi.ingsw.view.Observer;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * This class is the CLI View that is used to exploit the Observer Pattern. In addiction, it contains all the info
  * of the Client to show at the user.
  */
-public class CLIView implements Observer{
+public class CLIView implements Observer {
     private Board board;
     private Shelf shelf;
     private PersonalGoal personalGoal;

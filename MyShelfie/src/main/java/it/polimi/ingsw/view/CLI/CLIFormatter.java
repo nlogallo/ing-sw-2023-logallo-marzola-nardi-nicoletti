@@ -1,6 +1,6 @@
-package it.polimi.ingsw.utils;
+package it.polimi.ingsw.view.CLI;
 
-import it.polimi.ingsw.view.CLIView;
+import it.polimi.ingsw.view.CLI.CLIView;
 
 public class CLIFormatter {
     CLIView view;
