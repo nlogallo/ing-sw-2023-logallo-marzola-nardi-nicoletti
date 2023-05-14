@@ -47,10 +47,19 @@ public class CG_DiffHeight extends CommonGoal{
                     countForColumn++;
             }
             countList.add(countForColumn);
-            for(int d = 0; d < countList.size() - 1; d++){
-                if((countList.get(d) != countList.get(d + 1) + 1) && (countList.get(d) != countList.get(d + 1) - 1))
-                    return false;
+        }
+        boolean increasing = true;
+        for(int d = 0; d < countList.size() - 1; d++) {
+            if ((countList.get(d) != countList.get(d + 1) + 1)) {
+                increasing = false;
+                break;
             }
+        }
+        if(increasing)
+            return true;
+        for(int d = 0; d < countList.size() - 1; d++){
+            if((countList.get(d) != countList.get(d + 1) - 1))
+                return false;
         }
         return true;
     }

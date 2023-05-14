@@ -15,6 +15,7 @@ public class Player implements Serializable {
     private Game game;
     private ArrayList<Token> tokenCards = new ArrayList<>();
     private int points;
+    private boolean commonGoals[] = new boolean[2];
 
     /**
      * Class constructor
@@ -31,6 +32,8 @@ public class Player implements Serializable {
         this.personalGoal = null;
         this.game = game;
         this.points = 0;
+        this.commonGoals[0] = false;
+        this.commonGoals[1] = false;
     }
 
     /**
@@ -235,6 +238,23 @@ public class Player implements Serializable {
      */
     public ArrayList<Token> getTokenCards() {
         return tokenCards;
+    }
+
+    /**
+     * Getter
+     * @param pos identifies which common goal
+     * @return a boolean
+     */
+    public boolean getCommonGoals(int pos) {
+        return commonGoals[pos];
+    }
+
+    /**
+     * Setter
+     * @param pos identifies which common goal
+     */
+    public void setTrueCommonGoals(int pos){
+        commonGoals[pos] = true;
     }
 }
 

@@ -53,7 +53,6 @@ public class Token implements Serializable {
      * @throws IllegalArgumentException if the TokenID is over the maximum range
      */
     public void setPoints (int ID) throws IllegalArgumentException {
-
         if (checkID(ID)) {
             associateIDtoTokenPoints(ID);
         } else throw new IllegalArgumentException("ID isn't correct (over the maximum range)");

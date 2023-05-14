@@ -11,12 +11,10 @@ import java.util.ArrayList;
 public class GameController {
 
     private Game game;
-    private String nextPhaseMessage;
     private String currentPlayer;
 
     public GameController(Game game, String nickname){
         this.game = game;
-        this.nextPhaseMessage = null;
         this.currentPlayer = nickname;
     }
 
@@ -33,9 +31,7 @@ public class GameController {
         }catch (IllegalStateException ex){
             game.endGame();
             System.out.println("-Server- Game: " + this.game.getId() +" has ended");
-            this.nextPhaseMessage = game.winner().getNickname() + " has won";
         }
-        this.nextPhaseMessage = nextPlayer + " is your turn";
         this.currentPlayer = nextPlayer;
     }
 
@@ -151,26 +147,18 @@ public class GameController {
 
     /**
      * Getter method
-     * @return the current next phase message, that is who is playing in this phase or the winner of the game
-     */
-    public String getNextPhaseMessage(){
-        return this.nextPhaseMessage;
-    }
-
-    /**
-     * Getter method
      * @return the current player
      */
     public String getCurrentPlayer(){
-        return game.getCurrentPlayer().getNickname();
+        if (game.getCurrentPlayer() != null)
+            return game.getCurrentPlayer().getNickname();
+        else
+            return "Game ended";
     }
 
-    /**
-     * Setter method
-     * @param message is the message to save
-     */
-    public void setNextPhaseMessage(String message){
-        this.nextPhaseMessage = message;
+    public String getWinner(){
+        return game.winner().getNickname();
     }
+
 
 }

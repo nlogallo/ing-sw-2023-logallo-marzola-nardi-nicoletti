@@ -94,7 +94,7 @@ public class CLIView implements Observer{
     public void updatePersonalTokens(Token token){
         for(int i = 0; i < personalTokens.size(); i++){
             if(personalTokens.get(i).getId() == token.getId())
-                break;
+                return;
         }
         personalTokens.add(token);
     }

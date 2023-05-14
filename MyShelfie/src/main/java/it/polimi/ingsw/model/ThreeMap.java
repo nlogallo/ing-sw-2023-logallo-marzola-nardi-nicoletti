@@ -25,8 +25,8 @@ public class ThreeMap implements Serializable {
         if (playersNumber < 2 || playersNumber > 4)
             throw new IllegalArgumentException("Illegal number of players ");
         this.playersNumber = playersNumber;
-        firstMap = new HashMap<CommonGoal, Token>(2);
-        secondMap = new HashMap<Token, Player>(playersNumber * 2);
+        firstMap = new HashMap<CommonGoal, Token>(0);
+        secondMap = new HashMap<Token, Player>(0);
     }
 
     /**
@@ -54,12 +54,29 @@ public class ThreeMap implements Serializable {
     public Token setPlayer(CommonGoal commonGoalKey, Player player) throws IllegalArgumentException {
         if (!firstMap.containsKey(commonGoalKey))
             throw new IllegalArgumentException("This common goal doesn't exist");
-        Token token = firstMap.remove(commonGoalKey);
+        Token token = firstMap.get(commonGoalKey);
         secondMap.put(token, player);
-        if (token.getId() > 2 && secondMap.size() < playersNumber * 2) {
-            Token updateToken = new Token(token.getId() - 2);
-            firstMap.put(commonGoalKey, updateToken);
+        int val = token.getId();
+        boolean added = false;
+        if(playersNumber == 2)
+            val -= 4;
+        else
+            val -= 2;
+        if (secondMap.size() < playersNumber * 2) {
+            Token updateToken;
+            if((playersNumber == 2 || playersNumber == 3) && val >= 3) {
+                added = true;
+                updateToken = new Token(val);
+                firstMap.replace(commonGoalKey, updateToken);
+            }
+            if(playersNumber == 4 && val >= 1) {
+                added = true;
+                updateToken = new Token(val);
+                firstMap.replace(commonGoalKey, updateToken);
+            }
         }
+        if(!added)
+            firstMap.replace(commonGoalKey, null);
         return token;
     }
 
@@ -91,7 +108,13 @@ public class ThreeMap implements Serializable {
      */
     public ArrayList<CommonGoal> getCommonGoals() {
         ArrayList<CommonGoal> commonGoalArrayList = new ArrayList<>();
-        commonGoalArrayList.addAll(firstMap.keySet());
+        ArrayList<CommonGoal> reverted = new ArrayList<>(firstMap.keySet());
+        if(firstMap.get(reverted.get(0)).getId() %2 != 0){
+            commonGoalArrayList.add(reverted.get(1));
+            commonGoalArrayList.add(reverted.get(0));
+        }
+        else
+            commonGoalArrayList.addAll(firstMap.keySet());
         return commonGoalArrayList;
     }
 
@@ -113,7 +136,7 @@ public class ThreeMap implements Serializable {
             remainingTokenList.addAll(getRemainingTokenListForACommonGoal(commonGoals.get(0), numOfPlayers));
             remainingTokenList.addAll(getRemainingTokenListForACommonGoal(commonGoals.get(1),numOfPlayers));
         }
-        remainingTokenList.add(0, new Token(0));
+        //remainingTokenList.add(0, new Token(0));
         remainingTokenList.sort(Comparator.comparingInt(Token::getId));
         return remainingTokenList;
     }
@@ -126,16 +149,32 @@ public class ThreeMap implements Serializable {
      * @return a list with the remaining game Token for a specific CommonGoal
      */
     private ArrayList<Token> getRemainingTokenListForACommonGoal(CommonGoal commonGoal, int numOfPlayers) {
-
-        int idLastToken = firstMap.get(commonGoal).getId();
-        ArrayList<Token> partialRemainingTokenList = new ArrayList<>();
-        partialRemainingTokenList.add(firstMap.get(commonGoal));
-
-        for (int i = 1; i < numOfPlayers; i++) {
-            idLastToken -= 2;
-            partialRemainingTokenList.add(new Token(idLastToken));
+        int idLastToken;
+        if (firstMap.get(commonGoal) != null) {
+            idLastToken = firstMap.get(commonGoal).getId();
+            ArrayList<Token> partialRemainingTokenList = new ArrayList<>();
+            partialRemainingTokenList.add(firstMap.get(commonGoal));
+            if (numOfPlayers == 2 && (idLastToken == 7 || idLastToken == 8))
+                partialRemainingTokenList.add(new Token(idLastToken - 4));
+            else {
+                if (numOfPlayers == 3) {
+                    while (idLastToken != 3 && idLastToken != 4) {
+                        idLastToken -= 2;
+                        partialRemainingTokenList.add(new Token(idLastToken));
+                    }
+                } else {
+                    if(numOfPlayers == 4) {
+                        while (idLastToken != 1 && idLastToken != 2) {
+                            idLastToken -= 2;
+                            partialRemainingTokenList.add(new Token(idLastToken));
+                        }
+                    }
+                }
+            }
+            return partialRemainingTokenList;
         }
-        return partialRemainingTokenList;
+        else
+            return new ArrayList<>();
     }
 }
 

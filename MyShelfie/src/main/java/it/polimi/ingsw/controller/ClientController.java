@@ -106,11 +106,11 @@ public class ClientController {
         networkMessage.setRequestId("MT");
         NetworkMessage resp = client.sendMessage(networkMessage);
         //unpack the message
+        clientViewObservable.setScreenMessage(resp.getTextMessage());
         clientViewObservable.setShelf((Shelf) resp.getContent().get(0));
         clientViewObservable.setBoard((Board) resp.getContent().get(1));
-        for(Token t : (ArrayList<Token>) resp.getContent().get(2)){
+        for(Token t : (ArrayList<Token>) resp.getContent().get(2))
             clientViewObservable.setPersonalTokens(t);
-        }
         clientViewObservable.refreshCLI();
     }
 

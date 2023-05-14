@@ -22,6 +22,7 @@ public class Game implements Serializable {
     private Board board;
     private GameState state;
     private Player firstToEnd;
+    private Player winner;
     private Player currentPlayer;
     private ThreeMap commonGoals;
     private final File gameFile;
@@ -44,6 +45,7 @@ public class Game implements Serializable {
         this.currentPlayer = null;
         this.commonGoals = null;
         this.gameFile = new File("data/savedGame/game" + this.id + ".bin");
+        this.winner = null;
         this.chats.add(startGlobalChat());
         for(int i = 0; i < playersNumber; i++)
             mutex.add(false);
@@ -162,7 +164,6 @@ public class Game implements Serializable {
      * Makes the assignation of the personalGoal to each player
      */
     public void assignPersonalGoal() {
-
         ArrayList<Integer> personalGoalsIndex = new ArrayList<>();
         for (int i = 0; i < 12; i++)
             personalGoalsIndex.add(i);
@@ -182,17 +183,16 @@ public class Game implements Serializable {
      * This method picks two random commonGoals and saved them in the ThreeMap
      */
     public void chooseCommonGoals() {
-
         ArrayList<Integer> commonGoalIndex = new ArrayList<>();
         for (int i = 0; i < 12; i++)
             commonGoalIndex.add(i);
         Random random = new Random();
         int randomNum;
-        int tempIndex = 12;
+        int tempIndex = commonGoalIndex.size();
         boolean firstCommonGoal = true;
         for (int i = 0; i < 2; i++) {
             randomNum = random.nextInt(tempIndex);
-            setProperCommonGoal(randomNum, readDescriptionFromJSON(randomNum), firstCommonGoal);
+            setProperCommonGoal(commonGoalIndex.get(randomNum), readDescriptionFromJSON(randomNum), firstCommonGoal);
             firstCommonGoal = false;
             commonGoalIndex.remove(randomNum);
             tempIndex--;
@@ -377,7 +377,6 @@ public class Game implements Serializable {
      */
     public Player winner () {
         Collections.reverse(players);
-        Player winner;
         ArrayList <Integer> playerPoints = new ArrayList<>();
         for (Player player : players) {
             playerPoints.add(player.getPoints());
@@ -507,6 +506,14 @@ public class Game implements Serializable {
      */
     public boolean getMutexAtIndex(int position) {
         return mutex.get(position);
+    }
+
+    /**
+     * Getter
+     * @return the first player to end
+     */
+    public Player getFirstToEnd() {
+        return firstToEnd;
     }
 }
 

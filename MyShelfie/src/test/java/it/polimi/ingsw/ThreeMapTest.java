@@ -114,5 +114,6 @@ public class ThreeMapTest {
         assertFalse(threeMap.hasToken(commonGoal1, player0));
         assertFalse(threeMap.hasToken(commonGoal1, player1));
     }
+
 }
 

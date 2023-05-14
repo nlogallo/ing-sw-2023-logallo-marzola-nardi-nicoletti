@@ -13,7 +13,7 @@ public class ServerController {
      * Class constructor
      * @param game is the game associate with the gameController instance
      */
-    public ServerController(Game game, String nickname) {
+    public ServerController(Game game, String nickname ) {
         gameController = new GameController(game, nickname);
         isTokenChange = false;
     }
@@ -46,7 +46,20 @@ public class ServerController {
         if (!stringToSend.equals("Tiles cannot be pulled")) {
             String stringPart2 = null;
 
+        if(!player.getCommonGoals(0)) {
             if (commonGoal1.checkCommonGoal(player.getShelf().getShelfTypes())) {
+                gameController.updateToken(commonGoal1, player.getShelf().getShelfTypes(), player);
+                this.isTokenChange = true;
+            }
+        }
+        if(!player.getCommonGoals(1)) {
+            if (commonGoal2.checkCommonGoal(player.getShelf().getShelfTypes())) {
+                gameController.updateToken(commonGoal2, player.getShelf().getShelfTypes(), player);
+                this.isTokenChange = false;
+            }
+        }
+
+            /*if (commonGoal1.checkCommonGoal(player.getShelf().getShelfTypes())) {
                 if (!commonGoal2.checkCommonGoal(player.getShelf().getShelfTypes())) {
 
                     stringPart2 = gameController.updateToken(commonGoal1, player.getShelf().getShelfTypes(), player);
@@ -69,9 +82,10 @@ public class ServerController {
                             commonGoal1.getId() + ", " + commonGoal2.getId();
                     this.isTokenChange = true;
                 }
-            }
+            }*/
 
-            stringToSend = stringToSend + "\n" + stringPart2;
+            stringToSend = "Well done!";
+            networkMessage.setTextMessage(stringToSend);
             networkMessage.addContent(player.getShelf());
             networkMessage.addContent(gameController.getBoard());
             networkMessage.addContent(player.getTokenCards());
@@ -196,6 +210,8 @@ public class ServerController {
         int numOfPlayer = gameController.getPlayers().size();
         ArrayList<CommonGoal> commonGoals = gameController.getCommonGoal();
         ArrayList<Token> remainingTokenList = gameController.getGame().getThreeMap().getRemainingTokenList(commonGoals, numOfPlayer);
+        if(gameController.getGame().getFirstToEnd() == null)
+            remainingTokenList.add(new Token(0));
         networkMessage.addContent(remainingTokenList.size());
 
         for (Token token : remainingTokenList) {
@@ -245,11 +261,10 @@ public class ServerController {
                 otherNickNamesList.add(s.getNickname());
             }
         }
-
         Integer numOfGameToken = (gameController.getPlayers().size() * 2) + 1;
         ArrayList<CommonGoal> commonGoals = gameController.getCommonGoal();
         ArrayList<Token> remainingTokenList = gameController.getGame().getThreeMap().getRemainingTokenList(commonGoals, numOfPlayer);
-        gameController.setNextPhaseMessage(gameController.getCurrentPlayer() + " is your turn!");
+        remainingTokenList.add(new Token(0));
 
         networkMessage.setTextMessage(nickName + ", welcome to the Game. Enjoy it!");
         networkMessage.addContent(gameController.getBoard());
@@ -276,9 +291,12 @@ public class ServerController {
      */
     public NetworkMessage updateResult(){
         NetworkMessage networkMessage = new NetworkMessage();
-        networkMessage.setTextMessage(gameController.getNextPhaseMessage());
         networkMessage.addContent(gameController.getCurrentPlayer());
         networkMessage.setRequestId("UR");
+        if(!gameController.getCurrentPlayer().equals("Game ended"))
+            networkMessage.setTextMessage(gameController.getCurrentPlayer() + " is your turn!");
+        else
+            networkMessage.setTextMessage(gameController.getWinner() + " has won");
         return networkMessage;
     }
 
