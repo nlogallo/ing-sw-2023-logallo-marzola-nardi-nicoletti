@@ -15,7 +15,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Server class
@@ -24,6 +23,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     private static ArrayList<Game> games = new ArrayList<>();
     private static ArrayList<String> nicknames = new ArrayList<>();
     private static HashMap<String, VirtualView> RMIVirtualViews = new HashMap<>();
+    private static HashMap<String, String> chatParser = new HashMap<>();
 
     /**
      * Constructor method
@@ -43,11 +43,18 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 int port = 25566;
                 ServerSocket serverSocket = new ServerSocket(port);
                 System.out.println("TCP Server started on port " + port);
+                ServerSocket chatSocket = new ServerSocket(25567);
                 while (true) {
+                    //Game client handler
                     Socket clientSocket = serverSocket.accept();
                     System.out.println("TCP Client connected from " + clientSocket.getInetAddress().getHostAddress());
                     ClientTCPHandler client = new ClientTCPHandler(clientSocket);
                     new Thread(client).start();
+                    //Chat client handler
+                    Socket chatClientSocket = chatSocket.accept();
+                    System.out.println("Chat Client enabled for " + chatClientSocket.getInetAddress().getHostAddress());
+                    ChatClientTCPHandler chat = new ChatClientTCPHandler(chatClientSocket, "");
+                    new Thread(chat).start();
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -348,7 +355,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         }
                     }
                 }
-
                 outputStream.flush();
                 VirtualView virtualView = new VirtualView(game, game.getCurrentPlayer().getNickname());
                 NetworkMessage setup = virtualView.playerSetup(nickname);
@@ -359,7 +365,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 outputStream.flush();
                 while (true) {
                     this.clientSocket.setKeepAlive(true);
-                    if(games.get(game.getId() - 1).getState() == GameState.STARTED) {
+                    if(games.get(game.getId() - 1).getState() == GameState.STARTED && games.get(game.getId() - 1).getCurrentPlayer() != null) {
                         if(games.get(game.getId() - 1).getCurrentPlayer().getNickname().equals(nickname)) {
                             NetworkMessage netMessage = (NetworkMessage) inputStream.readObject();
                             if (netMessage.getRequestId().equals("MT")) {
@@ -370,7 +376,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                 games.set(game.getId() - 1, game);
                             }
                         }
-                        if(games.get(game.getId() - 1).getMutexAtIndex(playerIndex)) {
+                        if (games.get(game.getId() - 1).getMutexAtIndex(playerIndex) && game.getCurrentPlayer() != null) {
                             virtualView = new VirtualView(games.get(game.getId() - 1), game.getCurrentPlayer().getNickname());
                             outputStream.reset();
                             outputStream.writeObject(virtualView.updateBoard());
@@ -382,13 +388,17 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             games.set(game.getId() - 1, game);
                         }
                     } else {
-                        NetworkMessage errMessage = new NetworkMessage();
-                        errMessage.setRequestId("ER");
-                        errMessage.setTextMessage("A player left the game. Game end here.");
-                        outputStream.writeObject(errMessage);
+                        NetworkMessage endMessage = new NetworkMessage();
+                        if(games.get(game.getId() - 1).getCurrentPlayer() != null){
+                            endMessage.setRequestId("ER");
+                            endMessage.setTextMessage("A player left the game. Game end here.");
+                        }else{
+                            endMessage.setRequestId("ER");
+                            endMessage.setTextMessage("Game ended! Good game to everyone!");
+                        }
+                        outputStream.writeObject(endMessage);
                     }
                 }
-
             } catch (EOFException e) {
                 System.err.println("User " + nickname + " left the server.");
                 System.err.println("Game with id " + game.getId() + " has been terminated.");
@@ -402,5 +412,34 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             }
             nicknames.remove(nickname);
         }
+    }
+
+    private static class ChatClientTCPHandler implements Runnable {
+        private final Socket clientSocket;
+        private final String nickname;
+
+        public ChatClientTCPHandler(Socket socket, String nickname) {
+            this.clientSocket = socket;
+            this.nickname = nickname;
+        }
+
+        public void run() {
+            ObjectOutputStream outputStream = null;
+            ObjectInputStream inputStream = null;
+            try {
+                outputStream = new ObjectOutputStream(this.clientSocket.getOutputStream());
+                inputStream = new ObjectInputStream(this.clientSocket.getInputStream());
+                while(true){
+                    String msg = (String) inputStream.readObject();
+                    if(msg.equals("chatOk")){
+                        System.out.println("User from " + this.clientSocket.getInetAddress().getHostAddress() + " connected to chat!");
+                        outputStream.writeObject("ciao iuser, purtroppo si, mi hai scoperto");
+                    }
+                }
+            } catch (IOException e) {
+            } catch (ClassNotFoundException e) {
+            }
+        }
+
     }
 }

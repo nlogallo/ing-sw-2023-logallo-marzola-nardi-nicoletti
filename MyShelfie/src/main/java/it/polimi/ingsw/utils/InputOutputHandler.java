@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils;
 
-import it.polimi.ingsw.view.CLIView;
+import it.polimi.ingsw.view.CLI.CLIView;
 
 import java.util.ArrayList;
 import java.util.Scanner;
