@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.ConnectToServerController">
+    <children>
+        <ImageView fitHeight="358.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../assets/personal goal cards/back.jpg" />
+            </image>
+        </ImageView>
+        <ImageView fitHeight="358.0" fitWidth="301.0" layoutX="236.0" pickOnBounds="true">
+            <image>
+                <Image url="@../assets/misc/sfondo parquet.jpg" />
+            </image>
+        </ImageView>
+        <ImageView fitHeight="79.0" fitWidth="200.0" layoutX="287.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../assets/Publisher material/Title 2000x618px.png" />
+            </image>
+        </ImageView>
+        <Text layoutX="253.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your shelf looks empty, join the crew on the server" />
+        <TextField fx:id="IPText" layoutX="272.0" layoutY="127.0" prefHeight="25.0" prefWidth="229.0" promptText="Insert the server IP" />
+        <Button fx:id="connectButton" layoutX="357.0" layoutY="179.0" mnemonicParsing="false" text="Connect" />
+        <ImageView fitHeight="58.0" fitWidth="101.0" layoutX="472.0" layoutY="286.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../assets/Publisher material/Publisher.png" />
+            </image>
+        </ImageView>
+        <Button fx:id="quitButton" layoutX="357.0" layoutY="223.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="Quit" />
+        <Text layoutX="272.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server IP:" />
+    </children>
+</AnchorPane>
