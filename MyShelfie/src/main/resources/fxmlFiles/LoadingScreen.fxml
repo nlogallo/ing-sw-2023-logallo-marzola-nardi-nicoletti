@@ -8,7 +8,7 @@
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.LoadingScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.LoadingScreenController" stylesheets="@../ConnectionStyle.css">
     <children>
         <ImageView fitHeight="358.0" fitWidth="534.0" pickOnBounds="true">
             <image>
@@ -25,6 +25,6 @@
                 <Image url="@../assets/Publisher material/Publisher.png" />
             </image>
         </ImageView>
-        <Button fx:id="button" layoutX="412.0" layoutY="62.0" mnemonicParsing="false" text="START" />
+        <Button fx:id="button" layoutX="215.0" layoutY="300.0" mnemonicParsing="false" text="Start" />
     </children>
 </AnchorPane>

@@ -1,0 +1,10 @@
+.progress-indicator{
+    -fx-accent: linear-gradient(to left top, #15a3ad, #2d88fa);
+}
+
+Text{
+    -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
+    -fx-font-weight: bold;
+    -fx-alignment:center;
+    -fx-font-size: 22;
+}

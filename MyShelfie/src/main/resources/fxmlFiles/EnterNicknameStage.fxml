@@ -7,36 +7,51 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.EnterNicknameController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.EnterNicknameController" stylesheets="@../ConnectionStyle.css">
     <children>
-        <ImageView fitHeight="358.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="742.0" fitWidth="409.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../assets/personal goal cards/back.jpg" />
             </image>
         </ImageView>
-        <ImageView fitHeight="358.0" fitWidth="301.0" layoutX="236.0" pickOnBounds="true">
+        <ImageView fitHeight="600.0" fitWidth="392.0" layoutX="409.0" pickOnBounds="true">
             <image>
                 <Image url="@../assets/misc/sfondo parquet.jpg" />
             </image>
         </ImageView>
-        <ImageView fitHeight="79.0" fitWidth="200.0" layoutX="287.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="208.0" fitWidth="299.0" layoutX="460.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../assets/Publisher material/Title 2000x618px.png" />
             </image>
         </ImageView>
-        <Text layoutX="253.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your shelf looks empty, join the crew on the server" />
-        <TextField fx:id="nicknameText" layoutX="249.0" layoutY="186.0" prefHeight="25.0" prefWidth="262.0" promptText="Insert the nickname" />
-        <Button fx:id="sendNickname" layoutX="337.0" layoutY="273.0" mnemonicParsing="false" text="Find a match" />
-        <ImageView fitHeight="58.0" fitWidth="101.0" layoutX="472.0" layoutY="286.0" pickOnBounds="true" preserveRatio="true">
+        <Text layoutX="430.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your shelf looks empty, join the crew!" />
+        <TextField fx:id="nicknameText" layoutX="470.0" layoutY="281.0" prefHeight="25.0" prefWidth="262.0" promptText="Nickname" />
+        <Button fx:id="sendNickname" layoutX="550.0" layoutY="371.0" mnemonicParsing="false" text="Send" />
+        <ImageView fitHeight="71.0" fitWidth="82.0" layoutX="714.0" layoutY="515.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../assets/Publisher material/Publisher.png" />
             </image>
         </ImageView>
-        <Text layoutX="253.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server IP:" />
-        <Text layoutX="321.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="127.0.0.1" />
-        <Text layoutX="251.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connection:" wrappingWidth="72.15362548828125" />
-        <Text layoutX="321.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TCP Socket" />
-        <Text layoutX="251.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter your nickname:" />
-        <Text fx:id="textUnderInput" layoutX="249.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The nickname must be at least 3 characters long and less than 15" wrappingWidth="276.559326171875" />
+        <ImageView layoutX="425.0" layoutY="158.0" fitHeight="30.0" fitWidth="30.0" preserveRatio="true">
+            <image>
+                <Image url="@../assets/icons/check_circle.png" />
+            </image>
+        </ImageView>
+        <ImageView layoutX="425.0" layoutY="197.0" fitHeight="30.0" fitWidth="30.0" preserveRatio="true">
+            <image>
+                <Image url="@../assets/icons/check_circle.png" />
+            </image>
+        </ImageView>
+        <ImageView layoutX="425.0" layoutY="331.0" fitHeight="30.0" fitWidth="30.0" preserveRatio="true">
+            <image>
+                <Image url="@../assets/icons/info.png" />
+            </image>
+        </ImageView>
+        <Text layoutX="470.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server:" />
+        <Text fx:id="serverSocket" layoutX="550.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0"/>
+        <Text layoutX="470.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connection:" />
+        <Text fx:id="protocol" layoutX="590.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0"/>
+        <Text layoutX="470.0" layoutY="261.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter your nickname:" />
+        <Text fx:id="infoMessage" layoutX="470.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Valid length between 3-15 characters"/>
     </children>
 </AnchorPane>

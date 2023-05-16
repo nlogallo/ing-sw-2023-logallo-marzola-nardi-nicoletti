@@ -11,6 +11,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class NoGamesAvailableController implements GenericSceneController, Initializable {
@@ -32,6 +33,9 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
         spinner.getValueFactory().setValue(2);
         createGame.addEventHandler(MouseEvent.MOUSE_RELEASED, this::createGame);
     }
+
+    @Override
+    public void initData(ArrayList<Object> parameters) {}
 
     private void createGame(Event event){
         SceneController.changeScene(gui, "LobbyStage.fxml");

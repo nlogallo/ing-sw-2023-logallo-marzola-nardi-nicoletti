@@ -7,32 +7,39 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.ConnectToServerController">
+<?import javafx.scene.control.ToggleButton?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.ConnectToServerController" stylesheets="@../ConnectionStyle.css">
     <children>
-        <ImageView fitHeight="358.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="742.0" fitWidth="409.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../assets/personal goal cards/back.jpg" />
             </image>
         </ImageView>
-        <ImageView fitHeight="358.0" fitWidth="301.0" layoutX="236.0" pickOnBounds="true">
+        <ImageView fitHeight="600.0" fitWidth="392.0" layoutX="409.0" pickOnBounds="true">
             <image>
                 <Image url="@../assets/misc/sfondo parquet.jpg" />
             </image>
         </ImageView>
-        <ImageView fitHeight="79.0" fitWidth="200.0" layoutX="287.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="208.0" fitWidth="299.0" layoutX="460.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../assets/Publisher material/Title 2000x618px.png" />
             </image>
         </ImageView>
-        <Text layoutX="253.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your shelf looks empty, join the crew on the server" />
-        <TextField fx:id="IPText" layoutX="272.0" layoutY="127.0" prefHeight="25.0" prefWidth="229.0" promptText="Insert the server IP" />
-        <Button fx:id="connectButton" layoutX="357.0" layoutY="179.0" mnemonicParsing="false" text="Connect" />
-        <ImageView fitHeight="58.0" fitWidth="101.0" layoutX="472.0" layoutY="286.0" pickOnBounds="true" preserveRatio="true">
+        <Text layoutX="430.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your shelf looks empty, join the crew!" />
+        <TextField fx:id="IPText" layoutX="430.0" layoutY="230.0" prefHeight="25.0" prefWidth="220.0" promptText="IP" />
+        <TextField fx:id="portText" layoutX="670.0" layoutY="230.0" prefHeight="25.0" prefWidth="100.0" promptText="port" />
+        <Button fx:id="connectButton" layoutX="550.0" layoutY="400.0" mnemonicParsing="false" text="Connect" />
+        <ToggleButton fx:id="toggleSocket" layoutX="450.0" layoutY="320.0" prefHeight="25.0" prefWidth="150.0" text="TCP Socket"></ToggleButton>
+        <ToggleButton fx:id="toggleRMI" layoutX="620.0" layoutY="320.0" prefHeight="25.0" prefWidth="150.0" text="RMI"></ToggleButton>
+        <ImageView fitHeight="71.0" fitWidth="82.0" layoutX="714.0" layoutY="515.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../assets/Publisher material/Publisher.png" />
             </image>
         </ImageView>
-        <Button fx:id="quitButton" layoutX="357.0" layoutY="223.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="Quit" />
-        <Text layoutX="272.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server IP:" />
+        <Button fx:id="quitButton" layoutX="550.0" layoutY="460.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="Quit" />
+        <Text fx:id="labelIP" layoutX="430.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server IP:" />
+        <Text fx:id="labelPort" layoutX="670.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port:" />
+        <Text layoutX="657.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":"> </Text>
+        <Text layoutX="430.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose the protocol:" />
     </children>
 </AnchorPane>

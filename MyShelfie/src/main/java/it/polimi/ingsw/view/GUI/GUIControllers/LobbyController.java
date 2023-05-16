@@ -8,6 +8,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.stage.WindowEvent;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class LobbyController implements GenericSceneController, Initializable {
@@ -26,6 +27,9 @@ public class LobbyController implements GenericSceneController, Initializable {
         progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
         progressIndicator.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::closeScene);
     }
+
+    @Override
+    public void initData(ArrayList<Object> parameters) {}
 
     private void closeScene(Event event){
 

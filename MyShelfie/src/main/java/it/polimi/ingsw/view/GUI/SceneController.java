@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * This static class allows the GUI to handle the scene
@@ -32,6 +33,25 @@ public class SceneController {
         }
         activeSceneController = fmxlLoader.getController();
         activeScene = new Scene(root);
+        stage.setScene(activeScene);
+        stage.setResizable(false);
+        stage.show();
+    }
+
+    /**
+     *
+     */
+    public static void changeScene(GUIView gui, String fxmlName, ArrayList<Object> parameters) {
+        FXMLLoader fmxlLoader = new FXMLLoader(SceneController.class.getResource("/fxmlFiles/" + fxmlName));
+        Parent root = null;
+        try {
+            root = fmxlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        activeSceneController = fmxlLoader.getController();
+        activeScene = new Scene(root);
+        activeSceneController.initData(parameters);
         stage.setScene(activeScene);
         stage.setResizable(false);
         stage.show();

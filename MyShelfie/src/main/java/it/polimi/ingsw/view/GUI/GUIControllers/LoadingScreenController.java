@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class LoadingScreenController implements GenericSceneController, Initializable {
@@ -25,6 +26,9 @@ public class LoadingScreenController implements GenericSceneController, Initiali
     public void initialize(URL url, ResourceBundle resourceBundle) {
        button.addEventHandler(MouseEvent.MOUSE_RELEASED, this::buttonClick);
     }
+
+    @Override
+    public void initData(ArrayList<Object> parameters) {}
 
     private void buttonClick(Event event) {
         SceneController.changeScene(gui, "ConnectToServerStage.fxml");
