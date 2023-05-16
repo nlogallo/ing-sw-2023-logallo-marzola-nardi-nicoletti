@@ -61,7 +61,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             }
         }).start();
         new Thread(() -> {
-            int port = 1099;
+            int port = 30034;
             try {
                 MyShelfieServer server = new MyShelfieServer();
                 Registry registry = LocateRegistry.createRegistry(port);
@@ -244,6 +244,17 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return null;
     }
 
+    public synchronized int RMIIsGameFinished(int gameId) throws RemoteException {
+        Game game = games.get(gameId - 1);
+        if(game.getState().equals(GameState.ENDED)){
+            if(game.getCurrentPlayer() == null){
+                return 1;
+            }
+            return 2;
+        }
+        return 0;
+    }
+
     /**
      * This method searches for an available game
      * @return game
@@ -394,15 +405,21 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             endMessage.setTextMessage("A player left the game. Game end here.");
                         }else{
                             endMessage.setRequestId("ER");
-                            endMessage.setTextMessage("Game ended! Good game to everyone!");
+                            endMessage.setTextMessage("Game ended! Thank you for playing!");
                         }
                         outputStream.writeObject(endMessage);
                     }
                 }
             } catch (EOFException e) {
-                System.err.println("User " + nickname + " left the server.");
-                System.err.println("Game with id " + game.getId() + " has been terminated.");
-                games.get(game.getId() - 1).setState(GameState.ENDED);
+                if(!nickname.isEmpty()){
+                    System.err.println("User " + nickname + " left the server.");
+                }else{
+                    System.err.println("User from " + clientSocket.getInetAddress().getHostAddress() + " left the server.");
+                }
+                if(game.getId() != -1){
+                    System.err.println("Game with id " + game.getId() + " has been terminated.");
+                    games.get(game.getId() - 1).setState(GameState.ENDED);
+                }
             } catch (IOException e) {
                 System.err.println("User " + nickname + " left the server.");
             } catch (StringIndexOutOfBoundsException e) {
