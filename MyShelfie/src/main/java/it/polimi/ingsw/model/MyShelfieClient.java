@@ -6,7 +6,6 @@ import it.polimi.ingsw.view.CLI.CLIView;
 import it.polimi.ingsw.view.ClientViewObservable;
 
 import java.io.*;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.rmi.Naming;
@@ -28,7 +27,6 @@ public class MyShelfieClient {
     static ObjectOutputStream chatOutput;
     static ObjectInputStream chatInput;
     static int protocol;
-
     static String remoteNickname;
     static int gameId;
 
@@ -80,7 +78,7 @@ public class MyShelfieClient {
                         }
                     } while (!serverAnswer.equals("nicknameOk"));
                     remoteNickname = nickname;
-                    String command = (String) inputStream.readObject();
+                    String command = TCPCheckForAvailableGames();
                     if (command.equals("newGame")) {
                         System.out.println("No games available, creating a new one...");
                         int playersNumber;
@@ -91,14 +89,13 @@ public class MyShelfieClient {
                                 System.out.println("Players number must be 2, 3 or 4");
                             }
                         } while (playersNumber > 4 || playersNumber < 2);
-                        outputStream.writeObject(playersNumber);
-                        outputStream.flush();
+                        TCPSetPlayersNumber(playersNumber);
                     }
-                    gameId = (Integer) inputStream.readObject();
+                    gameId = TCPGetGameId();
                     System.out.println("Hi " + nickname + "!\nYou have been added to game with id " + gameId + "\nYour game will start when the players number is fulfilled");
 
                     while (true) {
-                        command = (String) inputStream.readObject();
+                        command = TCPCheckForGameStart();
                         if (command.equals("startGame")) {
                             System.out.println("GAME STARTED!");
                             System.out.println(chatInput.readObject());
@@ -130,7 +127,7 @@ public class MyShelfieClient {
                         }
                     } while (!serverAnswer.equals("nicknameOk"));
                     remoteNickname = nickname;
-                    Game game = RMIServer.RMICheckforAvailableGame(nickname);
+                    Game game = RMICheckForAvailableGame();
                     boolean seat = false;
                     if (game == null) {
                         System.out.println("No games available, creating a new one...");
@@ -142,13 +139,13 @@ public class MyShelfieClient {
                                 System.err.println("Players number must be 2, 3 or 4");
                             }
                         } while (playersNumber > 4);
-                        game = RMIServer.RMIHandleGameCreation(playersNumber, nickname);
+                        game = RMIHandleGameCreation(playersNumber);
                         seat = true;
                     }
                     gameId = game.getId();
                     System.out.println("Hi " + nickname + "!\nYou have been added to game with id " + game.getId() + "\nYour game will start when the players number is fulfilled");
                     while (true) {
-                        if (RMIServer.RMICheckForStart(game.getId(), seat)) {
+                        if (RMICheckForGameStart(game.getId(), seat)) {
                             break;
                         }
                     }
@@ -212,7 +209,9 @@ public class MyShelfieClient {
      * Method which handles nickname check communication
      * @param nickname
      * @param protocol
-     * @return
+     * @return nicknameExists if nickname already exists in the server
+     * nicknameWrong if nickname has a wrong pattern
+     * nicknameOk if nickname is valid
      * @throws IOException
      * @throws ClassNotFoundException
      */
@@ -224,6 +223,77 @@ public class MyShelfieClient {
         } else {
             return RMIServer.RMICheckNickname(nickname);
         }
+    }
+
+    /**
+     * Method which checks if a game is available (TCP)
+     * @return newGame if no game exists
+     * addedToGame if there is an existing game available to join
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    static public String TCPCheckForAvailableGames() throws IOException, ClassNotFoundException {
+        return (String) inputStream.readObject();
+    }
+
+    /**
+     * Method which checks if a game is available (RMI)
+     * @return the Game where the player has been added to or null if there was no available game to join
+     * @throws RemoteException
+     */
+    static public Game RMICheckForAvailableGame() throws RemoteException {
+        return RMIServer.RMICheckforAvailableGame(remoteNickname);
+    }
+
+    /**
+     * Method which sets the player number (TCP)
+     * @param playersNumber
+     * @throws IOException
+     */
+    static public void TCPSetPlayersNumber(int playersNumber) throws IOException {
+        outputStream.writeObject(playersNumber);
+        outputStream.flush();
+    }
+
+    /**
+     * Method which handles the entire game creation (RMI)
+     * @param playersNumber
+     * @return
+     * @throws RemoteException
+     */
+    static public Game RMIHandleGameCreation(int playersNumber) throws RemoteException {
+        return RMIServer.RMIHandleGameCreation(playersNumber, remoteNickname);
+    }
+
+    /**
+     * Method which gets the game id (TCP)
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    static public int TCPGetGameId() throws IOException, ClassNotFoundException {
+        return (Integer) inputStream.readObject();
+    }
+
+    /**
+     * Method which checks for the start game command (TCP)
+     * @return startGame if the game started
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    static public String TCPCheckForGameStart() throws IOException, ClassNotFoundException {
+        return (String) inputStream.readObject();
+    }
+
+    /**
+     * Method which checks for the start game command (RMI)
+     * @param gameId
+     * @param seat
+     * @return true if the game started
+     * @throws RemoteException
+     */
+    static public boolean RMICheckForGameStart(int gameId, boolean seat) throws RemoteException {
+        return RMIServer.RMICheckForStart(gameId, seat);
     }
 
     /**
