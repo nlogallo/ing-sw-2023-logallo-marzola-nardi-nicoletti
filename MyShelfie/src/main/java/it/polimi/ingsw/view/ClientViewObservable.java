@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.Token;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * This class was created to implement the Observer Pattern. It represents the Observable object that the Views need to know if something has changed in the interface.
@@ -109,11 +110,19 @@ public class ClientViewObservable {
     }
 
     /**
-     * This method set the nickname of current player
+     * This method sets the nickname of current player
      * @param nickname is the nickname
      */
     public void setCurrentPlayer(String nickname){
         view.updateCurrentPlayer(nickname);
+    }
+
+    /**
+     * This method sets the shelves of the players, apart from who is playing
+     * @param shelves are the shelves
+     */
+    public void setPlayersShelf(Map<String, Shelf> shelves){
+        view.updatePlayersShelf(shelves);
     }
 
     /**

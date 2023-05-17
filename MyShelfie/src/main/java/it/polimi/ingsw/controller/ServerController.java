@@ -292,11 +292,12 @@ public class ServerController {
     public NetworkMessage updateResult(){
         NetworkMessage networkMessage = new NetworkMessage();
         networkMessage.addContent(gameController.getCurrentPlayer());
+        networkMessage.addContent(gameController.getPlayerShelf());
         networkMessage.setRequestId("UR");
         if(!gameController.getCurrentPlayer().equals("Game ended"))
             networkMessage.setTextMessage(gameController.getCurrentPlayer() + " is your turn!");
         else
-            networkMessage.setTextMessage(gameController.getWinner() + " has won");
+            networkMessage.setTextMessage(gameController.getWinner());
         return networkMessage;
     }
 

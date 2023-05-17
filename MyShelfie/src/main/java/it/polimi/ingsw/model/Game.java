@@ -375,15 +375,27 @@ public class Game implements Serializable {
      * This method decrees the winner of the game
      * @return the winner of the game
      */
-    public Player winner () {
-        Collections.reverse(players);
+    public String winner () {
+        ArrayList<Player> playersCopy = new ArrayList<Player>(players);
+        Collections.reverse(playersCopy);
         ArrayList <Integer> playerPoints = new ArrayList<>();
-        for (Player player : players) {
+        for (Player player : playersCopy) {
+            player.calculatePoints();
             playerPoints.add(player.getPoints());
         }
         int maxPointIndex = playerPoints.indexOf(Collections.max(playerPoints));
-        winner = players.get(maxPointIndex);
-        return winner;
+        winner = playersCopy.get(maxPointIndex);
+        String gameResults;
+        Player player;
+        gameResults = "Congratulations, " + winner.getNickname() + "you won with " + playerPoints.get(maxPointIndex);
+        playerPoints.remove(maxPointIndex);
+        playersCopy.remove(maxPointIndex);
+        for(int i = 0; i < playersCopy.size(); i++){
+            maxPointIndex = playerPoints.indexOf(Collections.max(playerPoints));
+            player = playersCopy.get(maxPointIndex);
+            gameResults += "\n" + i + 2 + ") " + player.getNickname() + ": " + playerPoints.get(maxPointIndex) + "points";
+        }
+        return gameResults;
     }
 
 

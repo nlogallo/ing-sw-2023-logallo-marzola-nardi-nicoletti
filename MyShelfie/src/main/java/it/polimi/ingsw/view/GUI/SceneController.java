@@ -66,6 +66,14 @@ public class SceneController {
     }
 
     /**
+     * This method gets the stage
+     * @return Stage
+     */
+    public static Stage getStage(){
+        return SceneController.stage;
+    }
+
+    /**
      * This method closes the Stage
      */
     public static void closeStage(){

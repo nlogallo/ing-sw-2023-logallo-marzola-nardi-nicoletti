@@ -6,12 +6,13 @@ import it.polimi.ingsw.view.GUI.SceneController;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -51,9 +52,21 @@ public class ConnectToServerController implements GenericSceneController, Initia
         quitButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::quitOnClick);
         toggleSocket.setOnAction(actionEvent -> {
             toggleRMI.setSelected(false);
+            toggleSocket.setStyle(null);
+            toggleRMI.setStyle(null);
         });
         toggleRMI.setOnAction(actionEvent -> {
             toggleSocket.setSelected(false);
+            toggleSocket.setStyle(null);
+            toggleRMI.setStyle(null);
+        });
+        IPText.addEventHandler(MouseEvent.MOUSE_CLICKED, (event)->{
+            IPText.setStyle(null);
+            labelIP.setText("Server IP:");
+        });
+        portText.addEventHandler(MouseEvent.MOUSE_CLICKED, (event)->{
+            portText.setStyle(null);
+            labelPort.setText("Port:");
         });
     }
 
@@ -70,9 +83,8 @@ public class ConnectToServerController implements GenericSceneController, Initia
         IPText.setStyle(null);
         portText.setStyle(null);
         if(!toggleSocket.isSelected() && !toggleRMI.isSelected()){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "You have to select the protocol");
-            alert.setTitle("My Shelfie Alert");;
-            alert.showAndWait();
+            toggleSocket.setStyle("-fx-border-color: RED;");
+            toggleRMI.setStyle("-fx-border-color: RED;");
         }
         else {
             final String ipPattern = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
@@ -97,6 +109,15 @@ public class ConnectToServerController implements GenericSceneController, Initia
                         parameters.add(portText.getText());
                         parameters.add(protocol);
                         SceneController.changeScene(gui, "EnterNicknameStage.fxml", parameters);
+                    }
+                    else{
+                        Stage primaryStage = SceneController.getStage();
+                        Stage stage = new Stage();
+                        stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
+                        stage.setTitle("My Shelfie Connection Error");
+                        SceneController.setStage(stage);
+                        SceneController.changeScene(gui, "ErrorStage.fxml");
+                        SceneController.setStage(primaryStage);
                     }
                 } catch (NumberFormatException ex) {
                     labelPort.setText("Invalid Port");

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.view.CLI;
 
-import it.polimi.ingsw.view.CLI.CLIView;
-
 public class CLIFormatter {
     CLIView view;
     public static final String ANSI_RESET = "\u001B[00m";
@@ -44,28 +42,28 @@ public class CLIFormatter {
         System.out.print(ANSI_RESET + "\n2.Open chats" + String.format("%-52s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(3,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,7) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,8) + ANSI_RESET + "|" + String.format("%-2s", " ")+ "4"  + String.format("%-17s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,4)+ ANSI_RESET + "|");
 
         //ninth line
-        System.out.print(ANSI_RESET + "\n" + String.format("%-60s", " ") + ANSI_RESET + "+---".repeat(9) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+");
+        System.out.print(ANSI_RESET + "\n3.See other players' shelves" + String.format("%-32s", " ") + ANSI_RESET + "+---".repeat(9) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+");
 
         //tenth line
         System.out.print(ANSI_RESET + "\n" + String.format("%-60s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(4,0) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,7) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,8 ) + ANSI_RESET + "|" + String.format("%-2s", " ")+ "5" + String.format("%-17s", " ")+ ANSI_RESET + "|" +  getShelfTilesAtPosition(4,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,4) + ANSI_RESET + "|");
 
         //eleventh
-        System.out.print(ANSI_RESET + "\n+--------------------------------------+" + String.format("%-20s", " " ) + "+---".repeat(9) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+");
+        System.out.print(ANSI_RESET + "\n" + String.format("%-60s", " " ) + "+---".repeat(9) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+");
 
         //twelfth line
-        System.out.print(ANSI_RESET + "\n|" + ANSI_WHITE + " Last message:" + String.format("%-24s", " ") + ANSI_RESET + "|" + String.format("%-20s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,0) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,7) + ANSI_RESET + "|" +  String.format("%-6s", " ")+ "6"  + String.format("%-17s", " ")  + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,4) + ANSI_RESET + "|");
+        System.out.print(ANSI_RESET + "\n"  + String.format("%-60s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(5,0) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(5,7) + ANSI_RESET + "|" +  String.format("%-6s", " ")+ "6"  + String.format("%-17s", " ")  + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(5,4) + ANSI_RESET + "|");
 
         //thirteenth line
-        System.out.print(ANSI_RESET + "\n|" + "'HERE GOES LAST CHAT MESSAGE'" + String.format("%-9s", " ") + ANSI_RESET + "|" + String.format("%-20s", " " ) + "+---".repeat(8) + "+" + String.format("%-24s", " ") + "+---".repeat(5) + "+");
+        System.out.print(ANSI_RESET + "\n" + String.format("%-60s", " ") + "+---".repeat(8) + "+" + String.format("%-24s", " ") + "+---".repeat(5) + "+");
 
         //fourteenth line
-        System.out.print(ANSI_RESET + "\n|" + ANSI_WHITE + "------by " + ANSI_RESET + "PLAYER'S NAME" + String.format("%-16s", " ") + ANSI_RESET + "|" + String.format("%-28s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,6) + ANSI_RESET + "|" + String.format("%-10s", " ")+ "7" + String.format("%-17s", " "));
+        System.out.print(ANSI_RESET + "\n" + String.format("%-68s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(6,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(6,6) + ANSI_RESET + "|" + String.format("%-10s", " ")+ "7" + String.format("%-17s", " "));
 
         //fifteenth line
-        System.out.print(ANSI_RESET + "\n|" + ANSI_WHITE + "------on " + ANSI_RESET + "WHICH CHAT" + String.format("%-19s", " ") + ANSI_RESET + "|" + String.format("%-28s", " " ) +  "+---".repeat(5) + "+" + String.format("%-28s", " ") + ANSI_WHITE + "Adjacent Item Tiles");
+        System.out.print(ANSI_RESET + "\n" + String.format("%-68s", " " ) +  "+---".repeat(5) + "+" + String.format("%-28s", " ") + ANSI_WHITE + "Adjacent Item Tiles");
 
         //sixteenth line
-        System.out.print(ANSI_RESET + "\n+--------------------------------------+" + String.format("%-32s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,5) + ANSI_RESET + "|" + String.format("%-14s", " ")+ "8" + String.format("%-17s", " ")+ "+------------------------------------+");
+        System.out.print(ANSI_RESET + "\n" + String.format("%-72s", " " ) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(7,5) + ANSI_RESET + "|" + String.format("%-14s", " ")+ "8" + String.format("%-17s", " ")+ "+------------------------------------+");
 
         //seventeenth line
         System.out.print(ANSI_RESET + "\n" + String.format("%-72s", " ") + "+---".repeat(3) + "+" + String.format("%-32s", " ") + "|    " + ANSI_WHITE + "  " + ANSI_RESET + "+---+             +---+       " + ANSI_RESET + "|");
@@ -143,11 +141,10 @@ public class CLIFormatter {
         System.out.print("\n");
 
         //forty-third line
-        System.out.print("\n" + String.format("%-36s", " " ) + "3.Read the description" + String.format("%-28s", " " ) + "4.Read the description" + "\n");
+        System.out.print("\n" + String.format("%-36s", " " ) + "4.Read the description" + String.format("%-28s", " " ) + "5.Read the description" + "\n");
         
         System.out.print("\n\n" + "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         System.out.print("\n");
-
     }
 
     private int calculateSpacing(int emptyLength, int fixedTextLength, String dynamicTextToAdd){
@@ -614,4 +611,5 @@ public class CLIFormatter {
         }
         return "ERRORE" + String.format("%-15s", " " );
     }
+
 }

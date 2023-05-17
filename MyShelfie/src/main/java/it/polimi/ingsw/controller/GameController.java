@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represents the controller of the game
@@ -156,8 +158,23 @@ public class GameController {
             return "Game ended";
     }
 
+    /**
+     * This method returns the final ranking
+     * @return the ranking as a String
+     */
     public String getWinner(){
-        return game.winner().getNickname();
+        return game.winner();
+    }
+
+    /**
+     * This method returns the shelves of the players, apart from who is playing
+     * @return the ArrayList of shelves
+     */
+    public Map<String, Shelf> getPlayerShelf(){
+        Map<String, Shelf> shelvesMap = new HashMap<>();
+        for(Player p : game.getPlayers())
+            shelvesMap.put(p.getNickname(), p.getShelf());
+        return shelvesMap;
     }
 
 

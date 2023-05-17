@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.view.Observer;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * This class is the GUI View that is used to exploit the Observer Pattern. In addiction, it contains all the info
@@ -70,6 +71,11 @@ public class GUIView  implements Observer {
 
     @Override
     public void updateCurrentPlayer(String nickname) {
+
+    }
+
+    @Override
+    public void updatePlayersShelf(Map<String, Shelf> playersShelf) {
 
     }
 

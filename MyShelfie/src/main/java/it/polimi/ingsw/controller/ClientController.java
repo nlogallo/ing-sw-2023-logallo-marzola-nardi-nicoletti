@@ -6,6 +6,7 @@ import it.polimi.ingsw.utils.NetworkMessage;
 import it.polimi.ingsw.view.ClientViewObservable;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * This class represent the Client side controller
@@ -202,13 +203,18 @@ public class ClientController {
     }
 
     /**
-     * This method allows to update the result of the game
+     * This method allows to update the result of the game (including the shelves of players)
      * @param networkMessage is the NetworkMessage received from the Server
      */
     public void updateResults(NetworkMessage networkMessage){
         clientViewObservable.setScreenMessage(networkMessage.getTextMessage());
         clientViewObservable.setCurrentPlayer((String) networkMessage.getContent().get(0));
+        clientViewObservable.setPlayersShelf((Map<String, Shelf>)networkMessage.getContent().get(1));
         clientViewObservable.refreshCLI();
+    }
+
+    public void updatePlayersShelf(NetworkMessage networkMessage){
+
     }
 
     public void enableInput() {

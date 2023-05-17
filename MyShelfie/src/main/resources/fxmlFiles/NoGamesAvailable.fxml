@@ -50,13 +50,13 @@
                 <Image url="@../assets/icons/info.png" />
             </image>
         </ImageView>
-        <Text layoutX="470.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server IP:" />
-        <Text layoutX="570.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="127.0.0.1" />
+        <Text layoutX="470.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server:" />
+        <Text fx:id="serverSocket" layoutX="540.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0"/>
         <Text layoutX="470.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connection:"/>
-        <Text layoutX="590.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TCP Socket" />
+        <Text fx:id="protocol" layoutX="585.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" />
         <Text layoutX="470.0" layoutY="261.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nickname:" />
         <Text fx:id="infoMessage" layoutX="470.0" layoutY="301.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are no available games. &#xD; Insert the number of players &#xD; to start a new game." wrappingWidth="276.559326171875" />
-        <Text layoutX="580.0" layoutY="261.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player358" />
+        <Text fx:id="nickname" layoutX="570.0" layoutY="261.0" strokeType="OUTSIDE" strokeWidth="0.0" />
         <Spinner fx:id="spinner" layoutX="470.0" layoutY="371.0">
             <styleClass>
                 <String fx:value="split-arrows-horizontal" />

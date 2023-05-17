@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,6 +22,12 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
     private Button createGame;
     @FXML
     private Spinner spinner;
+    @FXML
+    private Text serverSocket;
+    @FXML
+    private Text protocol;
+    @FXML
+    private Text nickname;
 
     @Override
     public void setGui(GUIView gui) {
@@ -35,7 +42,15 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
     }
 
     @Override
-    public void initData(ArrayList<Object> parameters) {}
+    public void initData(ArrayList<Object> parameters) {
+        serverSocket.setText((String) parameters.get(0));
+        int protocolValue = (int) parameters.get(1);
+        if(protocolValue == 1)
+            protocol.setText("TCP Socket");
+        else
+            protocol.setText("RMI");
+        nickname.setText((String) parameters.get(2));
+    }
 
     private void createGame(Event event){
         SceneController.changeScene(gui, "LobbyStage.fxml");

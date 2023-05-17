@@ -109,7 +109,7 @@ public class ThreeMap implements Serializable {
     public ArrayList<CommonGoal> getCommonGoals() {
         ArrayList<CommonGoal> commonGoalArrayList = new ArrayList<>();
         ArrayList<CommonGoal> reverted = new ArrayList<>(firstMap.keySet());
-        if(firstMap.get(reverted.get(0)).getId() %2 != 0){
+        if(firstMap.get(reverted.get(0))!= null && firstMap.get(reverted.get(0)).getId() %2 != 0){
             commonGoalArrayList.add(reverted.get(1));
             commonGoalArrayList.add(reverted.get(0));
         }

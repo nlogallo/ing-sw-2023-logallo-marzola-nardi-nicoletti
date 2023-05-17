@@ -16,9 +16,13 @@ Text{
     -fx-border-radius: none;
     -fx-border-color: #7f3e12;
     -fx-border-width: 3px;
-    -fx-text-fill: linear-gradient(to left top, #ffffff, #dcdbd6);
+    -fx-text-fill: white;
     -fx-font-size: 22;
     -fx-padding: 0;
+}
+
+.button:hover{
+    -fx-background-color: linear-gradient(to left top, #a83c16, #d65715);
 }
 
 TextField{
@@ -64,9 +68,9 @@ TextField{
 .toggle-button{
     -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
     -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: rgba(255, 255, 255, 0.68);
     -fx-font-size: 22;
-    -fx-background-color: linear-gradient(to left top, #bebcbc, #8a8686);
+    -fx-background-color: linear-gradient(to left top, rgba(143, 70, 20, 0.47), rgba(55, 33, 18, 0.57));
     -fx-background-radius: 20;
     -fx-border-radius: 15;
     -fx-border-width: 2px;

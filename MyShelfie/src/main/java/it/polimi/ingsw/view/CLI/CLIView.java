@@ -7,6 +7,8 @@ import it.polimi.ingsw.utils.InputOutputHandler;
 import it.polimi.ingsw.view.Observer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class is the CLI View that is used to exploit the Observer Pattern. In addiction, it contains all the info
@@ -22,6 +24,7 @@ public class CLIView implements Observer {
     private ArrayList<Token> personalTokens = new ArrayList<>();
     private ArrayList<Token> gameTokens;
     private ArrayList<String> playersNickname;
+    private Map<String, Shelf> playersShelf;
     private String currentPlayer;
     private final String clientNickname;
     private String screenMessage;
@@ -136,12 +139,21 @@ public class CLIView implements Observer {
     }
 
     /**
-     * This method update the current player
+     * This method updates the current player
      * @param nickname is the nickname of current player
      */
     @Override
     public void updateCurrentPlayer(String nickname){
         this.currentPlayer = nickname;
+    }
+
+    /**
+     * This method updates the shelf of other players
+     * @param playersShelf is the ArrayList of shelves
+     */
+    @Override
+    public void updatePlayersShelf(Map<String, Shelf> playersShelf) {
+        this.playersShelf = new HashMap<String, Shelf>(playersShelf);
     }
 
     @Override
@@ -206,7 +218,7 @@ public class CLIView implements Observer {
     }
 
     /**
-     *
+     * This method allows to move the Tiles from the CLI
      * @param positions
      * @param column
      */
@@ -215,25 +227,27 @@ public class CLIView implements Observer {
     }
 
     /**
-     *
-     * @param text
-     */
-    public void sendMessage(ArrayList<String> receiver, String text){
-
-    }
-
-
-    /**
-     * This method refresh the CLI with the updated objects
+     * This method refreshes the CLI with the updated objects
      */
     @Override
     public void refreshCLI(){
         cliFormatter.createCLIInterface();
     }
 
+
+    /**
+     * This method enables the users input
+     */
     @Override
     public void enableInput(){
         inputOutputHandler.userPressButton();
     }
 
+    /**
+     * Getter method
+     * @return the shelves of other players
+     */
+    public Map<String, Shelf> getPlayersShelf() {
+        return playersShelf;
+    }
 }
