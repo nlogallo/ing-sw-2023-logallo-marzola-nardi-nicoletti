@@ -1,5 +1,6 @@
 package it.polimi.ingsw.utils;
 
+import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.view.CLI.CLIView;
 
 import java.util.ArrayList;
@@ -13,21 +14,22 @@ public class InputOutputHandler {
 
     private final CLIView view;
     private final Scanner scanner = new Scanner(System.in);
-    public static final String ANSI_RESET = "\u001B[00m";
-    public static final String ANSI_WHITE = "\u001B[37m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_CYAN = "\u001B[38;5;14m";
-    public static final String ANSI_MAGENTA = "\u001B[38;5;13m";
-    public static final String ANSI_BLUE = "\u001B[38;5;33m";
-    public static final String ANSI_CREAM = "\u001B[38;5;229m";
+    private static final String ANSI_RESET = "\u001B[00m";
+    private static final String ANSI_WHITE = "\u001B[37m";
+    private static final String ANSI_GREEN = "\u001B[32m";
+    private static final String ANSI_YELLOW = "\u001B[33m";
+    private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_CYAN = "\u001B[38;5;14m";
+    private static final String ANSI_MAGENTA = "\u001B[38;5;13m";
+    private static final String ANSI_BLUE = "\u001B[38;5;33m";
+    private static final String ANSI_CREAM = "\u001B[38;5;229m";
 
     public InputOutputHandler (CLIView view) {
         this.view = view;
     }
 
 
+    //comment needs to be fixed
     /**
      * This method checks if the player clicks the right buttons in the right phase of the game.
      * When is its turn the player can type 1 to make the move of the Tiles or 2 to open the Chat, if opens the chat
@@ -39,6 +41,7 @@ public class InputOutputHandler {
 
         while (view.getCurrentPlayer() == null || !view.getCurrentPlayer().equals(view.getClientNickname())) {
 
+            //to fixed
             System.out.println("Button allowed: 2: Open Chat");
             String input = scanner.nextLine();
             if (input.equals("2")) {
@@ -61,43 +64,34 @@ public class InputOutputHandler {
 
         if (view.getCurrentPlayer().equals(view.getClientNickname())) {
 
-            while(true) {
+            boolean inWhile = true;
+            while(inWhile) {
 
                 System.out.println("Buttons allowed:     1: Make your move ");
                 System.out.println("                     2: Open Chat");
+                System.out.println("                     3: Show other player Shelves");
+                System.out.println("                     4: Show first commonGoal description");
+                System.out.println("                     5: Show second commonGoal description");
                 System.out.print("... : ");
 
                 String input = scanner.nextLine();
-                if(input.equals("1") || input.equals("2")) {
+                if(input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5") ) {
 
-                    if (input.equals("1")) {
+                    //to fixed
+                    switch (Integer.parseInt(input)) {
 
-                        inputToMoveTile();
-                        break;
-
-                    } else {
-
-                        System.out.println("To exit from the chat press Q and the click enter");
-                        //open chat view
-
-                        while (true) {
-
-                            // chatHandler
-
-                            String button = scanner.nextLine().toUpperCase();
-                            if (button.equals("Q")) {
-
-                                //return to normal view
-                                break;
-
-                            } else {
-
-                                //chatHandler
-                                //send messages
-
-                            }
+                        case 1: { inputToMoveTile();
+                                  inWhile = false;
+                                  break; }
+                        case 2: { break; //open chat
                         }
+                        case 3: { break; //show other player Shelves
+                        }
+                        case 4: { showCommonGoalDescription(view.getCommonGoals().get(0), 0); break; }
+                        case 5: { showCommonGoalDescription(view.getCommonGoals().get(1), 1); break; }
+
                     }
+
                 } else {
                     System.out.println(ANSI_RED + "Incorrect value. You can type 1 if you want to take the Tiles " +
                             "or 2 if you want to open the chat. Retry!" + ANSI_RESET);
@@ -346,5 +340,20 @@ public class InputOutputHandler {
             case CAT ->  ANSI_GREEN ;
             case EMPTY -> ANSI_WHITE ;
         };
+    }
+
+
+    /**
+     * This method prints the specific common Goal description
+     * @param commonGoal is the specific common Goal
+     * @param id is the position of the specific common Goal in the commonGoals' array
+     */
+    private void showCommonGoalDescription (CommonGoal commonGoal, int id) {
+        System.out.println();
+        System.out.println("-+-".repeat(50));
+        System.out.println(ANSI_CREAM + "Common Goal number:  " + ANSI_RESET + (id+1));
+        System.out.println(ANSI_CREAM + "Description: " + ANSI_RESET + commonGoal.getDescription());
+        System.out.println("-+-".repeat(50));
+        System.out.println();
     }
 }

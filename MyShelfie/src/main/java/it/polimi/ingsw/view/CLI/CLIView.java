@@ -250,4 +250,11 @@ public class CLIView implements Observer {
     public Map<String, Shelf> getPlayersShelf() {
         return playersShelf;
     }
+
+    /**
+     * Getter method
+     * @return the client controller
+     */
+    public ClientController getClientController() { return this.clientController; }
+
 }
