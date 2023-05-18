@@ -192,7 +192,7 @@ public class Game implements Serializable {
         boolean firstCommonGoal = true;
         for (int i = 0; i < 2; i++) {
             randomNum = random.nextInt(tempIndex);
-            setProperCommonGoal(commonGoalIndex.get(randomNum), readDescriptionFromJSON(randomNum), firstCommonGoal);
+            setProperCommonGoal(commonGoalIndex.get(randomNum), readDescriptionFromJSON(commonGoalIndex.get(randomNum)), firstCommonGoal);
             firstCommonGoal = false;
             commonGoalIndex.remove(randomNum);
             tempIndex--;
@@ -393,7 +393,7 @@ public class Game implements Serializable {
         for(int i = 0; i < playersCopy.size(); i++){
             maxPointIndex = playerPoints.indexOf(Collections.max(playerPoints));
             player = playersCopy.get(maxPointIndex);
-            gameResults += "\n" + i + 2 + ") " + player.getNickname() + ": " + playerPoints.get(maxPointIndex) + "points";
+            gameResults += "\n" + i + ") " + player.getNickname() + ": " + playerPoints.get(maxPointIndex) + "points";
         }
         return gameResults;
     }

@@ -32,7 +32,6 @@ public class GameController {
             //game.saveGame();
         }catch (IllegalStateException ex){
             game.endGame();
-            System.out.println("-Server- Game: " + this.game.getId() +" has ended");
         }
         this.currentPlayer = nextPlayer;
     }
