@@ -385,31 +385,49 @@ public class MyShelfieClient {
             }
             boolean executed = false;
             while (true) {
-                if (result != null) {
-                    if (result.get(2).getContent().get(0).equals(nickname)) {
-                        controller.enableInput();
-                    }
-                }
-                if (RMIServer.RMIGetMutexAtIndex(game.getId(), playerIndex)) {
-                    result = RMIServer.RMIGetResult(game.getId(), nickname);
-                    game = RMIServer.RMIGetGame(game.getId());
-                    NetworkMessage board = result.get(0);
-                    NetworkMessage token = result.get(1);
-                    NetworkMessage res = result.get(2);
-                    if (board.getRequestId().equals("ER")) {
-                        System.err.println("\n" + board.getTextMessage());
-                        break;
-                    }
-                    controller.updateBoard(board);
-                    controller.updateGameTokens(token);
-                    controller.updateResults(res);
-                    RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);
-                }
+                game = RMIServer.RMIGetGame(game.getId());
                 int isFinished = RMIServer.RMIIsGameFinished(gameId);
-                if (isFinished == 1) {
+                if(isFinished == 0) {
+                    if (result != null) {
+                        if (result.get(2).getContent().get(0).equals(nickname)) {
+                            controller.enableInput();
+                        }
+                    }
+                    if (RMIServer.RMIGetMutexAtIndex(game.getId(), playerIndex)) {
+                        result = RMIServer.RMIGetResult(game.getId(), nickname);
+                        game = RMIServer.RMIGetGame(game.getId());
+                        NetworkMessage board = result.get(0);
+                        NetworkMessage token = result.get(1);
+                        NetworkMessage res = result.get(2);
+                        if (board.getRequestId().equals("ER")) {
+                            System.err.println("\n" + board.getTextMessage());
+                            break;
+                        }
+                        controller.updateBoard(board);
+                        controller.updateGameTokens(token);
+                        controller.updateResults(res);
+                        RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);
+                    }
+                }else if (isFinished == 1) {
+                    if (RMIServer.RMIGetMutexAtIndex(game.getId(), playerIndex)) {
+                        result = RMIServer.RMIGetResult(game.getId(), nickname);
+                        game = RMIServer.RMIGetGame(game.getId());
+                        NetworkMessage board = result.get(0);
+                        NetworkMessage token = result.get(1);
+                        NetworkMessage res = result.get(2);
+                        if (board.getRequestId().equals("ER")) {
+                            System.err.println("\n" + board.getTextMessage());
+                            break;
+                        }
+                        controller.updateBoard(board);
+                        controller.updateGameTokens(token);
+                        controller.updateResults(res);
+                        RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);
+                    }
                     System.out.println("Game ended! Thank you for playing!");
                     break;
                 } else if (isFinished == 2) {
+
                     System.err.println("A player left the game. Game end here.");
                     break;
                 }
