@@ -1,5 +1,6 @@
 package it.polimi.ingsw.utils;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 
@@ -9,8 +10,8 @@ import java.util.ArrayList;
  */
 public class ClientChat {
 
-    private final ArrayList<String> chat = new ArrayList<>();
     private final int id;
+    private final ArrayList<ClientMessage> chat = new ArrayList<>();
     private final ArrayList<String> playerList = new ArrayList<>();
 
     public ClientChat(int id, ArrayList<String> playerList) {
@@ -39,39 +40,10 @@ public class ClientChat {
 
     /**
      * Getter method
-     * @return the last message (String) in the chat instance
-     */
-    public String getLastMessageString() {
-        return chat.get(chat.size()-1);
-    }
-
-
-    /**
-     * Getter method
      * @return an arrayList that represents the chat instance
      */
-    public ArrayList<String> getMessagesString () {
+    public ArrayList<ClientMessage> getClientMessages() {
         return this.chat;
-    }
-
-
-    /**
-     * This method gets all messages received from a specific player
-     * @param player the specified player
-     * @return an arrayList with inside all messages received from a specific player
-     */
-    public ArrayList<String> getMessagesReceivedByPlayerX (String player) {
-
-        ArrayList<String> messagesReceivedByPlayerX = new ArrayList<>();
-        for (String s : chat) {
-            String[] pieceOfS = s.split("&&&");
-            String receiver = pieceOfS[1];
-            String text = pieceOfS[2];
-            if (receiver.equals(player)) {
-                messagesReceivedByPlayerX.add(s);
-            }
-        }
-        return messagesReceivedByPlayerX;
     }
 
 
@@ -88,7 +60,8 @@ public class ClientChat {
      * This method adds the new message (String) in the arrayList contained all messages (String) of the chat instance
      * @param message is the new message (String). The format of the new message (String) is: sender&&&receiver&&&text
      */
-    public void addMessage(String message) {
-        this.chat.add(message);
+    public void addMessage(String message, String sender, ArrayList<String> receivers, Timestamp timestamp) {
+        this.chat.add(new ClientMessage(message, sender, receivers, timestamp));
+
     }
 }
