@@ -32,6 +32,7 @@ public class SceneController {
             throw new RuntimeException(e);
         }
         activeSceneController = fmxlLoader.getController();
+        activeSceneController.setGui(gui);
         activeScene = new Scene(root);
         stage.setScene(activeScene);
         stage.setResizable(false);
