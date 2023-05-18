@@ -15,9 +15,11 @@ public class CLIMenus {
 
     public static void shelvesMenu(CLIView view){
         if(view.getPlayersShelf() != null) {
+            System.out.println("\n" + "-+-".repeat(59));
+            System.out.println(ANSI_CREAM + "These are the other player Shelves: " + ANSI_RESET);
             for (int i = 0; i < 14; i++)
                 printShelvesPerRow(i, view);
-            System.out.print("\n");
+            System.out.print("\n" + "-+-".repeat(59) + "\n");
         }
     }
 
