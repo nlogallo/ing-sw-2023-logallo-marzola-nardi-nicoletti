@@ -382,6 +382,13 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             if (netMessage.getRequestId().equals("MT")) {
                                 NetworkMessage resp = virtualView.moveTiles(netMessage, player);
                                 game = virtualView.getGame();
+                                /*if (game.getCurrentPlayer().hasSeat()) {
+                                    System.out.println("SIUM " + game.getCurrentPlayer().getNickname());
+                                    game.endGame();
+                                    if(game.getCurrentPlayer() != null){
+                                        System.out.println("SIUMO " + game.getCurrentPlayer().getNickname());
+                                    }
+                                }*/
                                 outputStream.reset();
                                 outputStream.writeObject(resp);
                                 games.set(game.getId() - 1, game);
@@ -389,6 +396,16 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         }
                         if (games.get(game.getId() - 1).getMutexAtIndex(playerIndex) && game.getCurrentPlayer() != null) {
                             virtualView = new VirtualView(games.get(game.getId() - 1), game.getCurrentPlayer().getNickname());
+                            outputStream.reset();
+                            outputStream.writeObject(virtualView.updateBoard());
+                            outputStream.reset();
+                            outputStream.writeObject(virtualView.updateGameTokens());
+                            outputStream.reset();
+                            outputStream.writeObject(virtualView.updateResult());
+                            game.setMutexFalseAtIndex(playerIndex);
+                            games.set(game.getId() - 1, game);
+                        }else if (games.get(game.getId() - 1).getState() == GameState.ENDED){
+                            virtualView = new VirtualView(games.get(game.getId() - 1), null);
                             outputStream.reset();
                             outputStream.writeObject(virtualView.updateBoard());
                             outputStream.reset();
