@@ -26,6 +26,11 @@ public class InputOutputHandler {
     private static final String ANSI_BLUE = "\u001B[38;5;33m";
     private static final String ANSI_CREAM = "\u001B[38;5;229m";
 
+
+    /**
+     * Class Constructor
+     * @param view is a specific view
+     */
     public InputOutputHandler (CLIView view) {
         this.view = view;
         chatHandler = new ChatHandler(view);
@@ -127,8 +132,7 @@ public class InputOutputHandler {
             if (cont != 0) {
 
                 System.out.print("If you want take an other tile press Y otherwise press N: ");
-                String s = scanner.nextLine().toUpperCase();
-                String will = checkContinueString(s);
+                String will = checkContinueString();
 
                 if (will.equals("N")) {
                     inWhile = false;
@@ -138,7 +142,7 @@ public class InputOutputHandler {
 
         stringColumnShelf = generateCorrectNumberString("Type the Shelf's column where you want to insert the tile: ", 5);
 
-        String tilePosition = null;
+        String tilePosition;
 
         for (int i = 0; i < rowPosition.size(); i++) {
             tilePosition = rowPosition.get(i) + columnPosition.get(i);
@@ -257,27 +261,20 @@ public class InputOutputHandler {
 
 
     /**
-     * This method check if the String val is equals Y or N.
-     * If val is not equals Y or N this method continues to request a new String.
-     * @param val is the String to check.
-     * @return the correct String equals Y or N
+     * This method checks if the player wants to take another tile or not
+     * @return the correct string that it could equal to Y or N
      */
-    private String checkContinueString(String val) {
+    private String checkContinueString() {
 
-        String outputString = val;
-
-        if(!(val.equals("Y") || val.equals("N"))) {
-
-            boolean isStringIncorrect = true;
-            while (isStringIncorrect) {
-
-                System.out.println(ANSI_RED + "The entry is incorrect!" + ANSI_RESET);
+        String outputString;
+        while (true) {
+            String input = scanner.nextLine().toUpperCase();
+            if (input.equals("Y") || input.equals("N")) {
+                outputString = input;
+                break;
+            } else {
+                System.out.println(ANSI_RED + "The entry is incorrect. Retry!" + ANSI_RESET);
                 System.out.print("If you want take an other tile press Y otherwise press N: ");
-                String newString = scanner.nextLine().toUpperCase();
-                if (newString.equals("Y") || newString.equals("N")) {
-                    outputString = newString;
-                    isStringIncorrect = false;
-                }
             }
         }
         return outputString;

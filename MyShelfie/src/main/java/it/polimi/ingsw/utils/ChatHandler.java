@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
+/**
+ * This class represents the handler of the chat, it is used to check and acquire the will of the player
+ * It is used also for create new duo chats, send new messages and view all the chats
+ */
 public class ChatHandler {
 
     private final CLIView view;
@@ -25,6 +29,11 @@ public class ChatHandler {
     private ArrayList<ClientChat> duoChats = new ArrayList<>();
     private ClientChat globalChat = null;
 
+
+    /**
+     * Class Constructor
+     * @param view is a specific CLIView
+     */
     public ChatHandler (CLIView view) {
         this.view = view;
         clientNickname = view.getClientNickname();
@@ -75,7 +84,6 @@ public class ChatHandler {
      * @param receivers are the receivers of the message
      * @param text is the text of the message
      */
-
     //to be fixed
     private void sendMessage (String sender, ArrayList<String> receivers, String text) {
         ClientController clientController = view.getClientController();
@@ -172,15 +180,15 @@ public class ChatHandler {
     }
 
 
-
     /**
-     * This method opens a new duo Chat
+     * This method creates a new duo Chat
      */
     private void createDuoChat() {
 
         //players doesn't contain the clientNickname
         ArrayList<String> players = view.getPlayersNickname();
         int contOption = 0;
+        boolean isHappen = false;
         System.out.println("\n" + "-+-".repeat(59) + "\n");
 
         while (true) {
@@ -189,14 +197,21 @@ public class ChatHandler {
                 for (int i = 0; i < players.size(); i++) {
                     if (i == 0 && checkChat(clientNickname, players.get(i))) {
                             System.out.println("         1: " + players.get(i));
+                            isHappen = true;
                     } else if (checkChat(clientNickname, players.get(i))) {
+                        if (isHappen) {
                             System.out.println(" ".repeat(61) + (i + 1) + ": " + players.get(i));
+                        } else {
+                            System.out.println("         " + (i+1) + ": " + players.get(i));
+                            isHappen = true;
+                        }
                     }
                     contOption++;
                 }
                 System.out.print("Your choose: ");
                 String userInput = scanner.nextLine();
-                if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), contOption)) {
+                if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), contOption) &&
+                        checkChat(clientNickname, players.get(Integer.parseInt(userInput)))) {
                     ArrayList<String> newChatPlayerList = new ArrayList<>();
                     newChatPlayerList.add(clientNickname);
                     newChatPlayerList.add(players.get(Integer.parseInt(userInput)-1));
@@ -216,7 +231,7 @@ public class ChatHandler {
 
 
     /**
-     *
+     * This method choose the specific duo chat to see from the list of the already open duo chat
      */
     private void chooseDuoChat () {
 
@@ -257,6 +272,11 @@ public class ChatHandler {
         }
     }
 
+
+    /**
+     * This method prints the specific chat
+     * @param chat is the specific chat
+     */
     private void viewDuoChat (ClientChat chat) {
 
         String otherPlayer = chat.getChatMembers().get(chat.getChatMembers().size() - chat.getChatMembers().indexOf(clientNickname) -1);
@@ -277,9 +297,15 @@ public class ChatHandler {
                 printMessage(messageList.get(i), chatMembers);
             }
         }
-        sendMessageOrOpenMenu(chat);
+        sendMessageOrOpenChatMenu(chat);
     }
 
+
+    /**
+     * This method prints the specific message in the correct form factor
+     * @param message is the message
+     * @param chatMembers are the chat members
+     */
     private void printMessage (ClientMessage message, ArrayList<String> chatMembers) {
 
         String color;
@@ -292,7 +318,13 @@ public class ChatHandler {
 
     }
 
-    private void sendMessageOrOpenMenu(ClientChat chat) {
+
+    /**
+     * This method is a subMenu in which the player could choose:       1: Send a message
+     *                                                                  2: Come back to Chat MENU
+     * @param chat is a specific chat
+     */
+    private void sendMessageOrOpenChatMenu(ClientChat chat) {
 
         while (true) {
             System.out.println();
@@ -312,6 +344,11 @@ public class ChatHandler {
         }
     }
 
+
+    /**
+     * This method checks if the player wants to send a new message or not
+     * @param chat is a specific chat
+     */
     private void writeMessageAndSendIt (ClientChat chat) {
 
         String message;
@@ -335,6 +372,11 @@ public class ChatHandler {
         }
     }
 
+
+    /**
+     * This method checks if the player wants to send a new message or not
+     * @return the correct string that it could equal to Y or N
+     */
     private String checkContinueString() {
 
         String outputString;
@@ -352,21 +394,22 @@ public class ChatHandler {
     }
 
 
-
+    /**
+     * This method prints the global chat
+     */
     private void viewGlobalChat () {
 
-        System.out.println("-+-".repeat(59));
+        System.out.println("-+-".repeat(59) + "\n");
         if (globalChat != null) {
             System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET);
             for (int i = globalChat.getClientMessages().size(); i > globalChat.getClientMessages().size() - 16; i--) {
                 ClientMessage message = globalChat.getClientMessages().get(i);
                 System.out.println(ANSI_CREAM + message.getTimestamp() + " " + message.getSender() + ": " + ANSI_RESET + message.getMessage());
             }
-            sendMessageOrOpenMenu(globalChat);
+            sendMessageOrOpenChatMenu(globalChat);
         } else {
             System.out.println(ANSI_RED + "There aren't messages in the global chat" + ANSI_RESET);
             chatMenu();
         }
     }
-
 }
