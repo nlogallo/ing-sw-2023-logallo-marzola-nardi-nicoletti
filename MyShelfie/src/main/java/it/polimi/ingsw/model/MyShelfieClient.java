@@ -98,7 +98,6 @@ public class MyShelfieClient {
                         command = TCPCheckForGameStart();
                         if (command.equals("startGame")) {
                             System.out.println("GAME STARTED!");
-                            System.out.println(chatInput.readObject());
                             new MyShelfieClient().handleGameTCP(nickname);
                             break;
                         }
@@ -149,11 +148,11 @@ public class MyShelfieClient {
                             break;
                         }
                     }
-                    game = RMIServer.RMIGetGame(game.getId());
+                    game = RMIGetGame(game.getId());
                     System.out.println("GAME STARTED!");
                     new MyShelfieClient().handleGameRMI(game, nickname);
                 } catch (Exception e) {
-                    throw new RemoteException();
+                    System.err.println("Connection lost! :(");
                 }
             }
         }
@@ -237,6 +236,14 @@ public class MyShelfieClient {
     }
 
     /**
+     * Setter method for remoteNickname
+     * @param nickname
+     */
+    static public void setRemoteNickname(String nickname){
+        remoteNickname = nickname;
+    }
+
+    /**
      * Method which checks if a game is available (RMI)
      * @return the Game where the player has been added to or null if there was no available game to join
      * @throws RemoteException
@@ -294,6 +301,16 @@ public class MyShelfieClient {
      */
     static public boolean RMICheckForGameStart(int gameId, boolean seat) throws RemoteException {
         return RMIServer.RMICheckForStart(gameId, seat);
+    }
+
+    /**
+     * Getter for RMI game
+     * @param gameId
+     * @return the updated game
+     * @throws RemoteException
+     */
+    static public Game RMIGetGame(int gameId) throws RemoteException {
+        return RMIServer.RMIGetGame(gameId);
     }
 
     /**

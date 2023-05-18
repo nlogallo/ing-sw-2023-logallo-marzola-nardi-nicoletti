@@ -460,7 +460,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     String msg = (String) inputStream.readObject();
                     if(msg.equals("chatOk")){
                         System.out.println("User from " + this.clientSocket.getInetAddress().getHostAddress() + " connected to chat!");
-                        outputStream.writeObject("ciao iuser, purtroppo si, mi hai scoperto");
                     }
                 }
             } catch (IOException e) {
