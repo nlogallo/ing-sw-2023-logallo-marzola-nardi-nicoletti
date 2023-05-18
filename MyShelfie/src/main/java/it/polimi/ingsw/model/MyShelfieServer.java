@@ -382,13 +382,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             if (netMessage.getRequestId().equals("MT")) {
                                 NetworkMessage resp = virtualView.moveTiles(netMessage, player);
                                 game = virtualView.getGame();
-                                /*if (game.getCurrentPlayer().hasSeat()) {
-                                    System.out.println("SIUM " + game.getCurrentPlayer().getNickname());
-                                    game.endGame();
-                                    if(game.getCurrentPlayer() != null){
-                                        System.out.println("SIUMO " + game.getCurrentPlayer().getNickname());
-                                    }
-                                }*/
                                 outputStream.reset();
                                 outputStream.writeObject(resp);
                                 games.set(game.getId() - 1, game);
