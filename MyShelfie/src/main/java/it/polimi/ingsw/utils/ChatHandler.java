@@ -188,6 +188,7 @@ public class ChatHandler {
         //players doesn't contain the clientNickname
         ArrayList<String> players = view.getPlayersNickname();
         int contOption = 0;
+        //isHappen is a boolean variable which is used to make a correct print
         boolean isHappen = false;
         System.out.println("\n" + "-+-".repeat(59) + "\n");
 
@@ -211,7 +212,7 @@ public class ChatHandler {
                 System.out.print("Your choose: ");
                 String userInput = scanner.nextLine();
                 if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), contOption) &&
-                        checkChat(clientNickname, players.get(Integer.parseInt(userInput)))) {
+                        checkChat(clientNickname, players.get(Integer.parseInt(userInput)-1))) {
                     ArrayList<String> newChatPlayerList = new ArrayList<>();
                     newChatPlayerList.add(clientNickname);
                     newChatPlayerList.add(players.get(Integer.parseInt(userInput)-1));
@@ -220,6 +221,7 @@ public class ChatHandler {
                     break;
                 } else {
                     System.out.println(ANSI_RED + "Value is incorrect. Retry!" + ANSI_RESET);
+                    isHappen = false;
                 }
             } else {
                 System.out.println(ANSI_RED + "You can't open other chat with the same people" + ANSI_RESET);
@@ -239,7 +241,7 @@ public class ChatHandler {
         System.out.println("\n" + "-+-".repeat(59) + "\n");
         while (true) {
             cont = 0;
-            if (duoChats.size() >= 1) {
+            if (duoChats.size() > 0) {
 
                 System.out.print(ANSI_CREAM + "These are your open duo chats: " + ANSI_RESET);
                 int otherPlayerIndex;
@@ -256,9 +258,12 @@ public class ChatHandler {
                     }
                 }
 
-                System.out.print("Which chat do you want to view: ");
+                System.out.print("Which chat do you want to view (Type Q to QUIT): ");
                 String userInput = scanner.nextLine();
-                if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), cont)) {
+                if(userInput.equals("q") || userInput.equals("Q")) {
+                    chatMenu();
+                    break;
+                } else if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), cont)) {
                     viewDuoChat(duoChats.get(Integer.parseInt(userInput)-1));
                     break;
                 } else {
