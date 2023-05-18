@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.utils.NetworkMessage;
+import it.polimi.ingsw.view.CLI.CLIMenus;
 import it.polimi.ingsw.view.ClientViewObservable;
 
 import java.util.ArrayList;
@@ -207,10 +208,14 @@ public class ClientController {
      * @param networkMessage is the NetworkMessage received from the Server
      */
     public void updateResults(NetworkMessage networkMessage){
-        clientViewObservable.setScreenMessage(networkMessage.getTextMessage());
-        clientViewObservable.setCurrentPlayer((String) networkMessage.getContent().get(0));
-        clientViewObservable.setPlayersShelf((Map<String, Shelf>)networkMessage.getContent().get(1));
-        clientViewObservable.refreshCLI();
+        if(networkMessage.getRequestId().equals("UR")) {
+            clientViewObservable.setScreenMessage(networkMessage.getTextMessage());
+            clientViewObservable.setCurrentPlayer((String) networkMessage.getContent().get(0));
+            clientViewObservable.setPlayersShelf((Map<String, Shelf>) networkMessage.getContent().get(1));
+            clientViewObservable.refreshCLI();
+        }
+        else
+            CLIMenus.endMenu(networkMessage.getTextMessage());
     }
 
     public void updatePlayersShelf(NetworkMessage networkMessage){

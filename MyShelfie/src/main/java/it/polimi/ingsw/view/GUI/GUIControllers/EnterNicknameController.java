@@ -71,7 +71,18 @@ public class EnterNicknameController implements GenericSceneController, Initiali
                     parameters.add(protocolValue);
                     parameters.add(nicknameText.getText());
                     //gui.setNickname("nickname");
-                    SceneController.changeScene(gui, "NoGamesAvailable.fxml", parameters);
+                    if(protocolValue == 1) {
+                        if(MyShelfieClient.TCPCheckForAvailableGames().equals("newGame"))
+                            SceneController.changeScene(gui, "NoGamesAvailable.fxml", parameters);
+                        else
+                            SceneController.changeScene(gui, "LobbyStage.fxml");
+                    }
+                    else{
+                        if(MyShelfieClient.RMICheckForAvailableGame() == null)
+                            SceneController.changeScene(gui, "NoGamesAvailable.fxml", parameters);
+                        else
+                            SceneController.changeScene(gui, "LobbyStage.fxml");
+                    }
                     break;
                 case "nicknameWrong":
                     infoMessage.setFill(Color.RED);

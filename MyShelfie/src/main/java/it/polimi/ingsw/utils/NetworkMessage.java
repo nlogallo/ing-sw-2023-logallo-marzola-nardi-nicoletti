@@ -17,6 +17,8 @@ public class NetworkMessage implements Serializable {
      * UR -> Update Result (a message that contains the status of the game, such as who is playing, or the final results of the game)
      * MT -> Move Tiles (a message send by the Client to move the tiles from client to the server)
      * SM -> Send Message (a message send by the Client to add a message in a Chat)
+     * ER -> Error Message
+     * END -> End of the game
      */
     private String requestId;
     /**

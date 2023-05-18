@@ -387,13 +387,13 @@ public class Game implements Serializable {
         winner = playersCopy.get(maxPointIndex);
         String gameResults;
         Player player;
-        gameResults = "Congratulations, " + winner.getNickname() + "you won with " + playerPoints.get(maxPointIndex);
+        gameResults = "Congratulations " + winner.getNickname() + " you won with " + playerPoints.get(maxPointIndex) + "points";
         playerPoints.remove(maxPointIndex);
         playersCopy.remove(maxPointIndex);
         for(int i = 0; i < playersCopy.size(); i++){
             maxPointIndex = playerPoints.indexOf(Collections.max(playerPoints));
             player = playersCopy.get(maxPointIndex);
-            gameResults += "\n" + i + ") " + player.getNickname() + ": " + playerPoints.get(maxPointIndex) + "points";
+            gameResults += "\n" + (i+2) + ") " + player.getNickname() + ": " + playerPoints.get(maxPointIndex) + " points";
         }
         return gameResults;
     }

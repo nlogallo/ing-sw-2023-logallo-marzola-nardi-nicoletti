@@ -21,8 +21,9 @@ public class CLIMenus {
         }
     }
 
-    public void endMenu(){
-
+    public static void endMenu(String results){
+        System.out.print("\n" + ANSI_RED + "Game Ended!" + ANSI_RESET);
+        System.out.print("\n" + results);
     }
 
     private static void printShelvesPerRow(int row, CLIView view){
