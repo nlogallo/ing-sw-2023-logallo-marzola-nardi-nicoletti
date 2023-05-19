@@ -43,7 +43,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 int port = 25566;
                 ServerSocket serverSocket = new ServerSocket(port);
                 System.out.println("TCP Server started on port " + port);
-                ServerSocket chatSocket = new ServerSocket(25567);
+                ServerSocket chatSocket = new ServerSocket(port + 1);
                 while (true) {
                     //Game client handler
                     Socket clientSocket = serverSocket.accept();
@@ -189,19 +189,20 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @throws RemoteException
      */
     public synchronized ArrayList<NetworkMessage> RMIGetResult(int gameId, String nickname) throws RemoteException {
-        int playerIndex = 0;
+        //int playerIndex = 0;
         ArrayList<NetworkMessage> result = new ArrayList<>();
         Game game = games.get(gameId - 1);
         VirtualView virtualView = RMIVirtualViews.get(nickname);
-        for (int i=0; i<game.getPlayers().size(); i++){
+        /*for (int i=0; i<game.getPlayers().size(); i++){
             if(game.getPlayers().get(i).getNickname().equals(nickname))
                 playerIndex = i;
-        }
+        }*/
         //if (games.get(gameId - 1).getMutexAtIndex(playerIndex)) {
             games.set(gameId - 1, game);
             result.add(virtualView.updateBoard());
             result.add(virtualView.updateGameTokens());
             result.add(virtualView.updateResult());
+            games.set(gameId - 1, virtualView.getGame());
             return result;
         //}
         //return null;
@@ -457,10 +458,12 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 outputStream = new ObjectOutputStream(this.clientSocket.getOutputStream());
                 inputStream = new ObjectInputStream(this.clientSocket.getInputStream());
                 while(true){
+                    clientSocket.setKeepAlive(true);
                     String msg = (String) inputStream.readObject();
                     if(msg.equals("chatOk")){
                         System.out.println("User from " + this.clientSocket.getInetAddress().getHostAddress() + " connected to chat!");
                     }
+                    //outputStream.writeObject("CIAONE SONO LA CHAT");
                 }
             } catch (IOException e) {
             } catch (ClassNotFoundException e) {

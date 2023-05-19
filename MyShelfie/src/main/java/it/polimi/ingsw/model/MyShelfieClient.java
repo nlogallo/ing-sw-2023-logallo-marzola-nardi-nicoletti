@@ -29,6 +29,10 @@ public class MyShelfieClient {
     static int protocol;
     static String remoteNickname;
     static int gameId;
+    static ClientViewObservable view;
+    static ClientController controller;
+
+    static boolean moveFinished = false;
 
     /**
      * Main method: Asks to the user to choose between TCP and RMI connection and establishes the connection with the chosen protocol.
@@ -98,6 +102,8 @@ public class MyShelfieClient {
                         command = TCPCheckForGameStart();
                         if (command.equals("startGame")) {
                             System.out.println("GAME STARTED!");
+                            String finalNickname = nickname;
+                            System.out.println("FRANCO "+ chatSocket.isConnected());
                             new MyShelfieClient().handleGameTCP(nickname);
                             break;
                         }
@@ -176,8 +182,8 @@ public class MyShelfieClient {
                 chatSocket = new Socket(hostname, port + 1);
                 if (chatSocket.isConnected()) {
                     chatOutput = new ObjectOutputStream(chatSocket.getOutputStream());
-                    chatInput = new ObjectInputStream(chatSocket.getInputStream());
                     chatOutput.writeObject("chatOk");
+                    //chatOutput.close();
                 }
                 if (socket.isConnected()) {
                     System.out.println("Connected! :)");
@@ -318,44 +324,64 @@ public class MyShelfieClient {
      *
      * @param nickname
      */
-    private void handleGameTCP(String nickname) {
-        ClientViewObservable view = new ClientViewObservable(new CLIView(nickname));
-        ClientController controller = new ClientController(view, this, nickname);
+    public void handleGameTCP(String nickname){
+        view = new ClientViewObservable(new CLIView(nickname));
+        controller = new ClientController(view, this, nickname);
         view.setClientController(controller);
         try {
             NetworkMessage nm = (NetworkMessage) inputStream.readObject();
             controller.playerSetup(nm);
             NetworkMessage currentPlayer = (NetworkMessage) inputStream.readObject();
             controller.updateResults(currentPlayer);
-            if (currentPlayer.getContent().get(0).equals(nickname)) {
+            /*if (currentPlayer.getContent().get(0).equals(nickname)) {
                 controller.enableInput();
-            }
+            }*/
             NetworkMessage result = null;
+
+            new Thread(() -> new MyShelfieClient().handleChatTCP(nickname, chatSocket)).start();
             while (true) {
-                if (result != null) {
+                /*if (result != null) {
                     if (result.getContent().get(0).equals(nickname)) {
                         controller.enableInput();
                     }
-                }
-                NetworkMessage board = (NetworkMessage) inputStream.readObject();
-                if (board.getRequestId().equals("ER")) {
-                    System.err.println("\n" + board.getTextMessage());
-                    break;
-                } else if (board.getRequestId().equals("UC")) {
-                    controller.updateChat(board);
-                } else if (board.getRequestId().equals("UB")) {
-                    controller.updateBoard(board);
-                    NetworkMessage token = (NetworkMessage) inputStream.readObject();
-                    controller.updateGameTokens(token);
-                    result = (NetworkMessage) inputStream.readObject();
-                    controller.updateResults(result);
+                }*/
+                if (moveFinished){
+                    NetworkMessage board = (NetworkMessage) inputStream.readObject();
+                    if (board.getRequestId().equals("ER")) {
+                        System.err.println("\n" + board.getTextMessage());
+                        break;
+                    } else if (board.getRequestId().equals("UC")) {
+                        controller.updateChat(board);
+                    } else if (board.getRequestId().equals("UB")) {
+                        controller.updateBoard(board);
+                        NetworkMessage token = (NetworkMessage) inputStream.readObject();
+                        controller.updateGameTokens(token);
+                        result = (NetworkMessage) inputStream.readObject();
+                        controller.updateResults(result);
+                    }
+                    moveFinished = false;
                 }
             }
         } catch (IOException e) {
-            System.err.println("\nConnection lost!");
+            throw new RuntimeException(e);
+            //System.err.println("\nConnection lost!");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void handleChatTCP(String nickname, Socket chatSocket) {
+        try {
+            chatOutput = new ObjectOutputStream(chatSocket.getOutputStream());
+            chatInput = new ObjectInputStream(chatSocket.getInputStream());
+            while (true) {
+                controller.enableInput();
+            }
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        } /*catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }*/
     }
 
     /**
@@ -364,7 +390,7 @@ public class MyShelfieClient {
      * @param game
      * @param nickname
      */
-    private void handleGameRMI(Game game, String nickname) {
+    public void handleGameRMI(Game game, String nickname) {
         ClientViewObservable view = new ClientViewObservable(new CLIView(nickname));
         ClientController controller = new ClientController(view, this, nickname);
         view.setClientController(controller);
@@ -383,7 +409,6 @@ public class MyShelfieClient {
                 if (game.getPlayers().get(i).getNickname().equals(nickname))
                     playerIndex = i;
             }
-            boolean executed = false;
             while (true) {
                 game = RMIServer.RMIGetGame(game.getId());
                 int isFinished = RMIServer.RMIIsGameFinished(gameId);
@@ -409,7 +434,7 @@ public class MyShelfieClient {
                         RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);
                     }
                 }else if (isFinished == 1) {
-                    if (RMIServer.RMIGetMutexAtIndex(game.getId(), playerIndex)) {
+                    //if (RMIServer.RMIGetMutexAtIndex(game.getId(), playerIndex)) {
                         result = RMIServer.RMIGetResult(game.getId(), nickname);
                         game = RMIServer.RMIGetGame(game.getId());
                         NetworkMessage board = result.get(0);
@@ -423,7 +448,7 @@ public class MyShelfieClient {
                         controller.updateGameTokens(token);
                         controller.updateResults(res);
                         RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);
-                    }
+                    //}
                     System.out.println("Game ended! Thank you for playing!");
                     break;
                 } else if (isFinished == 2) {
@@ -452,7 +477,9 @@ public class MyShelfieClient {
                 outputStream.flush();
                 if (networkMessage.getRequestId().equals("MT")) {
                     outputStream.writeObject(networkMessage);
-                    return (NetworkMessage) inputStream.readObject();
+                    NetworkMessage result = (NetworkMessage) inputStream.readObject();
+                    moveFinished = true;
+                    return result;
                 } else if (networkMessage.getRequestId().equals("SM")) {
                     outputStream.writeObject(networkMessage);
                     return (NetworkMessage) inputStream.readObject();
