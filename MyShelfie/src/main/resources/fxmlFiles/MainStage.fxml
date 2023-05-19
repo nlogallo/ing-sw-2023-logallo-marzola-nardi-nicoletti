@@ -816,9 +816,39 @@
       <AnchorPane layoutX="435.0" layoutY="114.0" prefHeight="254.0" prefWidth="126.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a66e49" height="220.0" layoutX="23.0" layoutY="18.0" stroke="#464545" strokeType="INSIDE" strokeWidth="2.0" width="76.0" />
-            <ImageView fx:id="pickedTile1Top" fitHeight="44.0" fitWidth="44.0" layoutX="41.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="pickedTileMiddle" fitHeight="44.0" fitWidth="44.0" layoutX="40.0" layoutY="104.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="pickedTileBottom" fitHeight="44.0" fitWidth="44.0" layoutX="39.0" layoutY="171.0" pickOnBounds="true" preserveRatio="true" />
+            <AnchorPane layoutX="39.0" layoutY="42.0" prefHeight="44.0" prefWidth="44.0">
+               <children>
+                  <ImageView fx:id="pickedTileTop" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="topLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font name="American Typewriter" size="25.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="pickedTopButton" mnemonicParsing="false" opacity="0.0" prefHeight="44.0" prefWidth="53.5" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="39.0" layoutY="107.0" prefHeight="44.0" prefWidth="44.0">
+               <children>
+                  <ImageView fx:id="pickedTileMiddle" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="middleLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER">
+                     <font>
+                        <Font name="American Typewriter" size="25.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="pickedMiddleButton" mnemonicParsing="false" opacity="0.0" prefHeight="44.0" prefWidth="53.5" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="39.0" layoutY="171.0" prefHeight="44.0" prefWidth="44.0">
+               <children>
+                  <ImageView fx:id="pickedTileBottom" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="bottomLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER">
+                     <font>
+                        <Font name="American Typewriter" size="25.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="pickedBottomButton" mnemonicParsing="false" opacity="0.0" prefHeight="44.0" prefWidth="53.5" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
       <Label layoutX="71.0" layoutY="466.0" text="Personal Goal">
