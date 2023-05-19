@@ -56,6 +56,9 @@ public class InputOutputHandler {
 
             System.out.println(ANSI_CREAM + "Button allowed:" + ANSI_RESET + "     2: Open Chat MENU");
             System.out.println(" ".repeat(20) + "3: Show other player Shelves ");
+            System.out.println(" ".repeat(20) + "4: Show first commonGoal description");
+            System.out.println(" ".repeat(20) + "5: Show second commonGoal description");
+            System.out.println("... : ");
 
             String input = scanner.nextLine();
             if (input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5") ) {
