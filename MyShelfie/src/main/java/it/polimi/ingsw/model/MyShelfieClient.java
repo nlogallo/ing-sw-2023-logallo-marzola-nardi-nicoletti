@@ -5,7 +5,9 @@ import it.polimi.ingsw.utils.NetworkMessage;
 import it.polimi.ingsw.view.CLI.CLIView;
 import it.polimi.ingsw.view.ClientViewObservable;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.rmi.Naming;
@@ -13,9 +15,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
 
 /**
  * Client class for RMI and TCP connection
@@ -373,8 +372,19 @@ public class MyShelfieClient {
             ArrayList<NetworkMessage> result = null;
 
             new Thread(() -> new MyShelfieClient().handleChatTCP(nickname, chatSocket)).start();
-
+            /*Thread threadChat = new Thread(){
+                @Override
+                public void run(){
+                    controller.enableInput();
+                }
+            };
+            threadChat.start();*/
+            Thread threadChat = null;
             while (true) {
+                if(threadChat != null)
+                    threadChat.interrupt();
+                threadChat = new Thread(() -> controller.enableInput());
+                threadChat.start();
                 /*if (result != null) {
                     if (result.getContent().get(0).equals(nickname)) {
                         controller.enableInput();
@@ -386,8 +396,22 @@ public class MyShelfieClient {
                         showMenu = false;
                     }
                     //synchronized (lock1){
-                        System.out.println("Pippo 1");
+                        /*if(!threadChat.isInterrupted()) {
+                            System.out.println("still alive");
+                            threadChat.interrupt();
+                            while(true){
+                                if(threadChat.isInterrupted())
+                                    break;
+                            }
+                            System.out.println(threadChat.isInterrupted());
+                        }*/
                         result = (ArrayList<NetworkMessage>) inputStream.readObject();
+                        //threadChat.interrupt();
+                        /*if(threadChat.isAlive()){
+                            System.out.println("sono ancora vivo");
+                            threadChat.interrupt();
+                            while (threadChat.isInterrupted()){}
+                        }*/
                         NetworkMessage board = result.get(0);
                         if (board.getRequestId().equals("ER")) {
                             System.err.println("\n" + board.getTextMessage());
@@ -421,10 +445,10 @@ public class MyShelfieClient {
             chatOutput = new ObjectOutputStream(chatSocket.getOutputStream());
             chatInput = new ObjectInputStream(chatSocket.getInputStream());
             while (true) {
-                if(showMenu)
                 //synchronized (lock1){
                     //lock1.wait();
-                    controller.enableInput();
+                    //controller.enableInput();
+                //inputStream.readObject();
                 //}
             }
         } catch (IOException e){

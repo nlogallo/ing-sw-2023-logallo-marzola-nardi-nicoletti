@@ -1,5 +1,7 @@
 package it.polimi.ingsw.view.GUI.GUIControllers;
 
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.MyShelfieClient;
 import it.polimi.ingsw.view.GUI.GUIView;
 import it.polimi.ingsw.view.GUI.SceneController;
 import javafx.event.Event;
@@ -8,10 +10,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -53,6 +59,39 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
     }
 
     private void createGame(Event event){
-        SceneController.changeScene(gui, "LobbyStage.fxml");
+        ArrayList<Object> parameters = new ArrayList<>();
+        if(protocol.getText().equals("TCP Socket")){
+            parameters.add(1);
+            try {
+                MyShelfieClient.TCPSetPlayersNumber((int)spinner.getValue());
+                int gameId = MyShelfieClient.TCPGetGameId();
+                parameters.add(gameId);
+            } catch (IOException | ClassNotFoundException e) {
+                Stage primaryStage = SceneController.getStage();
+                Stage stage = new Stage();
+                stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
+                stage.setTitle("My Shelfie Connection Error");
+                SceneController.setStage(stage);
+                SceneController.changeScene(gui, "ErrorStage.fxml");
+                SceneController.setStage(primaryStage);
+            }
+        }
+        else {
+            try {
+                parameters.add(2);
+                Game game = MyShelfieClient.RMIHandleGameCreation((int) spinner.getValue());
+                parameters.add(game.getId());
+            } catch (RemoteException e) {
+                Stage primaryStage = SceneController.getStage();
+                Stage stage = new Stage();
+                stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
+                stage.setTitle("My Shelfie Connection Error");
+                SceneController.setStage(stage);
+                SceneController.changeScene(gui, "ErrorStage.fxml");
+                SceneController.setStage(primaryStage);
+            }
+        }
+        parameters.add(nickname.getText());
+        SceneController.changeScene(gui, "LobbyStage.fxml", parameters);
     }
 }

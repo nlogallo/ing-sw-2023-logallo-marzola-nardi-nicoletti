@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.GUI.GUIControllers;
 
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.MyShelfieClient;
 import it.polimi.ingsw.view.GUI.GUIView;
 import it.polimi.ingsw.view.GUI.SceneController;
@@ -52,14 +53,15 @@ public class EnterNicknameController implements GenericSceneController, Initiali
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sendNickname.addEventHandler(MouseEvent.MOUSE_RELEASED, this::nicknameEntered);
-        nicknameText.setOnMouseClicked(actionEvent -> {
+        nicknameText.addEventHandler(MouseEvent.MOUSE_CLICKED, (event)->{
             nicknameText.setStyle(null);
-            infoMessage.setFill(Color.BLACK);
+            infoMessage.setText("Valid length between 3-15 characters");
         });
     }
 
     private void nicknameEntered(Event event){
         if(nicknameText.getText().length() < 3 || nicknameText.getText().length() > 14) {
+            infoMessage.setText("Valid length between 3-15 characters");
             nicknameText.setStyle("-fx-text-fill: #ff3131; -fx-border-color: #ff3131;");
         }
         try {
@@ -67,21 +69,35 @@ public class EnterNicknameController implements GenericSceneController, Initiali
             switch (response){
                 case "nicknameOk":
                     ArrayList<Object> parameters = new ArrayList<>();
-                    parameters.add(serverSocket.getText());
-                    parameters.add(protocolValue);
-                    parameters.add(nicknameText.getText());
-                    //gui.setNickname("nickname");
+                    MyShelfieClient.setRemoteNickname(nicknameText.getText());
                     if(protocolValue == 1) {
-                        if(MyShelfieClient.TCPCheckForAvailableGames().equals("newGame"))
+                        if(MyShelfieClient.TCPCheckForAvailableGames().equals("newGame")) {
+                            parameters.add(serverSocket.getText());
+                            parameters.add(protocolValue);
+                            parameters.add(nicknameText.getText());
                             SceneController.changeScene(gui, "NoGamesAvailable.fxml", parameters);
-                        else
-                            SceneController.changeScene(gui, "LobbyStage.fxml");
+                        }
+                        else{
+                            parameters.add(protocolValue);
+                            parameters.add(MyShelfieClient.TCPGetGameId());
+                            parameters.add(nicknameText.getText());
+                            SceneController.changeScene(gui, "LobbyStage.fxml", parameters);
+                        }
                     }
                     else{
-                        if(MyShelfieClient.RMICheckForAvailableGame() == null)
+                        Game game = MyShelfieClient.RMICheckForAvailableGame();
+                        if(game == null) {
+                            parameters.add(serverSocket.getText());
+                            parameters.add(protocolValue);
+                            parameters.add(nicknameText.getText());
                             SceneController.changeScene(gui, "NoGamesAvailable.fxml", parameters);
-                        else
-                            SceneController.changeScene(gui, "LobbyStage.fxml");
+                        }
+                        else {
+                            parameters.add(protocolValue);
+                            parameters.add(game.getId());
+                            parameters.add(nicknameText.getText());
+                            SceneController.changeScene(gui, "LobbyStage.fxml", parameters);
+                        }
                     }
                     break;
                 case "nicknameWrong":
