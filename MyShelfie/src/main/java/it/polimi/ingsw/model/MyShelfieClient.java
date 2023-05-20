@@ -5,6 +5,7 @@ import it.polimi.ingsw.utils.NetworkMessage;
 import it.polimi.ingsw.view.CLI.CLIView;
 import it.polimi.ingsw.view.ClientViewObservable;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,6 +16,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Client class for RMI and TCP connection
@@ -34,6 +36,7 @@ public class MyShelfieClient {
     static ClientViewObservable view;
     static ClientController controller;
     private final Object lock = new Object();
+    boolean isRunning = true;
     /*private final Lock lock1 = new Lock() {
         @Override
         public void lock() {
@@ -352,6 +355,27 @@ public class MyShelfieClient {
         return RMIServer.RMIGetGame(gameId);
     }
 
+    public static class MenuHandler implements Runnable {
+        private volatile boolean isRunning = true;
+
+        @Override
+        public void run() {
+            isRunning = true;
+            while (isRunning) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(1500);
+                    controller.enableInput();
+                } catch (InterruptedException e) {
+                    //throw new RuntimeException(e);
+                }
+            }
+        }
+
+        public void stopThread() {
+            isRunning = false;
+        }
+    }
+
     /**
      * This methods handles the Game with TCP connection
      *
@@ -371,7 +395,7 @@ public class MyShelfieClient {
             }*/
             ArrayList<NetworkMessage> result = null;
 
-            new Thread(() -> new MyShelfieClient().handleChatTCP(nickname, chatSocket)).start();
+            //new Thread(() -> new MyShelfieClient().handleChatTCP(nickname, chatSocket)).start();
             /*Thread threadChat = new Thread(){
                 @Override
                 public void run(){
@@ -380,10 +404,19 @@ public class MyShelfieClient {
             };
             threadChat.start();*/
             Thread threadChat = null;
+            MenuHandler menuHandler = new MenuHandler();
             while (true) {
-                if(threadChat != null)
-                    threadChat.interrupt();
-                threadChat = new Thread(() -> controller.enableInput());
+                if(threadChat != null) {
+                    menuHandler.stopThread();
+                    if(threadChat.isAlive()){
+                        threadChat.interrupt();
+                        while (true){
+                            if(threadChat.isInterrupted())
+                                break;
+                        }
+                    }
+                }
+                threadChat = new Thread(menuHandler);
                 threadChat.start();
                 /*if (result != null) {
                     if (result.getContent().get(0).equals(nickname)) {
@@ -426,6 +459,7 @@ public class MyShelfieClient {
                             controller.updateResults(res);
                         }
                         showMenu = true;
+                        menuHandler.stopThread();
                         //lock1.notifyAll();
                     //}
                 }
