@@ -13,6 +13,9 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 
 /**
  * Client class for RMI and TCP connection
@@ -31,8 +34,39 @@ public class MyShelfieClient {
     static int gameId;
     static ClientViewObservable view;
     static ClientController controller;
+    private final Object lock = new Object();
+    /*private final Lock lock1 = new Lock() {
+        @Override
+        public void lock() {
 
-    static boolean moveFinished = false;
+        }
+
+        @Override
+        public void lockInterruptibly() throws InterruptedException {
+
+        }
+
+        @Override
+        public boolean tryLock() {
+            return false;
+        }
+
+        @Override
+        public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
+            return false;
+        }
+
+        @Override
+        public void unlock() {
+
+        }
+
+        @Override
+        public Condition newCondition() {
+            return null;
+        }
+    };*/
+    static boolean showMenu = true;
 
     /**
      * Main method: Asks to the user to choose between TCP and RMI connection and establishes the connection with the chosen protocol.
@@ -336,36 +370,48 @@ public class MyShelfieClient {
             /*if (currentPlayer.getContent().get(0).equals(nickname)) {
                 controller.enableInput();
             }*/
-            NetworkMessage result = null;
+            ArrayList<NetworkMessage> result = null;
 
             new Thread(() -> new MyShelfieClient().handleChatTCP(nickname, chatSocket)).start();
+
             while (true) {
                 /*if (result != null) {
                     if (result.getContent().get(0).equals(nickname)) {
                         controller.enableInput();
                     }
                 }*/
-                if (moveFinished){
-                    NetworkMessage board = (NetworkMessage) inputStream.readObject();
-                    if (board.getRequestId().equals("ER")) {
-                        System.err.println("\n" + board.getTextMessage());
-                        break;
-                    } else if (board.getRequestId().equals("UC")) {
-                        controller.updateChat(board);
-                    } else if (board.getRequestId().equals("UB")) {
-                        controller.updateBoard(board);
-                        NetworkMessage token = (NetworkMessage) inputStream.readObject();
-                        controller.updateGameTokens(token);
-                        result = (NetworkMessage) inputStream.readObject();
-                        controller.updateResults(result);
+                synchronized (lock){
+                    if((currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname))){
+                        lock.wait();
+                        showMenu = false;
                     }
-                    moveFinished = false;
+                    //synchronized (lock1){
+                        System.out.println("Pippo 1");
+                        result = (ArrayList<NetworkMessage>) inputStream.readObject();
+                        NetworkMessage board = result.get(0);
+                        if (board.getRequestId().equals("ER")) {
+                            System.err.println("\n" + board.getTextMessage());
+                            break;
+                        } else if (board.getRequestId().equals("UC")) {
+                            controller.updateChat(board);
+                        } else if (board.getRequestId().equals("UB")) {
+                            controller.updateBoard(board);
+                            NetworkMessage token = result.get(1);
+                            controller.updateGameTokens(token);
+                            NetworkMessage res = result.get(2);
+                            controller.updateResults(res);
+                        }
+                        showMenu = true;
+                        //lock1.notifyAll();
+                    //}
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
             //System.err.println("\nConnection lost!");
         } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -375,11 +421,17 @@ public class MyShelfieClient {
             chatOutput = new ObjectOutputStream(chatSocket.getOutputStream());
             chatInput = new ObjectInputStream(chatSocket.getInputStream());
             while (true) {
-                controller.enableInput();
+                if(showMenu)
+                //synchronized (lock1){
+                    //lock1.wait();
+                    controller.enableInput();
+                //}
             }
         } catch (IOException e){
             throw new RuntimeException(e);
         } /*catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }*/ /*catch (InterruptedException e) {
             throw new RuntimeException(e);
         }*/
     }
@@ -477,8 +529,12 @@ public class MyShelfieClient {
                 outputStream.flush();
                 if (networkMessage.getRequestId().equals("MT")) {
                     outputStream.writeObject(networkMessage);
-                    NetworkMessage result = (NetworkMessage) inputStream.readObject();
-                    moveFinished = true;
+                    NetworkMessage result;
+                    synchronized (lock){
+                        result = (NetworkMessage) inputStream.readObject();
+                        lock.notifyAll();
+                    }
+                    //moveFinished = true;
                     return result;
                 } else if (networkMessage.getRequestId().equals("SM")) {
                     outputStream.writeObject(networkMessage);

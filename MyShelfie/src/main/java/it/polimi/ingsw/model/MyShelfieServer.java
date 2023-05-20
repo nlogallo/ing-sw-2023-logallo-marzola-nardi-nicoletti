@@ -388,24 +388,23 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                 games.set(game.getId() - 1, game);
                             }
                         }
+                        ArrayList<NetworkMessage> result = new ArrayList<>();
                         if (games.get(game.getId() - 1).getMutexAtIndex(playerIndex) && game.getCurrentPlayer() != null) {
                             virtualView = new VirtualView(games.get(game.getId() - 1), game.getCurrentPlayer().getNickname());
+                            result.add(virtualView.updateBoard());
+                            result.add(virtualView.updateGameTokens());
+                            result.add(virtualView.updateResult());
                             outputStream.reset();
-                            outputStream.writeObject(virtualView.updateBoard());
-                            outputStream.reset();
-                            outputStream.writeObject(virtualView.updateGameTokens());
-                            outputStream.reset();
-                            outputStream.writeObject(virtualView.updateResult());
+                            outputStream.writeObject(result);
                             game.setMutexFalseAtIndex(playerIndex);
                             games.set(game.getId() - 1, game);
                         }else if (games.get(game.getId() - 1).getState() == GameState.ENDED){
                             virtualView = new VirtualView(games.get(game.getId() - 1), null);
+                            result.add(virtualView.updateBoard());
+                            result.add(virtualView.updateGameTokens());
+                            result.add(virtualView.updateResult());
                             outputStream.reset();
-                            outputStream.writeObject(virtualView.updateBoard());
-                            outputStream.reset();
-                            outputStream.writeObject(virtualView.updateGameTokens());
-                            outputStream.reset();
-                            outputStream.writeObject(virtualView.updateResult());
+                            outputStream.writeObject(result);
                             game.setMutexFalseAtIndex(playerIndex);
                             games.set(game.getId() - 1, game);
                         }
@@ -457,13 +456,16 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             try {
                 outputStream = new ObjectOutputStream(this.clientSocket.getOutputStream());
                 inputStream = new ObjectInputStream(this.clientSocket.getInputStream());
+                boolean auth = false;
                 while(true){
                     clientSocket.setKeepAlive(true);
-                    String msg = (String) inputStream.readObject();
-                    if(msg.equals("chatOk")){
-                        System.out.println("User from " + this.clientSocket.getInetAddress().getHostAddress() + " connected to chat!");
+                    if(!auth){
+                        String msg = (String) inputStream.readObject();
+                        if (msg.equals("chatOk")) {
+                            System.out.println("User from " + this.clientSocket.getInetAddress().getHostAddress() + " connected to chat!");
+                        }
+                        auth = true;
                     }
-                    //outputStream.writeObject("CIAONE SONO LA CHAT");
                 }
             } catch (IOException e) {
             } catch (ClassNotFoundException e) {
