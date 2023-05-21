@@ -252,12 +252,12 @@ public class MainStageController implements GenericSceneController, Initializabl
     }
 
     private void makeMoveButtonClick(Event event) {
-        //if (gui.getCurrentPlayer() != null  && gui.getCurrentPlayer().equals(gui.getClientNickname()) && turnPhase == 0) {
+        if (gui.getCurrentPlayer() != null  && gui.getCurrentPlayer().equals(gui.getClientNickname()) && turnPhase == 0) {
             turnPhase = 1;
             positionsToPick = new ArrayList<>();
             positionsToOrder = new ArrayList<>();
             setTurnPhaseLabel(turnPhase);
-        //}
+        }
     }
 
     private void vButtonClick(Event event) {
