@@ -4,8 +4,6 @@ package it.polimi.ingsw.view.GUI;
 import it.polimi.ingsw.controller.ClientController;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
-import it.polimi.ingsw.utils.InputOutputHandler;
-import it.polimi.ingsw.view.CLI.CLIFormatter;
 import it.polimi.ingsw.view.GUI.GUIControllers.MainStageController;
 import it.polimi.ingsw.view.Observer;
 
@@ -37,12 +35,10 @@ public class GUIView  implements Observer {
 
     private MainStageController stageController;
 
-    public GUIView() {
-        /*this.screenMessage = null;
+    public GUIView(String clientNickname) {
+        this.screenMessage = null;
         this.clientNickname = clientNickname;
-         */
-        }
-
+    }
 
     @Override
     public void updateBoard(Board board) {
