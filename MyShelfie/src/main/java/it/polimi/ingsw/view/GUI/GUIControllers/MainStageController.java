@@ -42,6 +42,8 @@ public class MainStageController implements GenericSceneController, Initializabl
     private ImageView board00, board01, board02, board03, board04, board05, board06, board07, board08, board10, board11, board12, board13, board14, board15, board16, board17, board18, board20, board21, board22, board23, board24, board25, board26, board27, board28, board30, board31, board32, board33, board34, board35, board36, board37, board38, board40, board41, board42, board43, board44, board45, board46, board47, board48, board50, board51, board52, board53, board54, board55, board56, board57, board58, board60, board61, board62, board63, board64, board65, board66, board67, board68, board70, board71, board72, board73, board74, board75, board76, board77, board78, board80, board81, board82, board83, board84, board85, board86, board87, board88;
     private ImageView[][] boardImage = new ImageView[9][9];
     @FXML
+    private Button otherPlayerButton0, otherPlayerButton1, otherPlayerButton2;
+    @FXML
     private Button boardButton03, boardButton04, boardButton13, boardButton14, boardButton15, boardButton22, boardButton23, boardButton24, boardButton25, boardButton26, boardButton31, boardButton32, boardButton33, boardButton34, boardButton35, boardButton36, boardButton37, boardButton38, boardButton40, boardButton41, boardButton42, boardButton43, boardButton44, boardButton45, boardButton46, boardButton47, boardButton48, boardButton50, boardButton51, boardButton52, boardButton53, boardButton54, boardButton55, boardButton56, boardButton57, boardButton62, boardButton63, boardButton64, boardButton65, boardButton66, boardButton73, boardButton74, boardButton75, boardButton84, boardButton85;
     @FXML
     private Button firstColumnButton, secondColumnButton, thirdColumnButton, fourthColumnButton, fifthColumnButton;
@@ -54,7 +56,7 @@ public class MainStageController implements GenericSceneController, Initializabl
     @FXML
     private Label bottomLabel, middleLabel, topLabel;
     @FXML
-    private TextFlow serverMessageText;
+    private Label turnPhaseLabel;
     @FXML
     private ImageView boardEndGameToken, commonGoal1Token, commonGoal2Token;
     @FXML
@@ -64,6 +66,8 @@ public class MainStageController implements GenericSceneController, Initializabl
     private ImageView seat;
     @FXML
     private ImageView commonGoal1TokenAchieved, commonGoal2TokenAchieved, endGameTokenAchieved;
+    @FXML
+    private ImageView personalGoal, commonGoal1, commonGoal2;
 
     @Override
     public void setGui(GUIView gui) {
@@ -82,6 +86,10 @@ public class MainStageController implements GenericSceneController, Initializabl
         gui.updateBoard(new Board(4)); // SOLO PER TEST
         gui.updateShelf(new Shelf());
         turnPhase = 0;
+        setTurnPhaseLabel(turnPhase);
+        setGoalsPicture();
+        setTokenPictures();
+        setSeatPicture();
 
         initButtons();
     }
@@ -220,10 +228,11 @@ public class MainStageController implements GenericSceneController, Initializabl
     Board board = gui.getBoard();
 
     TileType[][] types = board.getTilesType();
+    Tile[][] tiles = board.getTilesTable();
         for(int i = 0; i<9; i++) {
             for (int j = 0; j<9; j++) {
                 if (types[i][j] != TileType.EMPTY) {
-                    setPicture(boardImage[i][j], types[i][j]);
+                    setPicture(boardImage[i][j], tiles[i][j]);
                 }
             }
         }
@@ -236,7 +245,7 @@ public class MainStageController implements GenericSceneController, Initializabl
         for(int i = 0; i<6; i++) {
             for (int j = 0; j<5; j++) {
                 if (types[i][j] != TileType.EMPTY) {
-                    setPicture(shelfImage[i][j], types[i][j]);
+                    setPicture(shelfImage[i][j], shelf.getTile(i, j));
                 }
             }
         }
@@ -247,6 +256,7 @@ public class MainStageController implements GenericSceneController, Initializabl
             turnPhase = 1;
             positionsToPick = new ArrayList<>();
             positionsToOrder = new ArrayList<>();
+            setTurnPhaseLabel(turnPhase);
         //}
     }
 
@@ -254,36 +264,44 @@ public class MainStageController implements GenericSceneController, Initializabl
         switch (turnPhase) {
             case 1 -> {
                 if (positionsToPick.size() >= 1 && positionsToPick.size() <= 3) {
-                        setPicture(pickedTileBottom, gui.getBoard().getTilesType()[positionsToPick.get(0).getRow()][positionsToPick.get(0).getColumn()]);
+                        setPicture(pickedTileBottom, gui.getBoard().getTilesTable()[positionsToPick.get(0).getRow()][positionsToPick.get(0).getColumn()]);
                         pickedTileBottom.setOpacity(1);
                         if (positionsToPick.size() >= 2) {
-                            setPicture(pickedTileMiddle, gui.getBoard().getTilesType()[positionsToPick.get(1).getRow()][positionsToPick.get(1).getColumn()]);
+                            setPicture(pickedTileMiddle, gui.getBoard().getTilesTable()[positionsToPick.get(1).getRow()][positionsToPick.get(1).getColumn()]);
                             pickedTileMiddle.setOpacity(1);
                             if (positionsToPick.size() == 3) {
-                                setPicture(pickedTileTop, gui.getBoard().getTilesType()[positionsToPick.get(2).getRow()][positionsToPick.get(2).getColumn()]);
+                                setPicture(pickedTileTop, gui.getBoard().getTilesTable()[positionsToPick.get(2).getRow()][positionsToPick.get(2).getColumn()]);
                                 pickedTileTop.setOpacity(1);
                             }
                         }
                         turnPhase = 2;
+                        setTurnPhaseLabel(turnPhase);
+                        if (positionsToPick.size() == 1) {
+                            positionsToOrder.add(positionsToPick.get(0));
+                            turnPhase = 3;
+                            setTurnPhaseLabel(turnPhase);
+                        }
                 }
             }
 
             case 2 -> {
-                if (positionsToOrder.size() >= 1 && positionsToOrder.size() <= 3) {
-                    setPicture(pickedTileBottom, gui.getBoard().getTilesType()[positionsToOrder.get(0).getRow()][positionsToOrder.get(0).getColumn()]);
+                if (positionsToOrder.size() ==  positionsToPick.size()) {
+                    setPicture(pickedTileBottom, gui.getBoard().getTilesTable()[positionsToOrder.get(0).getRow()][positionsToOrder.get(0).getColumn()]);
                     pickedTileBottom.setOpacity(1);
                     bottomLabel.setOpacity(0);
                     if (positionsToOrder.size() >= 2) {
-                        setPicture(pickedTileMiddle, gui.getBoard().getTilesType()[positionsToOrder.get(1).getRow()][positionsToOrder.get(1).getColumn()]);
+                        setPicture(pickedTileMiddle, gui.getBoard().getTilesTable()[positionsToOrder.get(1).getRow()][positionsToOrder.get(1).getColumn()]);
                         pickedTileMiddle.setOpacity(1);
                         middleLabel.setOpacity(0);
                         if (positionsToOrder.size() == 3) {
-                            setPicture(pickedTileTop, gui.getBoard().getTilesType()[positionsToPick.get(2).getRow()][positionsToOrder.get(2).getColumn()]);
+                            setPicture(pickedTileTop, gui.getBoard().getTilesTable()[positionsToPick.get(2).getRow()][positionsToOrder.get(2).getColumn()]);
                             pickedTileTop.setOpacity(1);
                             topLabel.setOpacity(0);
                         }
                     }
+                    selectedColumn = -1;
                     turnPhase = 3;
+                    setTurnPhaseLabel(turnPhase);
                 }
             }
 
@@ -306,6 +324,7 @@ public class MainStageController implements GenericSceneController, Initializabl
                         pickedTileTop.setOpacity(0);
 
                         turnPhase = 0;
+                        setTurnPhaseLabel(turnPhase);
                         selectedColumn = -1;
 
                         for (int i = 0; i<9; i++) {
@@ -337,6 +356,7 @@ public class MainStageController implements GenericSceneController, Initializabl
                         boardImage[i][j].setOpacity(1);
                 }
                 turnPhase = 1;
+                setTurnPhaseLabel(turnPhase);
                 bottomLabel.setOpacity(0);
                 middleLabel.setOpacity(0);
                 topLabel.setOpacity(0);
@@ -406,6 +426,14 @@ public class MainStageController implements GenericSceneController, Initializabl
         if (turnPhase == 3)
             selectedColumn = 4;
     }
+
+    private void otherPlayerButtonClick0(Event event) {}
+    private void otherPlayerButtonClick1(Event event) {}
+    private void otherPlayerButtonClick2(Event event) {}
+
+    private void setGoalsPicture(){}
+    private void setTokenPictures(){}
+    private void setSeatPicture(){}
 
     private void boardButtonClick03 (Event event){
         if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
@@ -1100,19 +1128,82 @@ public class MainStageController implements GenericSceneController, Initializabl
         boardButton75.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick75);
         boardButton84.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick84);
         boardButton85.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick85);
-        pickedBottomButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::pickedBottomButtonClick);;
-        pickedMiddleButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::pickedMiddleButtonClick);;
-        pickedTopButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::pickedTopButtonClick);;
+
+        pickedBottomButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::pickedBottomButtonClick);
+        pickedMiddleButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::pickedMiddleButtonClick);
+        pickedTopButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::pickedTopButtonClick);
+
+        otherPlayerButton0.addEventHandler(MouseEvent.MOUSE_RELEASED, this::otherPlayerButtonClick0);
+        otherPlayerButton1.addEventHandler(MouseEvent.MOUSE_RELEASED, this::otherPlayerButtonClick1);
+        otherPlayerButton2.addEventHandler(MouseEvent.MOUSE_RELEASED, this::otherPlayerButtonClick2);
     }
 
-    private void setPicture (ImageView image, TileType type) {
+    private void setTurnPhaseLabel (int phase) {
+        switch(phase) {
+            case 0 -> turnPhaseLabel.setText("When it's your turn tap on 'Make move' to pick tiles");
+
+            case 1 -> {
+                String maxTiles;
+                if (gui.getShelf().freeSpots() < 3 ) {
+                    maxTiles = String.valueOf(gui.getShelf().freeSpots());
+                } else {maxTiles = "3";}
+                turnPhaseLabel.setText("You can pick no more than " + maxTiles + " aligned Tiles that have at least one free edge, and tap on V");
+            }
+             case 2 -> {
+                turnPhaseLabel.setText("Tap on the tiles to choose the order to put them in the shelf and press V");
+             }
+             case 3 -> {
+                turnPhaseLabel.setText("Chose the column and tap on V");
+             }
+        }
+    }
+
+    private void setPicture (ImageView image, Tile tile) {
+        TileType type = tile.getType();
+        int imageType = tile.getImageType();
         switch (type) {
-            case PLANT -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.1.png"))));
-            case TROPHY -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.1.png"))));
-            case GAME -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.1.png"))));
-            case CAT -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.1.png"))));
-            case BOOK -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.1.png"))));
-            case FRAME -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.1.png"))));
+            case PLANT -> {
+                switch(imageType) {
+                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.1.png"))));
+                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.2.png"))));
+                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.3.png"))));
+                }
+            }
+            case TROPHY -> {
+                switch(imageType) {
+                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.1.png"))));
+                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.2.png"))));
+                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.3.png"))));
+                }
+            }
+            case GAME -> {
+                switch(imageType) {
+                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.1.png"))));
+                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.2.png"))));
+                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.3.png"))));
+                }
+            }
+            case CAT -> {
+                switch(imageType) {
+                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.1.png"))));
+                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.2.png"))));
+                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.3.png"))));
+                }
+            }
+            case BOOK -> {
+                switch(imageType) {
+                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.1.png"))));
+                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.2.png"))));
+                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.3.png"))));
+                }
+            }
+            case FRAME -> {
+                switch(imageType) {
+                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.1.png"))));
+                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.2.png"))));
+                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.3.png"))));
+                }
+            }
         }
 
     }

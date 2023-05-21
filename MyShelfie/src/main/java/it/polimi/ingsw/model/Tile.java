@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import java.io.Serializable;
+import java.util.Random;
 
 /**
  * This class represents the Tile class of the game
@@ -13,6 +14,7 @@ public class Tile implements Serializable {
     private TileContainer container;
     private int row;
     private int column;
+    private int imageType;
 
 
     /**
@@ -29,6 +31,9 @@ public class Tile implements Serializable {
         this.container = TileContainer.IN_BOARD;
         this.row = -1;
         this.column = -1;
+
+        Random r = new Random();
+        imageType = r.nextInt(3);
     }
 
 
@@ -165,6 +170,13 @@ public class Tile implements Serializable {
             } else throw new IllegalArgumentException("Row must be lower than 9");
         } else throw new IllegalArgumentException("Row and Column must be positive or zero");
         return areContained;
+    }
+
+    /**
+     * Getter
+     */
+    public int getImageType() {
+        return imageType;
     }
 }
 

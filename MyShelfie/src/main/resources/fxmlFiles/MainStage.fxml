@@ -5,8 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -16,7 +14,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.TextFlow?>
 
 <AnchorPane prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.MainStageController">
    <children>
@@ -35,215 +32,202 @@
             <Image url="@../assets/misc/sfondo parquet.jpg" />
          </image>
       </ImageView>
-      <TabPane layoutX="59.0" layoutY="41.0" prefHeight="423.0" prefWidth="365.0" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-          <Tab text="Your Shelf">
-               <content>
-                  <AnchorPane prefHeight="392.0" prefWidth="348.0">
+      <AnchorPane layoutX="50.0" layoutY="80.0" prefHeight="392.0" prefWidth="348.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#8d623d" height="293.0" layoutX="37.0" layoutY="17.0" stroke="BLACK" strokeType="INSIDE" width="279.0" />
+            <ImageView fitHeight="368.0" fitWidth="354.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/boards/bookshelf.png" />
+               </image>
+            </ImageView>
+            <GridPane layoutX="38.0" layoutY="20.0" prefHeight="294.0" prefWidth="278.0" AnchorPane.bottomAnchor="78.0" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="38.0" AnchorPane.topAnchor="20.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#8d623d" height="293.0" layoutX="37.0" layoutY="17.0" stroke="BLACK" strokeType="INSIDE" width="279.0" />
-                        <ImageView fitHeight="368.0" fitWidth="354.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../assets/boards/bookshelf.png" />
-                           </image>
-                        </ImageView>
-                        <GridPane layoutX="38.0" layoutY="20.0" prefHeight="294.0" prefWidth="278.0" AnchorPane.bottomAnchor="78.0" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="38.0" AnchorPane.topAnchor="20.0">
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
-                           <children>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                 <children>
-                                    <ImageView fx:id="shelf00" fitHeight="44.0" fitWidth="44.0" layoutX="3.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
-                                 <children>
-                                    <ImageView fx:id="shelf01" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
-                                 <children>
-                                    <ImageView fx:id="shelf02" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
-                                 <children>
-                                    <ImageView fx:id="shelf03" fitHeight="44.0" fitWidth="44.0" layoutX="7.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4">
-                                 <GridPane.margin>
-                                    <Insets />
-                                 </GridPane.margin>
-                                 <children>
-                                    <ImageView fx:id="shelf04" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-                                 <children>
-                                    <ImageView fx:id="shelf10" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <children>
-                                    <ImageView fx:id="shelf11" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                 <children>
-                                    <ImageView fx:id="shelf12" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                                 <children>
-                                    <ImageView fx:id="shelf13" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets />
-                                 </GridPane.margin>
-                                 <children>
-                                    <ImageView fx:id="shelf14" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
-                                 <children>
-                                    <ImageView fx:id="shelf20" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                 <children>
-                                    <ImageView fx:id="shelf21" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                                 <children>
-                                    <ImageView fx:id="shelf22" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                                 <children>
-                                    <ImageView fx:id="shelf23" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
-                                 <GridPane.margin>
-                                    <Insets />
-                                 </GridPane.margin>
-                                 <children>
-                                    <ImageView fx:id="shelf24" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
-                                 <children>
-                                    <ImageView fx:id="shelf30" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                 <children>
-                                    <ImageView fx:id="shelf31" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
-                                 <children>
-                                    <ImageView fx:id="shelf32" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
-                                 <children>
-                                    <ImageView fx:id="shelf33" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
-                                 <GridPane.margin>
-                                    <Insets />
-                                 </GridPane.margin>
-                                 <children>
-                                    <ImageView fx:id="shelf34" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
-                                 <children>
-                                    <ImageView fx:id="shelf40" fitHeight="44.0" fitWidth="44.0" layoutX="3.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                 <children>
-                                    <ImageView fx:id="shelf41" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
-                                 <children>
-                                    <ImageView fx:id="shelf42" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
-                                 <children>
-                                    <ImageView fx:id="shelf43" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
-                                 <children>
-                                    <ImageView fx:id="shelf44" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5">
-                                 <children>
-                                    <ImageView fx:id="shelf50" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                 <children>
-                                    <ImageView fx:id="shelf51" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
-                                 <children>
-                                    <ImageView fx:id="shelf52" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
-                                 <children>
-                                    <ImageView fx:id="shelf53" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="5">
-                                 <children>
-                                    <ImageView fx:id="shelf54" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                              </AnchorPane>
-                           </children>
-                        </GridPane>
-                        <Button fx:id="firstColumnButton" layoutX="53.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
-                        <Button fx:id="secondColumnButton" layoutX="109.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
-                        <Button fx:id="thirdColumnButton" layoutX="163.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
-                        <Button fx:id="fourthColumnButton" layoutX="219.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
-                        <Button fx:id="fifthColumnButton" layoutX="273.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
+                        <ImageView fx:id="shelf00" fitHeight="44.0" fitWidth="44.0" layoutX="3.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </AnchorPane>
-               </content>
-          </Tab>
-          <Tab text="Untitled Tab 2">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
-        </tabs>
-      </TabPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                     <children>
+                        <ImageView fx:id="shelf01" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+                     <children>
+                        <ImageView fx:id="shelf02" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
+                     <children>
+                        <ImageView fx:id="shelf03" fitHeight="44.0" fitWidth="44.0" layoutX="7.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <children>
+                        <ImageView fx:id="shelf04" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fx:id="shelf10" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fx:id="shelf11" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fx:id="shelf12" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fx:id="shelf13" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <children>
+                        <ImageView fx:id="shelf14" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                     <children>
+                        <ImageView fx:id="shelf20" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <ImageView fx:id="shelf21" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <children>
+                        <ImageView fx:id="shelf22" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                     <children>
+                        <ImageView fx:id="shelf23" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <children>
+                        <ImageView fx:id="shelf24" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
+                     <children>
+                        <ImageView fx:id="shelf30" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <children>
+                        <ImageView fx:id="shelf31" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                     <children>
+                        <ImageView fx:id="shelf32" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                     <children>
+                        <ImageView fx:id="shelf33" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <children>
+                        <ImageView fx:id="shelf34" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
+                     <children>
+                        <ImageView fx:id="shelf40" fitHeight="44.0" fitWidth="44.0" layoutX="3.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <children>
+                        <ImageView fx:id="shelf41" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                     <children>
+                        <ImageView fx:id="shelf42" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                     <children>
+                        <ImageView fx:id="shelf43" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                     <children>
+                        <ImageView fx:id="shelf44" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5">
+                     <children>
+                        <ImageView fx:id="shelf50" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                     <children>
+                        <ImageView fx:id="shelf51" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                     <children>
+                        <ImageView fx:id="shelf52" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                     <children>
+                        <ImageView fx:id="shelf53" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="5">
+                     <children>
+                        <ImageView fx:id="shelf54" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </GridPane>
+            <Button fx:id="firstColumnButton" layoutX="53.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
+            <Button fx:id="secondColumnButton" layoutX="109.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
+            <Button fx:id="thirdColumnButton" layoutX="163.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
+            <Button fx:id="fourthColumnButton" layoutX="219.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
+            <Button fx:id="fifthColumnButton" layoutX="273.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
+         </children>
+      </AnchorPane>
       <AnchorPane layoutX="636.0" layoutY="60.0" prefHeight="420.0" prefWidth="420.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#976342" height="434.0" layoutX="-7.0" layoutY="-6.0" stroke="BLACK" strokeType="INSIDE" width="434.0" />
@@ -743,7 +727,7 @@
                   <Image url="@../assets/personal goal cards/front_EMPTY.jpg" />
                </image>
             </ImageView>
-            <ImageView fx:id="personalgoal" fitHeight="292.0" fitWidth="201.0" layoutY="-10.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="personalGoal" fitHeight="292.0" fitWidth="201.0" layoutY="-10.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="330.0" layoutY="525.0" prefHeight="120.0" prefWidth="196.0">
@@ -754,7 +738,7 @@
                   <Image url="@../assets/common goal cards/back.jpg" />
                </image>
             </ImageView>
-            <ImageView fx:id="commongoal1" fitHeight="129.0" fitWidth="195.0" layoutX="5.0" layoutY="-10.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="commonGoal1" fitHeight="129.0" fitWidth="195.0" layoutX="5.0" layoutY="-10.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../assets/common goal cards/5.jpg" />
                </image></ImageView>
@@ -773,7 +757,7 @@
                   <Image url="@../assets/common goal cards/back.jpg" />
                </image>
             </ImageView>
-            <ImageView fx:id="commongoal2" fitHeight="129.0" fitWidth="195.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="commonGoal2" fitHeight="129.0" fitWidth="195.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../assets/common goal cards/8.jpg" />
                </image></ImageView>
@@ -870,7 +854,11 @@
                   <Font name="American Typewriter" size="24.0" />
                </font>
             </Label>
-            <TextFlow fx:id="serverMessageText" layoutX="22.0" layoutY="50.0" prefHeight="85.0" prefWidth="387.0" />
+            <Label fx:id="turnPhaseLabel" layoutX="32.0" layoutY="52.0" prefHeight="72.0" prefWidth="358.0" wrapText="true">
+               <font>
+                  <Font name="American Typewriter" size="18.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
       <SplitPane dividerPositions="0.9160982264665757" layoutX="1090.0" layoutY="57.0" orientation="VERTICAL" prefHeight="735.0" prefWidth="283.0">
@@ -906,5 +894,8 @@
             <Font name="American Typewriter" size="14.0" />
          </font>
       </Button>
+      <Button fx:id="otherPlayerButton0" layoutX="67.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="Button" />
+      <Button fx:id="otherPlayerButton1" layoutX="174.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="Button" />
+      <Button fx:id="otherPlayerButton2" layoutX="281.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="Button" />
    </children>
 </AnchorPane>
