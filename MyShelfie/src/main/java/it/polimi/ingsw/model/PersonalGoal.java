@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class PersonalGoal implements Serializable {
     private TileType[][] matrix;
+    private int id;
 
     /**
      * Class constructor
@@ -48,6 +49,21 @@ public class PersonalGoal implements Serializable {
             return 0;
         }
 
+    }
+
+    /**
+     * setter
+     * @param id of the personal goal
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * Getter
+     */
+    public int getId() {
+        return id;
     }
 
     /**

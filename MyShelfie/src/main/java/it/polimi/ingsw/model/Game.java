@@ -172,7 +172,9 @@ public class Game implements Serializable {
         int tempIndex = 11;
         for (Player player : players) {
             randomNum = random.nextInt(tempIndex);
-            player.setPersonalGoal(new PersonalGoal(readPGFromJSON(randomNum)));
+            PersonalGoal personalGoal = new PersonalGoal(readPGFromJSON(randomNum));
+            personalGoal.setId(randomNum);
+            player.setPersonalGoal(personalGoal);
             personalGoalsIndex.remove(randomNum);
             tempIndex--;
         }
