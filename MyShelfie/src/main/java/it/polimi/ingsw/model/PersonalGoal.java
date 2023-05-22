@@ -60,6 +60,13 @@ public class PersonalGoal implements Serializable {
     }
 
     /**
+     * Getter
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
      * Return the Personal Goal Pattern to the Player
      * @return TileType[][]
      */
