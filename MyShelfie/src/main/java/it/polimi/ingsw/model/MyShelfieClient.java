@@ -430,7 +430,7 @@ public class MyShelfieClient {
                         controller.enableInput();
                     }
                 }
-                if (interfaceChosen == 2 && (currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname))) {
+                if (interfaceChosen == 2 && ((currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname)))) {
                     //firstOne = false;
                     responseReceived = false;
                 } else

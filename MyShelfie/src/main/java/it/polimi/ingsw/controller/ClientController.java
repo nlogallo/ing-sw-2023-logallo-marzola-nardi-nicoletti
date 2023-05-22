@@ -121,7 +121,7 @@ public class ClientController {
      * @param receiver is the list of receiver (it depends on what chat the user selects)
      * @param text is the text of the message to send
      */
-    public void sendMessage(ArrayList<String> receiver, String text){
+    public void sendMessage(String sender, ArrayList<String> receiver, String text){
         if ((text == null) || (text.trim().length() == 0)) {
             clientViewObservable.setScreenMessage("You can't send empty message");
             return;
@@ -131,6 +131,7 @@ public class ClientController {
         networkMessage.addContent(receiver);
         networkMessage.addContent(text);
         networkMessage.setRequestId("SM");
+        client.sendMessage(networkMessage);
     }
 
     /**
