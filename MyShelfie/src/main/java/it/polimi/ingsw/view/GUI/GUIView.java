@@ -64,6 +64,9 @@ public class GUIView  implements Observer {
     @Override
     public void updateCommonGoal(CommonGoal commonGoal) {
         this.commonGoals.add(commonGoal);
+        if (commonGoals.size() == 2)
+            stageController.setGoalsPicture();
+
     }
 
     @Override

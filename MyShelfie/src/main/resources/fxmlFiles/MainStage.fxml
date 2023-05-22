@@ -35,11 +35,6 @@
       <AnchorPane layoutX="50.0" layoutY="80.0" prefHeight="392.0" prefWidth="348.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#8d623d" height="293.0" layoutX="37.0" layoutY="17.0" stroke="BLACK" strokeType="INSIDE" width="279.0" />
-            <ImageView fitHeight="368.0" fitWidth="354.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/boards/bookshelf.png" />
-               </image>
-            </ImageView>
             <GridPane layoutX="38.0" layoutY="20.0" prefHeight="294.0" prefWidth="278.0" AnchorPane.bottomAnchor="78.0" AnchorPane.leftAnchor="38.0" AnchorPane.rightAnchor="38.0" AnchorPane.topAnchor="20.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -221,6 +216,11 @@
                   </AnchorPane>
                </children>
             </GridPane>
+            <ImageView fitHeight="368.0" fitWidth="354.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/boards/bookshelf.png" />
+               </image>
+            </ImageView>
             <Button fx:id="firstColumnButton" layoutX="53.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
             <Button fx:id="secondColumnButton" layoutX="109.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
             <Button fx:id="thirdColumnButton" layoutX="163.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
@@ -738,10 +738,7 @@
                   <Image url="@../assets/common goal cards/back.jpg" />
                </image>
             </ImageView>
-            <ImageView fx:id="commonGoal1" fitHeight="129.0" fitWidth="195.0" layoutX="5.0" layoutY="-10.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/common goal cards/5.jpg" />
-               </image></ImageView>
+            <ImageView fx:id="commonGoal1" fitHeight="129.0" fitWidth="195.0" layoutX="5.0" layoutY="-10.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="commonGoal1Token" fitHeight="59.0" fitWidth="58.0" layoutX="117.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" rotate="-10.3">
                <image>
                   <Image url="@../assets/scoring tokens/scoring_4.jpg" />
@@ -757,10 +754,7 @@
                   <Image url="@../assets/common goal cards/back.jpg" />
                </image>
             </ImageView>
-            <ImageView fx:id="commonGoal2" fitHeight="129.0" fitWidth="195.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/common goal cards/8.jpg" />
-               </image></ImageView>
+            <ImageView fx:id="commonGoal2" fitHeight="129.0" fitWidth="195.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="commonGoal2Token" fitHeight="56.0" fitWidth="56.0" layoutX="122.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" rotate="-6.7">
                <image>
                   <Image url="@../assets/scoring tokens/scoring.jpg" />

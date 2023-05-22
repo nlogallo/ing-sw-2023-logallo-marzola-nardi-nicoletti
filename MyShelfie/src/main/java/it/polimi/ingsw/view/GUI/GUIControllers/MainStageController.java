@@ -85,11 +85,8 @@ public class MainStageController implements GenericSceneController, Initializabl
         setAttributes();
         gui = MyShelfieClient.getGuiView();
         gui.setStageController(this);
-        //gui.updateBoard(new Board(4)); // SOLO PER TEST
-        //gui.updateShelf(new Shelf());
         turnPhase = 0;
         setTurnPhaseLabel(turnPhase);
-        setGoalsPicture();
         setTokenPictures();
         setSeatPicture();
 
@@ -233,9 +230,9 @@ public class MainStageController implements GenericSceneController, Initializabl
     Tile[][] tiles = board.getTilesTable();
         for(int i = 0; i<9; i++) {
             for (int j = 0; j<9; j++) {
-                if (types[i][j] != TileType.EMPTY) {
-                    setPicture(boardImage[i][j], tiles[i][j]);
-                }
+                if (tiles[i][j] != null) {
+                    setTilePicture(boardImage[i][j], tiles[i][j]);
+                } else boardImage[i][j].setOpacity(0);
             }
         }
     }
@@ -246,9 +243,9 @@ public class MainStageController implements GenericSceneController, Initializabl
         TileType[][] types = shelf.getShelfTypes();
         for(int i = 0; i<6; i++) {
             for (int j = 0; j<5; j++) {
-                if (types[i][j] != TileType.EMPTY) {
-                    setPicture(shelfImage[i][j], shelf.getTile(i, j));
-                }
+                if (shelf.getTile(i, j) != null) {
+                    setTilePicture(shelfImage[i][j], shelf.getTile(i, j));
+                } else shelfImage[i][j].setOpacity(0);
             }
         }
     }
@@ -266,13 +263,13 @@ public class MainStageController implements GenericSceneController, Initializabl
         switch (turnPhase) {
             case 1 -> {
                 if (positionsToPick.size() >= 1 && positionsToPick.size() <= 3) {
-                        setPicture(pickedTileBottom, gui.getBoard().getTilesTable()[positionsToPick.get(0).getRow()][positionsToPick.get(0).getColumn()]);
+                        setTilePicture(pickedTileBottom, gui.getBoard().getTilesTable()[positionsToPick.get(0).getRow()][positionsToPick.get(0).getColumn()]);
                         pickedTileBottom.setOpacity(1);
                         if (positionsToPick.size() >= 2) {
-                            setPicture(pickedTileMiddle, gui.getBoard().getTilesTable()[positionsToPick.get(1).getRow()][positionsToPick.get(1).getColumn()]);
+                            setTilePicture(pickedTileMiddle, gui.getBoard().getTilesTable()[positionsToPick.get(1).getRow()][positionsToPick.get(1).getColumn()]);
                             pickedTileMiddle.setOpacity(1);
                             if (positionsToPick.size() == 3) {
-                                setPicture(pickedTileTop, gui.getBoard().getTilesTable()[positionsToPick.get(2).getRow()][positionsToPick.get(2).getColumn()]);
+                                setTilePicture(pickedTileTop, gui.getBoard().getTilesTable()[positionsToPick.get(2).getRow()][positionsToPick.get(2).getColumn()]);
                                 pickedTileTop.setOpacity(1);
                             }
                         }
@@ -288,15 +285,15 @@ public class MainStageController implements GenericSceneController, Initializabl
 
             case 2 -> {
                 if (positionsToOrder.size() ==  positionsToPick.size()) {
-                    setPicture(pickedTileBottom, gui.getBoard().getTilesTable()[positionsToOrder.get(0).getRow()][positionsToOrder.get(0).getColumn()]);
+                    setTilePicture(pickedTileBottom, gui.getBoard().getTilesTable()[positionsToOrder.get(0).getRow()][positionsToOrder.get(0).getColumn()]);
                     pickedTileBottom.setOpacity(1);
                     bottomLabel.setOpacity(0);
                     if (positionsToOrder.size() >= 2) {
-                        setPicture(pickedTileMiddle, gui.getBoard().getTilesTable()[positionsToOrder.get(1).getRow()][positionsToOrder.get(1).getColumn()]);
+                        setTilePicture(pickedTileMiddle, gui.getBoard().getTilesTable()[positionsToOrder.get(1).getRow()][positionsToOrder.get(1).getColumn()]);
                         pickedTileMiddle.setOpacity(1);
                         middleLabel.setOpacity(0);
                         if (positionsToOrder.size() == 3) {
-                            setPicture(pickedTileTop, gui.getBoard().getTilesTable()[positionsToPick.get(2).getRow()][positionsToOrder.get(2).getColumn()]);
+                            setTilePicture(pickedTileTop, gui.getBoard().getTilesTable()[positionsToPick.get(2).getRow()][positionsToOrder.get(2).getColumn()]);
                             pickedTileTop.setOpacity(1);
                             topLabel.setOpacity(0);
                         }
@@ -330,11 +327,6 @@ public class MainStageController implements GenericSceneController, Initializabl
                         setTurnPhaseLabel(turnPhase);
                         selectedColumn = -1;
 
-                        for (int i = 0; i<9; i++) {
-                            for(int j = 0; j<9; j++)
-                                boardImage[i][j].setOpacity(1);
-                        }
-
                     }
                 }
             }
@@ -347,7 +339,8 @@ public class MainStageController implements GenericSceneController, Initializabl
                 positionsToPick = new ArrayList<>();
                 for (int i = 0; i<9; i++) {
                     for(int j = 0; j<9; j++)
-                        boardImage[i][j].setOpacity(1);
+                        if (gui.getBoard().getTilesTable()[i][j] != null)
+                            boardImage[i][j].setOpacity(1);
                 }
             }
 
@@ -356,7 +349,8 @@ public class MainStageController implements GenericSceneController, Initializabl
                 positionsToOrder = new ArrayList<>();
                 for (int i = 0; i<9; i++) {
                     for(int j = 0; j<9; j++)
-                        boardImage[i][j].setOpacity(1);
+                        if (gui.getBoard().getTilesTable()[i][j] != null)
+                            boardImage[i][j].setOpacity(1);
                 }
                 turnPhase = 1;
                 setTurnPhaseLabel(turnPhase);
@@ -434,8 +428,11 @@ public class MainStageController implements GenericSceneController, Initializabl
     private void otherPlayerButtonClick1(Event event) {}
     private void otherPlayerButtonClick2(Event event) {}
 
-    private void setGoalsPicture(){}
-    private void setTokenPictures(){}
+    public void setGoalsPicture(){
+        setCommonGoalPicture(commonGoal1, gui.getCommonGoals().get(0).getId());
+        setCommonGoalPicture(commonGoal2, gui.getCommonGoals().get(1).getId());
+    }
+    public void setTokenPictures(){}
     private void setSeatPicture(){}
 
     private void boardButtonClick03 (Event event){
@@ -1161,9 +1158,12 @@ public class MainStageController implements GenericSceneController, Initializabl
         }
     }
 
-    private void setPicture (ImageView image, Tile tile) {
+    private void setTilePicture (ImageView image, Tile tile) {
         TileType type = tile.getType();
         int imageType = tile.getImageType();
+        if (tile == null) {
+            image.setOpacity(0);
+        } else {
             switch (type) {
                 case PLANT -> {
                     switch (imageType) {
@@ -1171,6 +1171,7 @@ public class MainStageController implements GenericSceneController, Initializabl
                         case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.2.png"))));
                         case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.3.png"))));
                     }
+                    image.setOpacity(1);
                 }
                 case TROPHY -> {
                     switch (imageType) {
@@ -1178,6 +1179,7 @@ public class MainStageController implements GenericSceneController, Initializabl
                         case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.2.png"))));
                         case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.3.png"))));
                     }
+                    image.setOpacity(1);
                 }
                 case GAME -> {
                     switch (imageType) {
@@ -1185,6 +1187,7 @@ public class MainStageController implements GenericSceneController, Initializabl
                         case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.2.png"))));
                         case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.3.png"))));
                     }
+                    image.setOpacity(1);
                 }
                 case CAT -> {
                     switch (imageType) {
@@ -1192,6 +1195,7 @@ public class MainStageController implements GenericSceneController, Initializabl
                         case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.2.png"))));
                         case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.3.png"))));
                     }
+                    image.setOpacity(1);
                 }
                 case BOOK -> {
                     switch (imageType) {
@@ -1199,6 +1203,7 @@ public class MainStageController implements GenericSceneController, Initializabl
                         case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.2.png"))));
                         case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.3.png"))));
                     }
+                    image.setOpacity(1);
                 }
                 case FRAME -> {
                     switch (imageType) {
@@ -1206,8 +1211,26 @@ public class MainStageController implements GenericSceneController, Initializabl
                         case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.2.png"))));
                         case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.3.png"))));
                     }
+                    image.setOpacity(1);
                 }
+            }
+        }
+    }
 
+    private void setCommonGoalPicture(ImageView image, int id) {
+        switch (id) {
+            case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/4.jpg"))));
+            case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/11.jpg"))));
+            case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/3.jpg"))));
+            case 3 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/7.jpg"))));
+            case 4 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/8.jpg"))));
+            case 5 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/2.jpg"))));
+            case 6 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/1.jpg"))));
+            case 7 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/6.jpg"))));
+            case 8 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/5.jpg"))));
+            case 9 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/10.jpg"))));
+            case 10 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/9.jpg"))));
+            case 11 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/12.jpg"))));
         }
     }
 
