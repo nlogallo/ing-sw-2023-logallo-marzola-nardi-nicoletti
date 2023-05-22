@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.TextFlow;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,7 +35,9 @@ public class MainStageController implements GenericSceneController, Initializabl
     3->select column;
     */
 
-
+    public MainStageController(GUIView gui){
+        this.gui = gui;
+    }
 
     @FXML
     private ImageView board00, board01, board02, board03, board04, board05, board06, board07, board08, board10, board11, board12, board13, board14, board15, board16, board17, board18, board20, board21, board22, board23, board24, board25, board26, board27, board28, board30, board31, board32, board33, board34, board35, board36, board37, board38, board40, board41, board42, board43, board44, board45, board46, board47, board48, board50, board51, board52, board53, board54, board55, board56, board57, board58, board60, board61, board62, board63, board64, board65, board66, board67, board68, board70, board71, board72, board73, board74, board75, board76, board77, board78, board80, board81, board82, board83, board84, board85, board86, board87, board88;
@@ -82,9 +83,10 @@ public class MainStageController implements GenericSceneController, Initializabl
 
     private void initAll(){
         setAttributes();
+        gui = MyShelfieClient.getGuiView();
         gui.setStageController(this);
-        gui.updateBoard(new Board(4)); // SOLO PER TEST
-        gui.updateShelf(new Shelf());
+        //gui.updateBoard(new Board(4)); // SOLO PER TEST
+        //gui.updateShelf(new Shelf());
         turnPhase = 0;
         setTurnPhaseLabel(turnPhase);
         setGoalsPicture();
@@ -94,7 +96,7 @@ public class MainStageController implements GenericSceneController, Initializabl
         initButtons();
     }
 
-    private void setAttributes(){
+    public void setAttributes(){
         boardImage[0][0] = board00;
         boardImage[0][1] = board01;
         boardImage[0][2] = board02;
@@ -310,11 +312,11 @@ public class MainStageController implements GenericSceneController, Initializabl
                     if (gui.getShelf().freeRows(selectedColumn) > positionsToOrder.size()) {
                         ArrayList<String> positions = new ArrayList<>();
                         for (int i = 0; i < positionsToOrder.size(); i++) {
-                            String txt1 = valueOf(positionsToOrder.get(i).getRow());
-                            String txt2 = valueOf(positionsToOrder.get(i).getColumn());
+                            String txt1 = valueOf(positionsToOrder.get(i).getRow() + 1);
+                            String txt2 = valueOf(positionsToOrder.get(i).getColumn() + 1);
                             positions.add(txt1 + txt2);
                         }
-                        //gui.getClientController().moveTiles(positions, selectedColumn + 1, gui.getBoard(), gui.getShelf());
+                        gui.getClientController().moveTiles(positions, selectedColumn + 1, gui.getBoard(), gui.getShelf());
 
                         bottomLabel.setOpacity(0);
                         middleLabel.setOpacity(0);
@@ -322,7 +324,8 @@ public class MainStageController implements GenericSceneController, Initializabl
                         pickedTileBottom.setOpacity(0);
                         pickedTileMiddle.setOpacity(0);
                         pickedTileTop.setOpacity(0);
-
+                        setBoardImage();
+                        setShelfImage();
                         turnPhase = 0;
                         setTurnPhaseLabel(turnPhase);
                         selectedColumn = -1;
@@ -1161,51 +1164,51 @@ public class MainStageController implements GenericSceneController, Initializabl
     private void setPicture (ImageView image, Tile tile) {
         TileType type = tile.getType();
         int imageType = tile.getImageType();
-        switch (type) {
-            case PLANT -> {
-                switch(imageType) {
-                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.1.png"))));
-                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.2.png"))));
-                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.3.png"))));
+            switch (type) {
+                case PLANT -> {
+                    switch (imageType) {
+                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.1.png"))));
+                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.2.png"))));
+                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.3.png"))));
+                    }
                 }
-            }
-            case TROPHY -> {
-                switch(imageType) {
-                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.1.png"))));
-                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.2.png"))));
-                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.3.png"))));
+                case TROPHY -> {
+                    switch (imageType) {
+                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.1.png"))));
+                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.2.png"))));
+                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.3.png"))));
+                    }
                 }
-            }
-            case GAME -> {
-                switch(imageType) {
-                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.1.png"))));
-                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.2.png"))));
-                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.3.png"))));
+                case GAME -> {
+                    switch (imageType) {
+                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.1.png"))));
+                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.2.png"))));
+                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.3.png"))));
+                    }
                 }
-            }
-            case CAT -> {
-                switch(imageType) {
-                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.1.png"))));
-                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.2.png"))));
-                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.3.png"))));
+                case CAT -> {
+                    switch (imageType) {
+                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.1.png"))));
+                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.2.png"))));
+                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.3.png"))));
+                    }
                 }
-            }
-            case BOOK -> {
-                switch(imageType) {
-                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.1.png"))));
-                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.2.png"))));
-                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.3.png"))));
+                case BOOK -> {
+                    switch (imageType) {
+                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.1.png"))));
+                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.2.png"))));
+                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.3.png"))));
+                    }
                 }
-            }
-            case FRAME -> {
-                switch(imageType) {
-                    case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.1.png"))));
-                    case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.2.png"))));
-                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.3.png"))));
+                case FRAME -> {
+                    switch (imageType) {
+                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.1.png"))));
+                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.2.png"))));
+                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.3.png"))));
+                    }
                 }
-            }
-        }
 
+        }
     }
 
 

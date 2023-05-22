@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class EnterNicknameController implements GenericSceneController, Initializable {
-    private GUIView gui;
     @FXML
     private Button sendNickname;
     @FXML
@@ -37,7 +36,7 @@ public class EnterNicknameController implements GenericSceneController, Initiali
 
     @Override
     public void setGui(GUIView gui) {
-        this.gui = gui;
+
     }
 
     @Override
@@ -75,13 +74,13 @@ public class EnterNicknameController implements GenericSceneController, Initiali
                             parameters.add(serverSocket.getText());
                             parameters.add(protocolValue);
                             parameters.add(nicknameText.getText());
-                            SceneController.changeScene(gui, "NoGamesAvailable.fxml", parameters);
+                            SceneController.changeScene("NoGamesAvailable.fxml", parameters);
                         }
                         else{
                             parameters.add(protocolValue);
                             parameters.add(MyShelfieClient.TCPGetGameId());
                             parameters.add(nicknameText.getText());
-                            SceneController.changeScene(gui, "LobbyStage.fxml", parameters);
+                            SceneController.changeScene("LobbyStage.fxml", parameters);
                         }
                     }
                     else{
@@ -90,13 +89,13 @@ public class EnterNicknameController implements GenericSceneController, Initiali
                             parameters.add(serverSocket.getText());
                             parameters.add(protocolValue);
                             parameters.add(nicknameText.getText());
-                            SceneController.changeScene(gui, "NoGamesAvailable.fxml", parameters);
+                            SceneController.changeScene("NoGamesAvailable.fxml", parameters);
                         }
                         else {
                             parameters.add(protocolValue);
                             parameters.add(game.getId());
                             parameters.add(nicknameText.getText());
-                            SceneController.changeScene(gui, "LobbyStage.fxml", parameters);
+                            SceneController.changeScene("LobbyStage.fxml", parameters);
                         }
                     }
                     break;
@@ -116,7 +115,7 @@ public class EnterNicknameController implements GenericSceneController, Initiali
             stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
             stage.setTitle("My Shelfie Connection Error");
             SceneController.setStage(stage);
-            SceneController.changeScene(gui, "ErrorStage.fxml");
+            SceneController.changeScene("ErrorStage.fxml");
             SceneController.setStage(primaryStage);
         }
     }

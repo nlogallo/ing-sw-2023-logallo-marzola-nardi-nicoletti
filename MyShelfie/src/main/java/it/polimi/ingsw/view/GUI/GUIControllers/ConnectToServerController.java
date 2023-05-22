@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 
 public class ConnectToServerController implements GenericSceneController, Initializable {
 
-    private GUIView gui;
 
     @FXML
     private ToggleButton toggleSocket;
@@ -43,7 +42,6 @@ public class ConnectToServerController implements GenericSceneController, Initia
 
     @Override
     public void setGui(GUIView gui) {
-        this.gui = gui;
     }
 
     @Override
@@ -108,7 +106,7 @@ public class ConnectToServerController implements GenericSceneController, Initia
                         parameters.add(IPText.getText());
                         parameters.add(portText.getText());
                         parameters.add(protocol);
-                        SceneController.changeScene(gui, "EnterNicknameStage.fxml", parameters);
+                        SceneController.changeScene("EnterNicknameStage.fxml", parameters);
                     }
                     else{
                         Stage primaryStage = SceneController.getStage();
@@ -116,7 +114,7 @@ public class ConnectToServerController implements GenericSceneController, Initia
                         stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
                         stage.setTitle("My Shelfie Connection Error");
                         SceneController.setStage(stage);
-                        SceneController.changeScene(gui, "ErrorStage.fxml");
+                        SceneController.changeScene("ErrorStage.fxml");
                         SceneController.setStage(primaryStage);
                     }
                 } catch (NumberFormatException ex) {

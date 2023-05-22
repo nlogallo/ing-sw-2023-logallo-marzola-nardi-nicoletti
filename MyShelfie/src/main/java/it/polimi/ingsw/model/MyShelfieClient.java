@@ -4,8 +4,10 @@ import it.polimi.ingsw.controller.ClientController;
 import it.polimi.ingsw.utils.NetworkMessage;
 import it.polimi.ingsw.view.CLI.CLIView;
 import it.polimi.ingsw.view.ClientViewObservable;
+import it.polimi.ingsw.view.GUI.GUIView;
+import it.polimi.ingsw.view.GUI.MyShelfieFX;
+import it.polimi.ingsw.view.GUI.SceneController;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -36,7 +38,9 @@ public class MyShelfieClient {
     static ClientViewObservable view;
     static ClientController controller;
     private final Object lock = new Object();
-    boolean isRunning = true;
+    static GUIView guiView;
+    private static int interfaceChosen;
+    boolean responseReceived = false;
     /*private final Lock lock1 = new Lock() {
         @Override
         public void lock() {
@@ -68,7 +72,6 @@ public class MyShelfieClient {
             return null;
         }
     };*/
-    static boolean showMenu = true;
 
     /**
      * Main method: Asks to the user to choose between TCP and RMI connection and establishes the connection with the chosen protocol.
@@ -79,6 +82,15 @@ public class MyShelfieClient {
     public static void main(String args[]) throws IOException {
         System.out.println("Welcome to MyShelfie!");
         Scanner sc = new Scanner(System.in);
+        while(true){
+            System.out.println("Press 1 to use the CLI or 2 to use the GUI:");
+            interfaceChosen = Integer.parseInt(sc.nextLine());
+            if(interfaceChosen == 2){
+                MyShelfieFX.main(null);
+            } else if (interfaceChosen == 1) {
+                break;
+            }
+        }
         while (true) {
             System.out.println("Choose your connection protocol:\n1. TCP\n2. RMI\n3. Quit\n");
             try {
@@ -139,7 +151,6 @@ public class MyShelfieClient {
                         if (command.equals("startGame")) {
                             System.out.println("GAME STARTED!");
                             String finalNickname = nickname;
-                            System.out.println("FRANCO "+ chatSocket.isConnected());
                             new MyShelfieClient().handleGameTCP(nickname);
                             break;
                         }
@@ -260,6 +271,8 @@ public class MyShelfieClient {
         if (protocol == 1) {
             outputStream.writeObject(nickname);
             outputStream.flush();
+            if(interfaceChosen == 2)
+                guiView = new GUIView((nickname));
             return (String) inputStream.readObject();
         } else {
             return RMIServer.RMICheckNickname(nickname);
@@ -361,13 +374,11 @@ public class MyShelfieClient {
         @Override
         public void run() {
             isRunning = true;
-            while (isRunning) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(1500);
-                    controller.enableInput();
-                } catch (InterruptedException e) {
-                    //throw new RuntimeException(e);
-                }
+            try {
+                TimeUnit.MILLISECONDS.sleep(1500);
+                controller.enableInput();
+            } catch (InterruptedException e) {
+                //throw new RuntimeException(e);
             }
         }
 
@@ -382,17 +393,23 @@ public class MyShelfieClient {
      * @param nickname
      */
     public void handleGameTCP(String nickname){
-        view = new ClientViewObservable(new CLIView(nickname));
+        if(interfaceChosen == 2)
+            view = new ClientViewObservable(guiView);
+        else
+            view = new ClientViewObservable(new CLIView(nickname));
         controller = new ClientController(view, this, nickname);
         view.setClientController(controller);
         try {
+            if(interfaceChosen == 2)
+                SceneController.createMainStage("MainStage.fxml");
             NetworkMessage nm = (NetworkMessage) inputStream.readObject();
             controller.playerSetup(nm);
             NetworkMessage currentPlayer = (NetworkMessage) inputStream.readObject();
             controller.updateResults(currentPlayer);
-            /*if (currentPlayer.getContent().get(0).equals(nickname)) {
+            if (interfaceChosen == 1 && currentPlayer.getContent().get(0).equals(nickname)) {
                 controller.enableInput();
-            }*/
+            }
+
             ArrayList<NetworkMessage> result = null;
 
             //new Thread(() -> new MyShelfieClient().handleChatTCP(nickname, chatSocket)).start();
@@ -403,32 +420,25 @@ public class MyShelfieClient {
                 }
             };
             threadChat.start();*/
-            Thread threadChat = null;
+            /*Thread threadChat = null;
             MenuHandler menuHandler = new MenuHandler();
+            threadChat = new Thread(menuHandler);
+            threadChat.start();*/
             while (true) {
-                if(threadChat != null) {
-                    menuHandler.stopThread();
-                    if(threadChat.isAlive()){
-                        threadChat.interrupt();
-                        while (true){
-                            if(threadChat.isInterrupted())
-                                break;
-                        }
-                    }
-                }
-                threadChat = new Thread(menuHandler);
-                threadChat.start();
-                /*if (result != null) {
-                    if (result.getContent().get(0).equals(nickname)) {
+                if (result != null && interfaceChosen == 1) {
+                    if (result.get(2).getContent().get(0).equals(nickname)) {
                         controller.enableInput();
                     }
-                }*/
-                synchronized (lock){
-                    if((currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname))){
-                        lock.wait();
-                        showMenu = false;
-                    }
-                    //synchronized (lock1){
+                }
+                if (interfaceChosen == 2 && (currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname))) {
+                    //firstOne = false;
+                    responseReceived = false;
+                } else
+                    responseReceived = true;
+                //controller.enableInput();}
+
+                //}
+                //synchronized (lock1){
                         /*if(!threadChat.isInterrupted()) {
                             System.out.println("still alive");
                             threadChat.interrupt();
@@ -438,30 +448,45 @@ public class MyShelfieClient {
                             }
                             System.out.println(threadChat.isInterrupted());
                         }*/
-                        result = (ArrayList<NetworkMessage>) inputStream.readObject();
-                        //threadChat.interrupt();
+                if (responseReceived) {
+                    result = (ArrayList<NetworkMessage>) inputStream.readObject();
+                    //threadChat.interrupt();
                         /*if(threadChat.isAlive()){
                             System.out.println("sono ancora vivo");
                             threadChat.interrupt();
                             while (threadChat.isInterrupted()){}
                         }*/
-                        NetworkMessage board = result.get(0);
-                        if (board.getRequestId().equals("ER")) {
-                            System.err.println("\n" + board.getTextMessage());
-                            break;
-                        } else if (board.getRequestId().equals("UC")) {
-                            controller.updateChat(board);
-                        } else if (board.getRequestId().equals("UB")) {
-                            controller.updateBoard(board);
-                            NetworkMessage token = result.get(1);
-                            controller.updateGameTokens(token);
-                            NetworkMessage res = result.get(2);
-                            controller.updateResults(res);
-                        }
-                        showMenu = true;
-                        menuHandler.stopThread();
-                        //lock1.notifyAll();
-                    //}
+                    NetworkMessage board = result.get(0);
+                    if (board.getRequestId().equals("ER")) {
+                        System.err.println("\n" + board.getTextMessage());
+                        break;
+                    } else if (board.getRequestId().equals("UC")) {
+                        controller.updateChat(board);
+                    } else if (board.getRequestId().equals("UB")) {
+                        controller.updateBoard(board);
+                        NetworkMessage token = result.get(1);
+                        controller.updateGameTokens(token);
+                        NetworkMessage res = result.get(2);
+                        controller.updateResults(res);
+                            /*TimeUnit.MILLISECONDS.sleep(1000);
+                            Robot robot = new Robot();
+                            robot.keyPress(KeyEvent.VK_A);
+                            if(threadChat != null) {
+                                menuHandler.stopThread();
+                                if(threadChat.isAlive()){
+                                    threadChat.interrupt();
+                                    while (true){
+                                        if(threadChat.isInterrupted())
+                                            break;
+                                    }
+                                }
+                            }
+                            threadChat = new Thread(menuHandler);
+                            threadChat.start();*/
+                    }
+                    //showMenu = true;
+                    //menuHandler.stopThread();
+                    //lock1.notifyAll();
                 }
             }
         } catch (IOException e) {
@@ -469,10 +494,12 @@ public class MyShelfieClient {
             //System.err.println("\nConnection lost!");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+            } //catch (InterruptedException e) {
+            //throw new RuntimeException(e);
+            //} //catch (AWTException e) {
+            //throw new RuntimeException(e);
     }
+
 
     public void handleChatTCP(String nickname, Socket chatSocket) {
         try {
@@ -480,8 +507,8 @@ public class MyShelfieClient {
             chatInput = new ObjectInputStream(chatSocket.getInputStream());
             while (true) {
                 //synchronized (lock1){
-                    //lock1.wait();
-                    //controller.enableInput();
+                //lock1.wait();
+                //controller.enableInput();
                 //inputStream.readObject();
                 //}
             }
@@ -545,19 +572,19 @@ public class MyShelfieClient {
                     }
                 }else if (isFinished == 1) {
                     //if (RMIServer.RMIGetMutexAtIndex(game.getId(), playerIndex)) {
-                        result = RMIServer.RMIGetResult(game.getId(), nickname);
-                        game = RMIServer.RMIGetGame(game.getId());
-                        NetworkMessage board = result.get(0);
-                        NetworkMessage token = result.get(1);
-                        NetworkMessage res = result.get(2);
-                        if (board.getRequestId().equals("ER")) {
-                            System.err.println("\n" + board.getTextMessage());
-                            break;
-                        }
-                        controller.updateBoard(board);
-                        controller.updateGameTokens(token);
-                        controller.updateResults(res);
-                        RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);
+                    result = RMIServer.RMIGetResult(game.getId(), nickname);
+                    game = RMIServer.RMIGetGame(game.getId());
+                    NetworkMessage board = result.get(0);
+                    NetworkMessage token = result.get(1);
+                    NetworkMessage res = result.get(2);
+                    if (board.getRequestId().equals("ER")) {
+                        System.err.println("\n" + board.getTextMessage());
+                        break;
+                    }
+                    controller.updateBoard(board);
+                    controller.updateGameTokens(token);
+                    controller.updateResults(res);
+                    RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);
                     //}
                     System.out.println("Game ended! Thank you for playing!");
                     break;
@@ -581,6 +608,7 @@ public class MyShelfieClient {
      * @return
      */
     public NetworkMessage sendMessage(NetworkMessage networkMessage) {
+        protocol = 1;
         if (protocol == 1) {
             try {
                 socket.setKeepAlive(true);
@@ -588,11 +616,8 @@ public class MyShelfieClient {
                 if (networkMessage.getRequestId().equals("MT")) {
                     outputStream.writeObject(networkMessage);
                     NetworkMessage result;
-                    synchronized (lock){
-                        result = (NetworkMessage) inputStream.readObject();
-                        lock.notifyAll();
-                    }
-                    //moveFinished = true;
+                    result = (NetworkMessage) inputStream.readObject();
+                    responseReceived = true;
                     return result;
                 } else if (networkMessage.getRequestId().equals("SM")) {
                     outputStream.writeObject(networkMessage);
@@ -620,6 +645,10 @@ public class MyShelfieClient {
             }
         }
         return null;
+    }
+
+    public static GUIView getGuiView(){
+        return guiView;
     }
 }
 

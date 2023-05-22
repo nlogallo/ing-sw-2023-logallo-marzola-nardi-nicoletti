@@ -92,6 +92,6 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
             }
         }
         parameters.add(nickname.getText());
-        SceneController.changeScene(gui, "LobbyStage.fxml", parameters);
+        SceneController.changeScene("LobbyStage.fxml", parameters);
     }
 }

@@ -21,9 +21,8 @@ public class MyShelfieFX extends Application {
         primaryStage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
         primaryStage.setTitle("My Shelfie");
         primaryStage.centerOnScreen();
-        GUIView gui = new GUIView();
         SceneController.setStage(primaryStage);
-        SceneController.changeScene(gui, "LoadingScreen.fxml");
+        SceneController.changeScene("LoadingScreen.fxml");
     }
 
     @Override
