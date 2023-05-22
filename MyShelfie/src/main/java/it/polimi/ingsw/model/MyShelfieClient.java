@@ -218,12 +218,13 @@ public class MyShelfieClient {
      *
      * @param hostname
      * @param port
-     * @param protocol
+     * @param connectionProtocol
      * @return
      */
-    static public boolean connect(String hostname, int port, int protocol) {
-        if (protocol == 1) {
+    static public boolean connect(String hostname, int port, int connectionProtocol) {
+        if (connectionProtocol == 1) {
             System.out.println("Connecting to TCP server...");
+            protocol = 1;
             try {
                 socket = new Socket(hostname, port);
                 chatSocket = new Socket(hostname, port + 1);
@@ -244,7 +245,8 @@ public class MyShelfieClient {
             } catch (IOException e) {
                 return false;
             }
-        } else if (protocol == 2) {
+        } else if (connectionProtocol == 2) {
+            protocol = 2;
             try {
                 System.out.println("Connecting to RMI server...");
                 RMIServer = (MyShelfieRMIInterface) Naming.lookup("rmi://localhost:" + port + "/Server");
@@ -269,11 +271,11 @@ public class MyShelfieClient {
      * @throws ClassNotFoundException
      */
     static public String checkNickname(String nickname, int protocol) throws IOException, ClassNotFoundException {
+        if (interfaceChosen == 2)
+            guiView = new GUIView((nickname));
         if (protocol == 1) {
             outputStream.writeObject(nickname);
             outputStream.flush();
-            if (interfaceChosen == 2)
-                guiView = new GUIView((nickname));
             return (String) inputStream.readObject();
         } else {
             return RMIServer.RMICheckNickname(nickname);
@@ -533,10 +535,16 @@ public class MyShelfieClient {
      * @param nickname
      */
     public void handleGameRMI(Game game, String nickname) {
-        ClientViewObservable view = new ClientViewObservable(new CLIView(nickname));
+        gameId = game.getId();
+        if (interfaceChosen == 2)
+            view = new ClientViewObservable(guiView);
+        else
+            view = new ClientViewObservable(new CLIView(nickname));
         ClientController controller = new ClientController(view, this, nickname);
         view.setClientController(controller);
         try {
+            if (interfaceChosen == 2)
+                SceneController.createMainStage("MainStage.fxml");
             NetworkMessage nm = RMIServer.RMIHandlePlayerSetup(game, nickname);
             game = (Game) nm.getContent().get(nm.getContent().size() - 1);
             controller.playerSetup(nm);
@@ -613,7 +621,7 @@ public class MyShelfieClient {
      * @return
      */
     public NetworkMessage sendMessage(NetworkMessage networkMessage) {
-        protocol = 1;
+        System.out.println("protocol:" + protocol);
         if (protocol == 1) {
             try {
                 socket.setKeepAlive(true);
