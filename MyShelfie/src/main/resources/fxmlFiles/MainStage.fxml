@@ -613,11 +613,7 @@
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="8" GridPane.rowIndex="6">
                      <children>
                         <ImageView fx:id="board68" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fx:id="boardEndGameToken" fitHeight="39.0" fitWidth="46.0" layoutX="-16.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" rotate="9.9">
-                           <image>
-                              <Image url="@../assets/scoring tokens/end game.jpg" />
-                           </image>
-                        </ImageView>
+                        <ImageView fx:id="boardEndGameToken" fitHeight="39.0" fitWidth="46.0" layoutX="-16.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" rotate="9.9" />
                      </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="7">
@@ -721,23 +717,13 @@
       </AnchorPane>
       <AnchorPane layoutX="50.0" layoutY="520.0" prefHeight="293.0" prefWidth="214.0">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5e3d28" height="295.0" layoutX="-5.0" layoutY="-11.0" stroke="#2f2f2f" strokeType="INSIDE" strokeWidth="3.0" width="205.0" />
-            <ImageView fitHeight="285.0" fitWidth="210.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/personal goal cards/front_EMPTY.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="personalGoal" fitHeight="292.0" fitWidth="201.0" layoutY="-10.0" pickOnBounds="true" preserveRatio="true" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5e3d28" height="302.0" layoutX="-5.0" layoutY="-12.0" stroke="#2f2f2f" strokeType="INSIDE" strokeWidth="3.0" width="203.0" />
+            <ImageView fx:id="personalGoal" fitHeight="292.0" fitWidth="201.0" layoutY="-8.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="330.0" layoutY="525.0" prefHeight="120.0" prefWidth="196.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#754d34" height="138.0" layoutY="-15.0" stroke="#3c3c3c" strokeType="INSIDE" strokeWidth="3.0" width="212.0" />
-            <ImageView fitHeight="129.0" fitWidth="195.0" layoutX="5.0" layoutY="-10.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/common goal cards/back.jpg" />
-               </image>
-            </ImageView>
             <ImageView fx:id="commonGoal1" fitHeight="129.0" fitWidth="195.0" layoutX="5.0" layoutY="-10.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="commonGoal1Token" fitHeight="59.0" fitWidth="58.0" layoutX="117.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" rotate="-10.3" />
          </children>
@@ -745,11 +731,6 @@
       <AnchorPane layoutX="327.0" layoutY="670.0" prefHeight="130.0" prefWidth="202.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#6b462e" height="138.0" layoutX="3.0" layoutY="-3.0" stroke="#363535" strokeType="INSIDE" strokeWidth="3.0" width="212.0" />
-            <ImageView fitHeight="129.0" fitWidth="195.0" layoutX="8.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/common goal cards/back.jpg" />
-               </image>
-            </ImageView>
             <ImageView fx:id="commonGoal2" fitHeight="129.0" fitWidth="195.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="commonGoal2Token" fitHeight="56.0" fitWidth="56.0" layoutX="122.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" rotate="-6.7" />
          </children>
@@ -823,7 +804,7 @@
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a66e49" height="137.0" layoutX="10.0" layoutY="8.0" stroke="#464545" strokeType="INSIDE" strokeWidth="2.0" width="412.0" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f8f1ed" height="90.0" layoutX="19.0" layoutY="47.0" stroke="#464545" strokeType="INSIDE" strokeWidth="2.0" width="392.0" />
-            <Label layoutX="17.0" layoutY="15.0" prefHeight="15.0" prefWidth="397.0" text="Server Message:">
+            <Label layoutX="17.0" layoutY="15.0" prefHeight="15.0" prefWidth="397.0">
                <font>
                   <Font name="American Typewriter" size="24.0" />
                </font>
