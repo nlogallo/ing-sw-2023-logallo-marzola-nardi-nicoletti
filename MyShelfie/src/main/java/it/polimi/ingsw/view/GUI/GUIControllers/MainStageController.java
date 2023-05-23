@@ -1080,13 +1080,29 @@ public class MainStageController implements GenericSceneController, Initializabl
         }
     }
 
+    public void setShelfPlayerNickname() {
+        if (gui.getPlayersNickname().size() >= 1) {
+            otherPlayerButton0.setText(gui.getPlayersNickname().get(0));
+
+            if(gui.getPlayersNickname().size() >= 2) {
+                otherPlayerButton1.setText(gui.getPlayersNickname().get(1));
+
+            } else otherPlayerButton1.setOpacity(0);
+
+            if(gui.getPlayersNickname().size() >= 3) {
+                otherPlayerButton2.setText(gui.getPlayersNickname().get(2));
+
+            } else otherPlayerButton2.setOpacity(0);
+        }
+    }
+
 
 
 
     private void initButtons() {
-        if (gui.getCurrentPlayer() != null  && !gui.getCurrentPlayer().equals(gui.getClientNickname()) ) {
-            //disable buttons you cant click if it isnt your turn
-        }
+        //otherPlayerButton0.addEventHandler(MouseEvent.MOUSE_RELEASED, this::);
+        //otherPlayerButton1.addEventHandler(MouseEvent.MOUSE_RELEASED, this::);
+        //otherPlayerButton2.addEventHandler(MouseEvent.MOUSE_RELEASED, this::);
         makeMoveButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::makeMoveButtonClick);
         backButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::backButtonClick);
         vButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::vButtonClick);

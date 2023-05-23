@@ -111,6 +111,7 @@ public class GUIView  implements Observer {
 
     @Override
     public void refreshCLI() {
+        stageController.setShelfPlayerNickname();
         stageController.setGoalsPicture();
         stageController.setBoardImage();
         stageController.setShelfImage();
