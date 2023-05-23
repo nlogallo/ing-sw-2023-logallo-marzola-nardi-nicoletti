@@ -50,29 +50,55 @@ public class ChatHandler {
     public void chatMenu() {
 
         while (true) {
+
             System.out.println();
             System.out.println("-+-".repeat(59));
             System.out.println();
-            System.out.println(ANSI_CREAM + "Buttons Allowed:" + ANSI_RESET + "     1: View Global Chat");
-            System.out.println(" ".repeat(21) + "2: View the list of already open duo chats");
-            System.out.println(" ".repeat(21) + "3: Create a new duo chat");
-            System.out.println(" ".repeat(21) + "4: Come back to Game MENU");
-            System.out.print("... : ");
-            String userInput = scanner.nextLine();
-            if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), 4)) {
-                switch (Integer.parseInt(userInput)) {
-                    case 1 ->  viewGlobalChat();
-                    case 2 ->  chooseDuoChat();
-                    case 3 ->  createDuoChat();
-                    case 4 -> {
-                        System.out.println();
-                        System.out.println("-+-".repeat(59));
-                        System.out.println();
+
+            //PlayersNickname doesn't contain ClientNickname, so for a game with two players, playersNickname has size = 1
+            if (view.getPlayersNickname().size() == 1) {
+                System.out.println(ANSI_CREAM + "Buttons Allowed:" + ANSI_RESET + "     1: View Global Chat");
+                System.out.println(" ".repeat(21) + "2: Come back to Game MENU");
+                System.out.print("... : ");
+                String userInput = scanner.nextLine();
+                if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), 4)) {
+                    switch (Integer.parseInt(userInput)) {
+                        case 1 -> {
+                            globalChat = new ClientChat(0, view.getPlayersNickname());
+                            viewGlobalChat();
+                        }
+                        case 2 -> {
+                            System.out.println();
+                            System.out.println("-+-".repeat(59));
+                            System.out.println();
+                        }
                     }
+                    break;
+                } else {
+                    System.out.println(ANSI_RED + "This button isn't allowed" + ANSI_RESET);
                 }
-                break;
             } else {
-                System.out.println(ANSI_RED + "This button isn't allowed" + ANSI_RESET);
+                System.out.println(ANSI_CREAM + "Buttons Allowed:" + ANSI_RESET + "     1: View Global Chat");
+                System.out.println(" ".repeat(21) + "2: View the list of already open duo chats");
+                System.out.println(" ".repeat(21) + "3: Create a new duo chat");
+                System.out.println(" ".repeat(21) + "4: Come back to Game MENU");
+                System.out.print("... : ");
+                String userInput = scanner.nextLine();
+                if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), 4)) {
+                    switch (Integer.parseInt(userInput)) {
+                        case 1 ->  viewGlobalChat();
+                        case 2 ->  chooseDuoChat();
+                        case 3 ->  createDuoChat();
+                        case 4 -> {
+                            System.out.println();
+                            System.out.println("-+-".repeat(59));
+                            System.out.println();
+                        }
+                    }
+                    break;
+                } else {
+                    System.out.println(ANSI_RED + "This button isn't allowed" + ANSI_RESET);
+                }
             }
         }
     }
@@ -405,16 +431,15 @@ public class ChatHandler {
     private void viewGlobalChat () {
 
         System.out.println("-+-".repeat(59) + "\n");
-        if (globalChat != null) {
+        if (globalChat.getClientMessages().size() >= 1) {
             System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET);
             for (int i = globalChat.getClientMessages().size(); i > globalChat.getClientMessages().size() - 16; i--) {
                 ClientMessage message = globalChat.getClientMessages().get(i);
                 System.out.println(ANSI_CREAM + message.getTimestamp() + " " + message.getSender() + ": " + ANSI_RESET + message.getMessage());
             }
-            sendMessageOrOpenChatMenu(globalChat);
         } else {
             System.out.println(ANSI_RED + "There aren't messages in the global chat" + ANSI_RESET);
-            chatMenu();
         }
+        sendMessageOrOpenChatMenu(globalChat);
     }
 }
