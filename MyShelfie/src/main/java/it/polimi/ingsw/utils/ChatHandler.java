@@ -16,18 +16,13 @@ public class ChatHandler {
 
     private final CLIView view;
     String clientNickname;
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
     private static final String ANSI_RESET = "\u001B[00m";
-    private static final String ANSI_WHITE = "\u001B[37m";
-    private static final String ANSI_GREEN = "\u001B[32m";
-    private static final String ANSI_YELLOW = "\u001B[33m";
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_CYAN = "\u001B[38;5;14m";
     private static final String ANSI_MAGENTA = "\u001B[38;5;13m";
     private static final String ANSI_BLUE = "\u001B[38;5;33m";
     private static final String ANSI_CREAM = "\u001B[38;5;229m";
-    private ArrayList<ClientChat> duoChats = new ArrayList<>();
-    private ClientChat globalChat = null;
 
 
     /**
@@ -37,7 +32,6 @@ public class ChatHandler {
     public ChatHandler (CLIView view) {
         this.view = view;
         clientNickname = view.getClientNickname();
-        //chats.add(new ClientChat(0, view.getPlayersNickname()));
     }
 
 
@@ -64,7 +58,7 @@ public class ChatHandler {
                 if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), 4)) {
                     switch (Integer.parseInt(userInput)) {
                         case 1 -> {
-                            globalChat = new ClientChat(0, view.getPlayersNickname());
+                            view.setGlobalChat(new ClientChat(0, view.getPlayersNickname()));
                             viewGlobalChat();
                         }
                         case 2 -> {
@@ -110,10 +104,10 @@ public class ChatHandler {
      * @param receivers are the receivers of the message
      * @param text is the text of the message
      */
-    //to be fixed
+
     private void sendMessage (String sender, ArrayList<String> receivers, String text) {
         ClientController clientController = view.getClientController();
-        //clientController.sendMessage(sender,receivers, text);
+        clientController.sendMessage(sender,receivers, text);
     }
 
 
@@ -128,17 +122,17 @@ public class ChatHandler {
 
         boolean isDuoChatAlreadyExist = false;
         if (receivers.size() > 1) {
-            if (globalChat == null) {
-                globalChat = new ClientChat(0, view.getPlayersNickname());
+            if (view.getGlobalChat() == null) {
+                view.setGlobalChat(new ClientChat(0, view.getPlayersNickname()));
             }
-            globalChat.addMessage(text, sender, receivers, timestamp);
+            view.getGlobalChat().addMessage(text, sender, receivers, timestamp);
         } else {
 
             ArrayList<String> senderPlusReceiver = new ArrayList<>();
             senderPlusReceiver.add(sender);
             senderPlusReceiver.addAll(receivers);
 
-            for (ClientChat chat : duoChats) {
+            for (ClientChat chat : view.getDuoChats()) {
                 ArrayList<String> players = chat.getChatMembers();
                 if (players.containsAll(senderPlusReceiver)) {
                     isDuoChatAlreadyExist = true;
@@ -147,8 +141,8 @@ public class ChatHandler {
             }
 
             if(!isDuoChatAlreadyExist) {
-                duoChats.add(new ClientChat(duoChats.size(), senderPlusReceiver ));
-                duoChats.get(duoChats.size()-1).addMessage(text, sender, receivers, timestamp);
+                view.getDuoChats().add(new ClientChat(view.getDuoChats().size(), senderPlusReceiver ));
+                view.getDuoChats().get(view.getDuoChats().size()-1).addMessage(text, sender, receivers, timestamp);
             }
         }
     }
@@ -197,7 +191,7 @@ public class ChatHandler {
         ArrayList<String> players = new ArrayList<>();
         players.add(clientNickname);
         players.add(player);
-        for (ClientChat chat : duoChats) {
+        for (ClientChat chat : view.getDuoChats()) {
             if(chat.getChatMembers().size() == 2 && chat.getChatMembers().containsAll(players)) {
                 return false;
             }
@@ -219,7 +213,7 @@ public class ChatHandler {
         System.out.println("\n" + "-+-".repeat(59) + "\n");
 
         while (true) {
-            if (duoChats.size() < view.getPlayersNickname().size()) {
+            if (view.getDuoChats().size() < view.getPlayersNickname().size()) {
                 System.out.print(ANSI_CREAM + "Other players with which you can create a new chat: " + ANSI_RESET);
                 for (int i = 0; i < players.size(); i++) {
                     if (i == 0 && checkChat(clientNickname, players.get(i))) {
@@ -242,8 +236,8 @@ public class ChatHandler {
                     ArrayList<String> newChatPlayerList = new ArrayList<>();
                     newChatPlayerList.add(clientNickname);
                     newChatPlayerList.add(players.get(Integer.parseInt(userInput)-1));
-                    duoChats.add(new ClientChat(duoChats.size() + 1, newChatPlayerList));
-                    viewDuoChat(duoChats.get(duoChats.size() - 1));
+                    view.addDuoChat(new ClientChat(view.getDuoChats().size() + 1, newChatPlayerList));
+                    viewDuoChat(view.getDuoChats().get(view.getDuoChats().size() - 1));
                     break;
                 } else {
                     System.out.println(ANSI_RED + "Value is incorrect. Retry!" + ANSI_RESET);
@@ -267,14 +261,14 @@ public class ChatHandler {
         System.out.println("\n" + "-+-".repeat(59) + "\n");
         while (true) {
             cont = 0;
-            if (duoChats.size() > 0) {
+            if (view.getDuoChats().size() > 0) {
 
                 System.out.print(ANSI_CREAM + "These are your open duo chats: " + ANSI_RESET);
                 int otherPlayerIndex;
-                for(int i = 0; i < duoChats.size(); i++) {
-                    if(duoChats.get(i).getChatMembers().size() == 2 && duoChats.get(i).getChatMembers().contains(clientNickname)) {
-                        otherPlayerIndex = duoChats.get(i).getChatMembers().size() - duoChats.get(i).getChatMembers().indexOf(clientNickname) - 1;
-                        String otherPlayer = duoChats.get(i).getChatMembers().get(otherPlayerIndex);
+                for(int i = 0; i < view.getDuoChats().size(); i++) {
+                    if(view.getDuoChats().get(i).getChatMembers().size() == 2 && view.getDuoChats().get(i).getChatMembers().contains(clientNickname)) {
+                        otherPlayerIndex = view.getDuoChats().get(i).getChatMembers().size() - view.getDuoChats().get(i).getChatMembers().indexOf(clientNickname) - 1;
+                        String otherPlayer = view.getDuoChats().get(i).getChatMembers().get(otherPlayerIndex);
                         if(cont == 0) {
                             System.out.println("        1: " + otherPlayer);
                         } else {
@@ -290,7 +284,7 @@ public class ChatHandler {
                     chatMenu();
                     break;
                 } else if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), cont)) {
-                    viewDuoChat(duoChats.get(Integer.parseInt(userInput)-1));
+                    viewDuoChat(view.getDuoChats().get(Integer.parseInt(userInput)-1));
                     break;
                 } else {
                     System.out.println(ANSI_RED + "Value is incorrect. Retry!" + ANSI_RESET);
@@ -431,15 +425,15 @@ public class ChatHandler {
     private void viewGlobalChat () {
 
         System.out.println("-+-".repeat(59) + "\n");
-        if (globalChat.getClientMessages().size() >= 1) {
+        if (view.getGlobalChat().getClientMessages().size() >= 1) {
             System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET);
-            for (int i = globalChat.getClientMessages().size(); i > globalChat.getClientMessages().size() - 16; i--) {
-                ClientMessage message = globalChat.getClientMessages().get(i);
+            for (int i = view.getGlobalChat().getClientMessages().size(); i > view.getGlobalChat().getClientMessages().size() - 16; i--) {
+                ClientMessage message = view.getGlobalChat().getClientMessages().get(i);
                 System.out.println(ANSI_CREAM + message.getTimestamp() + " " + message.getSender() + ": " + ANSI_RESET + message.getMessage());
             }
         } else {
             System.out.println(ANSI_RED + "There aren't messages in the global chat" + ANSI_RESET);
         }
-        sendMessageOrOpenChatMenu(globalChat);
+        sendMessageOrOpenChatMenu(view.getGlobalChat());
     }
 }

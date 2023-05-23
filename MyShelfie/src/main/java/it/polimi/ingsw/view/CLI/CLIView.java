@@ -3,9 +3,13 @@ package it.polimi.ingsw.view.CLI;
 import it.polimi.ingsw.controller.ClientController;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
+import it.polimi.ingsw.utils.ChatHandler;
+import it.polimi.ingsw.utils.ClientChat;
 import it.polimi.ingsw.utils.InputOutputHandler;
+import it.polimi.ingsw.view.ClientViewObservable;
 import it.polimi.ingsw.view.Observer;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +23,8 @@ public class CLIView implements Observer {
     private Shelf shelf;
     private PersonalGoal personalGoal;
     private ArrayList<CommonGoal> commonGoals = new ArrayList<>();
-    private ArrayList<Chat> chats = new ArrayList<>();
+    private ArrayList<ClientChat> duoChats = new ArrayList<>();
+    private ClientChat globalChat = null;
     private boolean seat;
     private ArrayList<Token> personalTokens = new ArrayList<>();
     private ArrayList<Token> gameTokens;
@@ -32,6 +37,7 @@ public class CLIView implements Observer {
     private CLIFormatter cliFormatter = new CLIFormatter(this);
     private InputOutputHandler inputOutputHandler = new InputOutputHandler(this);
     private boolean isOccurredAnError = false;
+    private ChatHandler chatHandler = new ChatHandler(this);
 
     /**
      * Constructor method
@@ -76,8 +82,24 @@ public class CLIView implements Observer {
      */
     @Override
     public void updateChat(String sender, int chatId, String text){
-        //if not exists create a new chat with that id
-        //add in the arrayList<ClientChat>
+
+        //to be fixed
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        if (chatId == 0) {
+            chatHandler.addMessage(sender, getPlayersNickname(), text, timestamp);
+        } else {
+            for (ClientChat duoChat : duoChats) {
+                if(duoChat.getId() == chatId) {
+                    for (int i = 0; i < duoChat.getChatMembers().size(); i++) {
+                        if (duoChat.getChatMembers().get(i).equals(clientNickname)) {
+                            ArrayList<String> receivers = new ArrayList<>();
+                            receivers.add(duoChat.getChatMembers().get(i));
+                            chatHandler.addMessage(sender, receivers, text, timestamp);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -169,6 +191,22 @@ public class CLIView implements Observer {
     @Override
     public void setIsOccurredAnError (boolean isOccurredAnError) { this.isOccurredAnError = isOccurredAnError; }
 
+
+    /**
+     * This method set the global Chat
+     * @param globalChat is the global Chat
+     */
+    @Override
+    public void setGlobalChat (ClientChat globalChat) { this.globalChat = globalChat; }
+
+    /**
+     * This method add a new duoChat in the list of open duo Chats
+     * @param duoChat is the new duo Chat
+     */
+    @Override
+    public void addDuoChat (ClientChat duoChat) { this.duoChats.add(duoChat);}
+
+
     public Board getBoard() {
         return board;
     }
@@ -256,5 +294,19 @@ public class CLIView implements Observer {
      * @return the client controller
      */
     public ClientController getClientController() { return this.clientController; }
+
+
+    /**
+     * Getter method
+     * @return the global Chat
+     */
+    public ClientChat getGlobalChat () { return this.globalChat; }
+
+
+    /**
+     * Getter method
+     * @return the arrayList of open duo chats
+     */
+    public ArrayList<ClientChat> getDuoChats () { return this.duoChats; }
 
 }
