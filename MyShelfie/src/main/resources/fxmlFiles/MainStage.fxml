@@ -739,11 +739,7 @@
                </image>
             </ImageView>
             <ImageView fx:id="commonGoal1" fitHeight="129.0" fitWidth="195.0" layoutX="5.0" layoutY="-10.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="commonGoal1Token" fitHeight="59.0" fitWidth="58.0" layoutX="117.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" rotate="-10.3">
-               <image>
-                  <Image url="@../assets/scoring tokens/scoring_4.jpg" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="commonGoal1Token" fitHeight="59.0" fitWidth="58.0" layoutX="117.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" rotate="-10.3" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="327.0" layoutY="670.0" prefHeight="130.0" prefWidth="202.0">
@@ -755,35 +751,19 @@
                </image>
             </ImageView>
             <ImageView fx:id="commonGoal2" fitHeight="129.0" fitWidth="195.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="commonGoal2Token" fitHeight="56.0" fitWidth="56.0" layoutX="122.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" rotate="-6.7">
-               <image>
-                  <Image url="@../assets/scoring tokens/scoring.jpg" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="commonGoal2Token" fitHeight="56.0" fitWidth="56.0" layoutX="122.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" rotate="-6.7" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="924.0" layoutY="670.0" prefHeight="106.0" prefWidth="105.0">
          <children>
-            <ImageView fx:id="seat" fitHeight="115.0" fitWidth="126.0" layoutX="3.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/misc/firstplayertoken.png" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="seat" fitHeight="115.0" fitWidth="126.0" layoutX="3.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="achivedTokensPane" layoutX="655.0" layoutY="680.0" prefHeight="112.0" prefWidth="200.0">
          <children>
-            <ImageView fx:id="commonGoal1tokenAchieved" fitHeight="44.0" fitWidth="44.0" layoutX="16.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/scoring tokens/scoring_6.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="commongGoal2tokenAchieved" fitHeight="44.0" fitWidth="44.0" layoutX="79.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../assets/scoring tokens/scoring_8.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="endGameTokenAchieved" fitHeight="44.0" fitWidth="44.0" layoutX="141.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="tokenAchieved0" fitHeight="44.0" fitWidth="44.0" layoutX="16.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="tokenAchieved1" fitHeight="44.0" fitWidth="44.0" layoutX="79.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="tokenAchieved2" fitHeight="44.0" fitWidth="44.0" layoutX="141.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" />
             <Label layoutX="4.0" text="Your Tokens:" textFill="#d7b89c">
                <font>
                   <Font name="American Typewriter" size="24.0" />

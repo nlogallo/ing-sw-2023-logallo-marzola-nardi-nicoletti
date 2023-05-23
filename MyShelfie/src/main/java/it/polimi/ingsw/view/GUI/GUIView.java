@@ -43,7 +43,6 @@ public class GUIView  implements Observer {
     @Override
     public void updateBoard(Board board) {
         this.board = board;
-        stageController.setBoardImage();
     }
 
     public void setStageController(MainStageController stageController) {
@@ -53,7 +52,6 @@ public class GUIView  implements Observer {
     @Override
     public void updateShelf(Shelf shelf) {
         this.shelf = shelf;
-        stageController.setShelfImage();
     }
 
     @Override
@@ -64,9 +62,6 @@ public class GUIView  implements Observer {
     @Override
     public void updateCommonGoal(CommonGoal commonGoal) {
         this.commonGoals.add(commonGoal);
-        if (commonGoals.size() == 2)
-            stageController.setGoalsPicture();
-
     }
 
     @Override
@@ -116,7 +111,11 @@ public class GUIView  implements Observer {
 
     @Override
     public void refreshCLI() {
-
+        stageController.setGoalsPicture();
+        stageController.setBoardImage();
+        stageController.setShelfImage();
+        stageController.setTokensPicture();
+        stageController.setSeatPicture();
     }
 
     @Override

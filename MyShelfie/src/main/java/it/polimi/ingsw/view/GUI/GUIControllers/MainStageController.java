@@ -66,9 +66,12 @@ public class MainStageController implements GenericSceneController, Initializabl
     @FXML
     private ImageView seat;
     @FXML
-    private ImageView commonGoal1TokenAchieved, commonGoal2TokenAchieved, endGameTokenAchieved;
+    private ImageView tokenAchieved0, tokenAchieved1, tokenAchieved2;
     @FXML
     private ImageView personalGoal, commonGoal1, commonGoal2;
+
+
+
 
     @Override
     public void setGui(GUIView gui) {
@@ -87,8 +90,7 @@ public class MainStageController implements GenericSceneController, Initializabl
         gui.setStageController(this);
         turnPhase = 0;
         setTurnPhaseLabel(turnPhase);
-        setTokenPictures();
-        setSeatPicture();
+
 
         initButtons();
     }
@@ -306,7 +308,7 @@ public class MainStageController implements GenericSceneController, Initializabl
 
             case 3 -> {
                 if (selectedColumn != -1) {
-                    if (gui.getShelf().freeRows(selectedColumn) > positionsToOrder.size()) {
+                    if (gui.getShelf().freeRows(selectedColumn) >= positionsToOrder.size()) {
                         ArrayList<String> positions = new ArrayList<>();
                         for (int i = 0; i < positionsToOrder.size(); i++) {
                             String txt1 = valueOf(positionsToOrder.get(i).getRow() + 1);
@@ -431,9 +433,21 @@ public class MainStageController implements GenericSceneController, Initializabl
     public void setGoalsPicture(){
         setCommonGoalPicture(commonGoal1, gui.getCommonGoals().get(0).getId());
         setCommonGoalPicture(commonGoal2, gui.getCommonGoals().get(1).getId());
+        setPersonalGoalPicture(personalGoal, gui.getPersonalGoal().getId());
     }
-    public void setTokenPictures(){}
-    private void setSeatPicture(){}
+    public void setTokensPicture(){
+        setTokenPicture(commonGoal1Token, 1);
+        setTokenPicture(commonGoal2Token, 2);
+        setTokenPicture(boardEndGameToken, 0);
+        setAchievedTokenPicture(tokenAchieved0, 0);
+        setAchievedTokenPicture(tokenAchieved1, 1);
+        setAchievedTokenPicture(tokenAchieved2, 2);
+    }
+
+    public void setSeatPicture() {
+        if (gui.isSeat() == true)
+            seat.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/misc/firstplayertoken.png"))));;
+    }
 
     private void boardButtonClick03 (Event event){
         if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
@@ -885,12 +899,12 @@ public class MainStageController implements GenericSceneController, Initializabl
     }
     private void boardButtonClick55 (Event event){
         if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board54.getOpacity() == 1.0) {
+            if (board55.getOpacity() == 1.0) {
                 if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(5, 4)) {
-                        positionsToPick.add(new Position(5, 4));
+                    if (gui.getBoard().canPull(5, 5)) {
+                        positionsToPick.add(new Position(5, 5));
                         if (gui.getBoard().areAligned(positionsToPick)) {
-                            board54.setOpacity(0.3);
+                            board55.setOpacity(0.3);
                         } else positionsToPick.remove(positionsToPick.size() - 1);
                     }
                 }
@@ -1234,6 +1248,93 @@ public class MainStageController implements GenericSceneController, Initializabl
         }
     }
 
+    private void setPersonalGoalPicture(ImageView image, int id) {
+        switch (id) {
+            case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals.png"))));
+            case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals2.png"))));
+            case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals3.png"))));
+            case 3 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals4.png"))));
+            case 4 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals5.png"))));
+            case 5 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals6.png"))));
+            case 6 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals7.png"))));
+            case 7 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals8.png"))));
+            case 8 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals9.png"))));
+            case 9 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals10.png"))));
+            case 10 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals11.png"))));
+            case 11 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals12.png"))));
+        }
+    }
 
+
+
+    private void setTokenPicture(ImageView image, int goalNo) {
+        switch(goalNo) {
+
+            case 0 -> {
+                boolean present = false;
+
+                for (int i = 0; i < gui.getGameTokens().size(); i++) {
+                    if (gui.getGameTokens().get(i).getId() == 0)
+                        present = true;
+                }
+                if (present) {
+                    image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/end game.jpg"))));
+                } else {image.setOpacity(0);}
+            }
+
+            case 1 -> {
+                int maxToken = 0;
+
+                for (int i = 0; i < gui.getGameTokens().size(); i++) {
+                    if ((gui.getGameTokens().get(i).getId() != 0) && ((gui.getGameTokens().get(i).getId() % 2) == 0))
+                    {
+                        if (gui.getGameTokens().get(i).getPoints() > maxToken)
+                            maxToken = gui.getGameTokens().get(i).getPoints();
+                    }
+                }
+                switch(maxToken) {
+                    case 8 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_8.jpg"))));
+                    case 6 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_6.jpg"))));
+                    case 4 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_4.jpg"))));
+                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_2.jpg"))));
+                    case 0 -> image.setOpacity(0);
+                }
+            }
+
+            case 2 -> {
+                int maxToken = 0;
+
+                for (int i = 0; i < gui.getGameTokens().size(); i++) {
+                    if ((gui.getGameTokens().get(i).getId() % 2) == 1)
+                    {
+                        if (gui.getGameTokens().get(i).getPoints() > maxToken)
+                            maxToken = gui.getGameTokens().get(i).getPoints();
+                    }
+                }
+
+                switch(maxToken) {
+                    case 8 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_8.jpg"))));
+                    case 6 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_6.jpg"))));
+                    case 4 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_4.jpg"))));
+                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_2.jpg"))));
+                    case 0 -> image.setOpacity(0);
+                }
+            }
+        }
+    }
+
+    private void setAchievedTokenPicture(ImageView image, int tokenNo) {
+        int size = gui.getPersonalTokens().size();
+        if (size == tokenNo + 1) {
+            int points = gui.getPersonalTokens().get(tokenNo).getPoints();
+            switch (points) {
+                case 8 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_8.jpg"))));
+                case 6 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_6.jpg"))));
+                case 4 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_4.jpg"))));
+                case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_2.jpg"))));
+                case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/end game.jpg"))));
+            }
+        }
+    }
 
 }
