@@ -424,7 +424,7 @@ public class MyShelfieClient {
 
             ArrayList<NetworkMessage> result = null;
 
-            //new Thread(() -> new MyShelfieClient().handleChatTCP(nickname, chatSocket)).start();
+            new Thread(() -> /*new MyShelfieClient().*/handleChatTCP(nickname, chatSocket)).start();
             /*Thread threadChat = new Thread(){
                 @Override
                 public void run(){
@@ -509,24 +509,21 @@ public class MyShelfieClient {
     }
 
         public void handleChatTCP(String nickname, Socket chatSocket) {
-        try {
-            chatOutput = new ObjectOutputStream(chatSocket.getOutputStream());
-            chatInput = new ObjectInputStream(chatSocket.getInputStream());
-            while (true) {
-                //synchronized (lock1){
-                //lock1.wait();
-                //controller.enableInput();
-                //inputStream.readObject();
-                //}
+            try {
+                chatOutput = new ObjectOutputStream(chatSocket.getOutputStream());
+                chatInput = new ObjectInputStream(chatSocket.getInputStream());
+                while (true) {
+                    NetworkMessage nm = (NetworkMessage) chatInput.readObject();
+                    if(nm.getRequestId().equals("UC")){
+                        controller.updateChat(nm);
+                    }
+                }
+            } catch (IOException e){
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e){
-            throw new RuntimeException(e);
-        } /*catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }*/ /*catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }*/
-    }
+        }
 
     /**
      * This method handles the game with RMI connection
@@ -624,8 +621,9 @@ public class MyShelfieClient {
         if (protocol == 1) {
             try {
                 socket.setKeepAlive(true);
-                outputStream.flush();
+                chatSocket.setKeepAlive(true);
                 if (networkMessage.getRequestId().equals("MT")) {
+                    outputStream.flush();
                     outputStream.writeObject(networkMessage);
                     NetworkMessage result;
                     synchronized (lock) {
@@ -634,8 +632,8 @@ public class MyShelfieClient {
                     }
                     return result;
                 } else if (networkMessage.getRequestId().equals("SM")) {
-                    outputStream.writeObject(networkMessage);
-                    return (NetworkMessage) inputStream.readObject();
+                    chatOutput.flush();
+                    chatOutput.writeObject(networkMessage);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -652,7 +650,7 @@ public class MyShelfieClient {
                 }
             } else if (networkMessage.getRequestId().equals("SM")) {
                 try {
-                    return RMIServer.RMISendMessage(networkMessage, remoteNickname, gameId);
+                    RMIServer.RMISendMessage(networkMessage, remoteNickname, gameId);
                 } catch (RemoteException e) {
                     return null;
                 }

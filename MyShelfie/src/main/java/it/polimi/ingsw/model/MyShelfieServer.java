@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -48,13 +49,11 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     //Game client handler
                     Socket clientSocket = serverSocket.accept();
                     System.out.println("TCP Client connected from " + clientSocket.getInetAddress().getHostAddress());
-                    ClientTCPHandler client = new ClientTCPHandler(clientSocket);
-                    new Thread(client).start();
-                    //Chat client handler
                     Socket chatClientSocket = chatSocket.accept();
                     System.out.println("Chat Client enabled for " + chatClientSocket.getInetAddress().getHostAddress());
-                    ChatClientTCPHandler chat = new ChatClientTCPHandler(chatClientSocket, "");
-                    new Thread(chat).start();
+                    ClientTCPHandler client = new ClientTCPHandler(clientSocket, chatClientSocket);
+                    new Thread(client).start();
+                    //Chat client handler
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -284,9 +283,11 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      */
     private static class ClientTCPHandler implements Runnable {
         private final Socket clientSocket;
+        private final Socket chatClientSocket;
 
-        public ClientTCPHandler(Socket socket) {
+        public ClientTCPHandler(Socket socket, Socket chatSocket) {
             this.clientSocket = socket;
+            this.chatClientSocket = chatSocket;
         }
 
         public void run() {
@@ -352,6 +353,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     if(game.getPlayers().get(i).getNickname().equals(nickname))
                         playerIndex = i;
                 }
+
+                ChatClientTCPHandler chat = new ChatClientTCPHandler(chatClientSocket, nickname, game.getId());
+                new Thread(chat).start();
 
                 game = games.get(game.getId()-1);
 
@@ -444,31 +448,61 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     private static class ChatClientTCPHandler implements Runnable {
         private final Socket clientSocket;
         private final String nickname;
+        private final int gameId;
 
-        public ChatClientTCPHandler(Socket socket, String nickname) {
+        public ChatClientTCPHandler(Socket socket, String nickname, int gameId) {
             this.clientSocket = socket;
             this.nickname = nickname;
+            this.gameId = gameId;
         }
 
         public void run() {
             ObjectOutputStream outputStream = null;
             ObjectInputStream inputStream = null;
+            VirtualView view = new VirtualView(games.get(gameId - 1), nickname);
             try {
                 outputStream = new ObjectOutputStream(this.clientSocket.getOutputStream());
                 inputStream = new ObjectInputStream(this.clientSocket.getInputStream());
-                boolean auth = false;
-                while(true){
-                    clientSocket.setKeepAlive(true);
-                    if(!auth){
-                        String msg = (String) inputStream.readObject();
-                        if (msg.equals("chatOk")) {
-                            System.out.println("User from " + this.clientSocket.getInetAddress().getHostAddress() + " connected to chat!");
+                ObjectInputStream finalInputStream = inputStream;
+                new Thread(() -> {
+                    while(true){
+                        try {
+                            clientSocket.setKeepAlive(true);
+                            NetworkMessage nm = (NetworkMessage) finalInputStream.readObject();
+                            NetworkMessage answer = view.updateChat(nm);
+                            games.set(gameId - 1, view.getGame());
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
                         }
-                        auth = true;
                     }
-                }
+                }).start();
+                ObjectOutputStream finalOutputStream = outputStream;
+                new Thread(() -> {
+                    HashMap<Integer, Integer> numberMessages = new HashMap<>();
+                    while(true){
+                        try {
+                            clientSocket.setKeepAlive(true);
+                            Game game = games.get(gameId);
+                            ArrayList<Chat> chats = game.getChats();
+                            for(int i = 0; i < chats.size(); i++) {
+                                Chat chat = chats.get(i);
+                                if(chat.getNameChatMembers().contains(nickname) && chat.getMessages().size() > numberMessages.get(chat.getId())){
+                                    numberMessages.put(chat.getId(), chat.getMessages().size());
+                                    Message m = chat.getLastMessage();
+                                    NetworkMessage nm = new NetworkMessage();
+                                    nm.setRequestId("UC");
+                                    nm.addContent(m.getSender().getNickname());
+                                    nm.addContent(chat.getId());
+                                    nm.addContent(m.getMessage());
+                                    finalOutputStream.writeObject(nm);
+                                }
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }).start();
             } catch (IOException e) {
-            } catch (ClassNotFoundException e) {
             }
         }
 
