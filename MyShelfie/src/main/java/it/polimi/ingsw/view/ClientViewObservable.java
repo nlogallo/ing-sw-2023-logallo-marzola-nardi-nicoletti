@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.PersonalGoal;
 import it.polimi.ingsw.model.Shelf;
 import it.polimi.ingsw.model.Token;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
+import it.polimi.ingsw.utils.ClientChat;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -137,8 +138,17 @@ public class ClientViewObservable {
      */
     public void setClientController(ClientController clientController){view.setClientController(clientController);}
 
+
+    /**
+     * This method sets the boolean parameter that is used to see if any errors have occurred
+     * @param var is the new value of the parameter
+     */
     public void setIsOccurredAnError (boolean var) {view.setIsOccurredAnError(var); }
 
+
+    /**
+     * This method enables the user input
+     */
     public void enableInput(){
         view.enableInput();
     }

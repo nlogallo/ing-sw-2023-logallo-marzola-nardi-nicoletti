@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.PersonalGoal;
 import it.polimi.ingsw.model.Shelf;
 import it.polimi.ingsw.model.Token;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
+import it.polimi.ingsw.utils.ClientChat;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -30,4 +31,7 @@ public interface Observer {
     public void setClientController(ClientController clientController);
     public void setIsOccurredAnError(boolean var);
     public void enableInput();
+    public void setGlobalChat(ClientChat globalChat);
+    public void addDuoChat(ClientChat duoChat);
+
 }
