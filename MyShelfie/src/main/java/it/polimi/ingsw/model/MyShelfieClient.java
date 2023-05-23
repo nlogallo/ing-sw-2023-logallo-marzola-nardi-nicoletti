@@ -621,7 +621,6 @@ public class MyShelfieClient {
      * @return
      */
     public NetworkMessage sendMessage(NetworkMessage networkMessage) {
-        System.out.println("protocol:" + protocol);
         if (protocol == 1) {
             try {
                 socket.setKeepAlive(true);
