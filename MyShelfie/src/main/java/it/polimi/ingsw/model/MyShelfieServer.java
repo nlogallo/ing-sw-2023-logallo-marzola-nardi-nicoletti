@@ -65,6 +65,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 MyShelfieServer server = new MyShelfieServer();
                 Registry registry = LocateRegistry.createRegistry(port);
                 registry.rebind("Server", server);
+                Registry chatRegistry = LocateRegistry.createRegistry(port + 1);
+                chatRegistry.rebind("chatServer", server);
                 System.out.println("RMI Server started on port " + port);
             } catch (Exception e) {
                 System.out.println("Exception in main: " + e);
@@ -240,7 +242,32 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return null;
     }
 
-    public synchronized NetworkMessage RMISendMessage(NetworkMessage networkMessage, String nickname, int gameId) throws RemoteException {
+    public synchronized void RMISendMessage(NetworkMessage networkMessage, String nickname, int gameId) throws RemoteException {
+        VirtualView view = new VirtualView(games.get(gameId - 1), nickname);
+        view.sendMessage(networkMessage);
+        RMIVirtualViews.put(nickname, view);
+        games.set(gameId - 1, view.getGame());
+    }
+
+    public synchronized NetworkMessage RMICheckForChatUpdates(String nickname, int gameId, HashMap<Integer, Integer> numberMessages) throws RemoteException{
+        Game game = games.get(gameId - 1);
+        ArrayList<Chat> chats = game.getChats();
+        for(int i = 0; i < chats.size(); i++) {
+            Chat chat = chats.get(i);
+            if (!numberMessages.containsKey(chat.getId())) {
+                numberMessages.put(chat.getId(), 0);
+            }
+            if(chat.getNameChatMembers().contains(nickname) && chat.getMessages().size() > numberMessages.get(chat.getId())){
+                numberMessages.put(chat.getId(), chat.getMessages().size());
+                Message m = chat.getLastMessage();
+                NetworkMessage nm = new NetworkMessage();
+                nm.setRequestId("UC");
+                nm.addContent(m.getSender().getNickname());
+                nm.addContent(chat.getId());
+                nm.addContent(m.getMessage());
+                return nm;
+            }
+        }
         return null;
     }
 
@@ -469,7 +496,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         try {
                             clientSocket.setKeepAlive(true);
                             NetworkMessage nm = (NetworkMessage) finalInputStream.readObject();
-                            NetworkMessage answer = view.updateChat(nm);
+                            view.sendMessage(nm);
                             games.set(gameId - 1, view.getGame());
                         } catch (IOException | ClassNotFoundException e) {
                             throw new RuntimeException(e);
@@ -482,10 +509,13 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     while(true){
                         try {
                             clientSocket.setKeepAlive(true);
-                            Game game = games.get(gameId);
+                            Game game = games.get(gameId - 1);
                             ArrayList<Chat> chats = game.getChats();
                             for(int i = 0; i < chats.size(); i++) {
                                 Chat chat = chats.get(i);
+                                if(!numberMessages.containsKey(chat.getId())){
+                                    numberMessages.put(chat.getId(), 0);
+                                }
                                 if(chat.getNameChatMembers().contains(nickname) && chat.getMessages().size() > numberMessages.get(chat.getId())){
                                     numberMessages.put(chat.getId(), chat.getMessages().size());
                                     Message m = chat.getLastMessage();

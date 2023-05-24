@@ -42,10 +42,8 @@ public class VirtualView {
    public NetworkMessage sendMessage(NetworkMessage networkMessage){
        String sender = (String) networkMessage.getContent().get(0);
        ArrayList<String> nicknameList = new ArrayList<String>();
-       Integer numberOfNicknames = (Integer) networkMessage.getContent().get(1);
-       for(int i = 0; i < numberOfNicknames; i++)
-           nicknameList.add((String) networkMessage.getContent().get(2 + i));
-       String text = (String) networkMessage.getContent().get(3 + numberOfNicknames);
+       nicknameList = (ArrayList<String>) networkMessage.getContent().get(1);
+       String text = (String) networkMessage.getContent().get(2);
        return serverController.addMessage(sender, nicknameList, text);
    }
 

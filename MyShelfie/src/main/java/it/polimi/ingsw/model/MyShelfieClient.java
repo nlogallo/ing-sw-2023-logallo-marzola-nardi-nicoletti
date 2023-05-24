@@ -17,6 +17,7 @@ import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +29,7 @@ public class MyShelfieClient {
     static Socket socket;
     static Socket chatSocket;
     static MyShelfieRMIInterface RMIServer;
+    static MyShelfieRMIInterface RMIChatServer;
     static ObjectOutputStream outputStream;
     static ObjectInputStream inputStream;
     static ObjectOutputStream chatOutput;
@@ -229,8 +231,10 @@ public class MyShelfieClient {
                 socket = new Socket(hostname, port);
                 chatSocket = new Socket(hostname, port + 1);
                 if (chatSocket.isConnected()) {
+                    chatSocket.setKeepAlive(true);
                     chatOutput = new ObjectOutputStream(chatSocket.getOutputStream());
-                    chatOutput.writeObject("chatOk");
+                    chatOutput.flush();
+                    //chatOutput.writeObject("chatOk");
                     //chatOutput.close();
                 }
                 if (socket.isConnected()) {
@@ -249,7 +253,8 @@ public class MyShelfieClient {
             protocol = 2;
             try {
                 System.out.println("Connecting to RMI server...");
-                RMIServer = (MyShelfieRMIInterface) Naming.lookup("rmi://localhost:" + port + "/Server");
+                RMIServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + port + "/Server");
+                RMIChatServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + (port + 1) + "/chatServer");
                 System.out.println("Connected! :)");
                 return true;
             } catch (Exception e) {
@@ -412,6 +417,8 @@ public class MyShelfieClient {
         controller = new ClientController(view, this, nickname);
         view.setClientController(controller);
         try {
+            chatInput = new ObjectInputStream(chatSocket.getInputStream());
+            new Thread(() -> /*new MyShelfieClient().*/handleChatTCP(nickname, chatSocket)).start();
             if (interfaceChosen == 2)
                 SceneController.createMainStage("MainStage.fxml");
             NetworkMessage nm = (NetworkMessage) inputStream.readObject();
@@ -423,8 +430,6 @@ public class MyShelfieClient {
             }
 
             ArrayList<NetworkMessage> result = null;
-
-            new Thread(() -> /*new MyShelfieClient().*/handleChatTCP(nickname, chatSocket)).start();
             /*Thread threadChat = new Thread(){
                 @Override
                 public void run(){
@@ -508,22 +513,36 @@ public class MyShelfieClient {
         }
     }
 
-        public void handleChatTCP(String nickname, Socket chatSocket) {
+    public void handleChatTCP(String nickname, Socket chatSocket) {
+        try {
+            while (true) {
+                NetworkMessage nm = (NetworkMessage) chatInput.readObject();
+                if(nm.getRequestId().equals("UC")){
+                    controller.updateChat(nm);
+                }
+            }
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void handleChatRMI(String nickname, MyShelfieRMIInterface server){
+        HashMap<Integer, Integer> numberMessages = new HashMap<>();
+        while(true){
             try {
-                chatOutput = new ObjectOutputStream(chatSocket.getOutputStream());
-                chatInput = new ObjectInputStream(chatSocket.getInputStream());
-                while (true) {
-                    NetworkMessage nm = (NetworkMessage) chatInput.readObject();
-                    if(nm.getRequestId().equals("UC")){
-                        controller.updateChat(nm);
+                NetworkMessage answer = server.RMICheckForChatUpdates(nickname, gameId, numberMessages);
+                if(answer != null) {
+                    if(answer.getRequestId().equals("UC")){
+                        controller.updateChat(answer);
                     }
                 }
-            } catch (IOException e){
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
+            } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
 
     /**
      * This method handles the game with RMI connection
@@ -537,9 +556,10 @@ public class MyShelfieClient {
             view = new ClientViewObservable(guiView);
         else
             view = new ClientViewObservable(new CLIView(nickname));
-        ClientController controller = new ClientController(view, this, nickname);
+        controller = new ClientController(view, this, nickname);
         view.setClientController(controller);
         try {
+            new Thread(() -> handleChatRMI(nickname, RMIChatServer)).start();
             if (interfaceChosen == 2)
                 SceneController.createMainStage("MainStage.fxml");
             NetworkMessage nm = RMIServer.RMIHandlePlayerSetup(game, nickname);
@@ -556,6 +576,7 @@ public class MyShelfieClient {
                 if (game.getPlayers().get(i).getNickname().equals(nickname))
                     playerIndex = i;
             }
+
             while (true) {
                 game = RMIServer.RMIGetGame(game.getId());
                 int isFinished = RMIServer.RMIIsGameFinished(gameId);
@@ -605,7 +626,8 @@ public class MyShelfieClient {
                 }
             }
         } catch (IOException e) {
-            System.err.println("\nConnection lost!");
+            throw new RuntimeException(e);
+            //System.err.println("\nConnection lost!");
         } /*catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }*/
@@ -690,7 +712,9 @@ interface MyShelfieRMIInterface extends Remote {
 
     NetworkMessage RMIMoveTiles(NetworkMessage networkMessage, String nickname, int gameId) throws RemoteException;
 
-    NetworkMessage RMISendMessage(NetworkMessage networkMessage, String nickname, int gameId) throws RemoteException;
+    void RMISendMessage(NetworkMessage networkMessage, String nickname, int gameId) throws RemoteException;
 
     int RMIIsGameFinished(int gameId) throws RemoteException;
+
+    NetworkMessage RMICheckForChatUpdates(String nickname, int gameId, HashMap<Integer, Integer> numberMessages) throws RemoteException;
 }
