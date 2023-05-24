@@ -63,5 +63,6 @@ public class ClientChat {
     public void addMessage(String message, String sender, ArrayList<String> receivers, Timestamp timestamp) {
         this.chat.add(new ClientMessage(message, sender, receivers, timestamp));
 
+
     }
 }

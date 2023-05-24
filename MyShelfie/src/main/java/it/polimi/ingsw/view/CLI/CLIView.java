@@ -1,12 +1,14 @@
 package it.polimi.ingsw.view.CLI;
 
 import it.polimi.ingsw.controller.ClientController;
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Board;
+import it.polimi.ingsw.model.PersonalGoal;
+import it.polimi.ingsw.model.Shelf;
+import it.polimi.ingsw.model.Token;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.utils.ChatHandler;
 import it.polimi.ingsw.utils.ClientChat;
 import it.polimi.ingsw.utils.InputOutputHandler;
-import it.polimi.ingsw.view.ClientViewObservable;
 import it.polimi.ingsw.view.Observer;
 
 import java.sql.Timestamp;
@@ -82,8 +84,6 @@ public class CLIView implements Observer {
      */
     @Override
     public void updateChat(String sender, int chatId, String text){
-
-        //to be fixed
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         if (chatId == 0) {
             chatHandler.addMessage(sender, getPlayersNickname(), text, timestamp);

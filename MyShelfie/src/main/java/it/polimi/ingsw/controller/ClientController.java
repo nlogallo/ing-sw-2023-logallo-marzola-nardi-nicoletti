@@ -123,7 +123,7 @@ public class ClientController {
     public boolean checkNullTiles(int row, int column, Board board) {
 
         Tile[][] tilesTable = board.getTilesTable();
-        if (tilesTable[row][column] == null) {
+        if (tilesTable[row - 1][column - 1] == null) {
             clientViewObservable.setScreenMessage("You can't select a spot that doesn't contain a tile.");
             //clientViewObservable.setIsOccurredAnError(true);
             return false;
@@ -133,7 +133,7 @@ public class ClientController {
 
     public boolean checkCanPullTile(int row, int column, Board board) {
 
-        if (!board.canPull(row, column)) {
+        if (!board.canPull(row - 1, column - 1)) {
             clientViewObservable.setScreenMessage("You can't pick tiles that don't have at least one free edge.");
             //clientViewObservable.setIsOccurredAnError(true);
             return false;
