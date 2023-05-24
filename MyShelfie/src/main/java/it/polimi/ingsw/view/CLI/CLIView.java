@@ -90,13 +90,13 @@ public class CLIView implements Observer {
         } else {
             for (ClientChat duoChat : duoChats) {
                 if(duoChat.getId() == chatId) {
-                    for (int i = 0; i < duoChat.getChatMembers().size(); i++) {
-                        if (duoChat.getChatMembers().get(i).equals(clientNickname)) {
-                            ArrayList<String> receivers = new ArrayList<>();
-                            receivers.add(duoChat.getChatMembers().get(i));
-                            chatHandler.addMessage(sender, receivers, text, timestamp);
-                        }
+                    ArrayList<String> receivers = new ArrayList<>();
+                    if (duoChat.getChatMembers().get(0).equals(clientNickname)) {
+                        receivers.add(duoChat.getChatMembers().get(1));
+                    } else {
+                        receivers.add(duoChat.getChatMembers().get(0));
                     }
+                    chatHandler.addMessage(sender, receivers, text, timestamp);
                 }
             }
         }

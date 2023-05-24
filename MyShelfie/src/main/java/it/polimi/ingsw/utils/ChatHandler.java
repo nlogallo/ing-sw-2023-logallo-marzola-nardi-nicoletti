@@ -121,7 +121,7 @@ public class ChatHandler {
     public void addMessage (String sender, ArrayList<String> receivers, String text, Timestamp timestamp) {
 
         boolean isDuoChatAlreadyExist = false;
-        if (receivers.size() >= 1) {
+        if ((receivers.size() > 1) || (view.getPlayersNickname().size() == 1)) {
             if (view.getGlobalChat() == null) {
                 ArrayList<String> players = new ArrayList<>();
                 players.add(view.getClientNickname());
@@ -129,7 +129,7 @@ public class ChatHandler {
                 view.setGlobalChat(new ClientChat(0, players));
             }
             view.getGlobalChat().addMessage(text, sender, receivers, timestamp);
-            System.out.println(view.getGlobalChat().getClientMessages().size());
+            //System.out.println(view.getGlobalChat().getClientMessages().size());
         } else {
 
             ArrayList<String> senderPlusReceiver = new ArrayList<>();
