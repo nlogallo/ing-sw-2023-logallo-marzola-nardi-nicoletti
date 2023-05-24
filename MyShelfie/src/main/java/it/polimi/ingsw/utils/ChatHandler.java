@@ -123,7 +123,10 @@ public class ChatHandler {
         boolean isDuoChatAlreadyExist = false;
         if (receivers.size() > 1) {
             if (view.getGlobalChat() == null) {
-                view.setGlobalChat(new ClientChat(0, view.getPlayersNickname()));
+                ArrayList<String> players = new ArrayList<>();
+                players.add(clientNickname);
+                players.addAll(view.getPlayersNickname());
+                view.setGlobalChat(new ClientChat(0, players));
             }
             view.getGlobalChat().addMessage(text, sender, receivers, timestamp);
         } else {

@@ -196,14 +196,13 @@ public class CLIView implements Observer {
      * This method set the global Chat
      * @param globalChat is the global Chat
      */
-    @Override
     public void setGlobalChat (ClientChat globalChat) { this.globalChat = globalChat; }
+
 
     /**
      * This method add a new duoChat in the list of open duo Chats
      * @param duoChat is the new duo Chat
      */
-    @Override
     public void addDuoChat (ClientChat duoChat) { this.duoChats.add(duoChat);}
 
 
@@ -309,4 +308,10 @@ public class CLIView implements Observer {
      */
     public ArrayList<ClientChat> getDuoChats () { return this.duoChats; }
 
+    public boolean callCheckNullTiles (int row, int column, Board board) { return clientController.checkNullTiles(row, column, board); }
+    public boolean callCheckCanPullTile(int row, int column, Board board) { return clientController.checkCanPullTile(row, column, board); }
+
+    public boolean callCheckIsAlignedTiles(ArrayList<String> positions, Board board) { return clientController.checkIsAlignedTiles(positions, board); }
+
+    public boolean callCheckFreeSpotsInColumnShelf (ArrayList<String> positions, Shelf shelf, int column) { return clientController.checkFreeSpotsInColumnShelf(positions, shelf, column); }
 }
