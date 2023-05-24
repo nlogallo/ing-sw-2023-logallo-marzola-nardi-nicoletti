@@ -425,6 +425,13 @@ public class ChatHandler {
     private void viewGlobalChat () {
 
         System.out.println("-+-".repeat(59) + "\n");
+        if (view.getGlobalChat() == null) {
+            ArrayList<String> players = new ArrayList<>();
+            players.add(clientNickname);
+            players.addAll(view.getPlayersNickname());
+            view.setGlobalChat(new ClientChat(0, players));
+        }
+
         if (view.getGlobalChat().getClientMessages().size() >= 1) {
             System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET);
             for (int i = view.getGlobalChat().getClientMessages().size(); i > view.getGlobalChat().getClientMessages().size() - 16; i--) {
