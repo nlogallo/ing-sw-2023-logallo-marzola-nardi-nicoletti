@@ -39,7 +39,7 @@ public class CLIView implements Observer {
     private CLIFormatter cliFormatter = new CLIFormatter(this);
     private InputOutputHandler inputOutputHandler = new InputOutputHandler(this);
     private boolean isOccurredAnError = false;
-    private ChatHandler chatHandler = new ChatHandler(this);
+    private ChatHandler chatHandler;
 
     /**
      * Constructor method
@@ -47,6 +47,7 @@ public class CLIView implements Observer {
     public CLIView(String clientNickname){
         this.screenMessage = null;
         this.clientNickname = clientNickname;
+        this.chatHandler = new ChatHandler(this);
     }
 
     /**
@@ -299,7 +300,11 @@ public class CLIView implements Observer {
      * Getter method
      * @return the global Chat
      */
-    public ClientChat getGlobalChat () { return this.globalChat; }
+    public ClientChat getGlobalChat () { return globalChat; }
+
+    public void addMessageInGlobalChat(String text, String sender, ArrayList<String> receivers, Timestamp timestamp){
+        globalChat.addMessage(text, sender, receivers, timestamp);
+    }
 
 
     /**

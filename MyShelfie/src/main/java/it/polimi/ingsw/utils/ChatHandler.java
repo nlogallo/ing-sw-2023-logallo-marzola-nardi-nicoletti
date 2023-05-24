@@ -15,7 +15,6 @@ import java.util.Scanner;
 public class ChatHandler {
 
     private final CLIView view;
-    String clientNickname;
     private final Scanner scanner = new Scanner(System.in);
     private static final String ANSI_RESET = "\u001B[00m";
     private static final String ANSI_RED = "\u001B[31m";
@@ -31,7 +30,6 @@ public class ChatHandler {
      */
     public ChatHandler (CLIView view) {
         this.view = view;
-        clientNickname = view.getClientNickname();
     }
 
 
@@ -58,7 +56,8 @@ public class ChatHandler {
                 if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), 4)) {
                     switch (Integer.parseInt(userInput)) {
                         case 1 -> {
-                            view.setGlobalChat(new ClientChat(0, view.getPlayersNickname()));
+                            if(view.getGlobalChat() == null)
+                                view.setGlobalChat(new ClientChat(0, view.getPlayersNickname()));
                             viewGlobalChat();
                         }
                         case 2 -> {
@@ -80,7 +79,11 @@ public class ChatHandler {
                 String userInput = scanner.nextLine();
                 if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), 4)) {
                     switch (Integer.parseInt(userInput)) {
-                        case 1 ->  viewGlobalChat();
+                        case 1 ->  {
+                            if(view.getGlobalChat() == null)
+                                view.setGlobalChat(new ClientChat(0, view.getPlayersNickname()));
+                            viewGlobalChat();
+                        }
                         case 2 ->  chooseDuoChat();
                         case 3 ->  createDuoChat();
                         case 4 -> {
@@ -128,10 +131,8 @@ public class ChatHandler {
                 players.addAll(view.getPlayersNickname());
                 view.setGlobalChat(new ClientChat(0, players));
             }
-            view.getGlobalChat().addMessage(text, sender, receivers, timestamp);
-            //System.out.println(view.getGlobalChat().getClientMessages().size());
+            view.addMessageInGlobalChat(text, sender, receivers, timestamp);
         } else {
-
             ArrayList<String> senderPlusReceiver = new ArrayList<>();
             senderPlusReceiver.add(sender);
             senderPlusReceiver.addAll(receivers);
@@ -220,10 +221,10 @@ public class ChatHandler {
             if (view.getDuoChats().size() < view.getPlayersNickname().size()) {
                 System.out.print(ANSI_CREAM + "Other players with which you can create a new chat: " + ANSI_RESET);
                 for (int i = 0; i < players.size(); i++) {
-                    if (i == 0 && checkChat(clientNickname, players.get(i))) {
+                    if (i == 0 && checkChat(view.getClientNickname(), players.get(i))) {
                             System.out.println("         1: " + players.get(i));
                             isHappen = true;
-                    } else if (checkChat(clientNickname, players.get(i))) {
+                    } else if (checkChat(view.getClientNickname(), players.get(i))) {
                         if (isHappen) {
                             System.out.println(" ".repeat(61) + (i + 1) + ": " + players.get(i));
                         } else {
@@ -236,9 +237,9 @@ public class ChatHandler {
                 System.out.print("Your choose: ");
                 String userInput = scanner.nextLine();
                 if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), contOption) &&
-                        checkChat(clientNickname, players.get(Integer.parseInt(userInput)-1))) {
+                        checkChat(view.getClientNickname(), players.get(Integer.parseInt(userInput)-1))) {
                     ArrayList<String> newChatPlayerList = new ArrayList<>();
-                    newChatPlayerList.add(clientNickname);
+                    newChatPlayerList.add(view.getClientNickname());
                     newChatPlayerList.add(players.get(Integer.parseInt(userInput)-1));
                     view.addDuoChat(new ClientChat(view.getDuoChats().size() + 1, newChatPlayerList));
                     viewDuoChat(view.getDuoChats().get(view.getDuoChats().size() - 1));
@@ -270,8 +271,8 @@ public class ChatHandler {
                 System.out.print(ANSI_CREAM + "These are your open duo chats: " + ANSI_RESET);
                 int otherPlayerIndex;
                 for(int i = 0; i < view.getDuoChats().size(); i++) {
-                    if(view.getDuoChats().get(i).getChatMembers().size() == 2 && view.getDuoChats().get(i).getChatMembers().contains(clientNickname)) {
-                        otherPlayerIndex = view.getDuoChats().get(i).getChatMembers().size() - view.getDuoChats().get(i).getChatMembers().indexOf(clientNickname) - 1;
+                    if(view.getDuoChats().get(i).getChatMembers().size() == 2 && view.getDuoChats().get(i).getChatMembers().contains(view.getClientNickname())) {
+                        otherPlayerIndex = view.getDuoChats().get(i).getChatMembers().size() - view.getDuoChats().get(i).getChatMembers().indexOf(view.getClientNickname()) - 1;
                         String otherPlayer = view.getDuoChats().get(i).getChatMembers().get(otherPlayerIndex);
                         if(cont == 0) {
                             System.out.println("        1: " + otherPlayer);
@@ -308,7 +309,7 @@ public class ChatHandler {
      */
     private void viewDuoChat (ClientChat chat) {
 
-        String otherPlayer = chat.getChatMembers().get(chat.getChatMembers().size() - chat.getChatMembers().indexOf(clientNickname) -1);
+        String otherPlayer = chat.getChatMembers().get(chat.getChatMembers().size() - chat.getChatMembers().indexOf(view.getClientNickname()) -1);
         System.out.println();
         System.out.println("-+-".repeat(59));
         System.out.println();
@@ -431,14 +432,19 @@ public class ChatHandler {
         System.out.println("-+-".repeat(59) + "\n");
         if (view.getGlobalChat() == null) {
             ArrayList<String> players = new ArrayList<>();
-            players.add(clientNickname);
+            players.add(view.getClientNickname());
             players.addAll(view.getPlayersNickname());
             view.setGlobalChat(new ClientChat(0, players));
         }
 
         if (view.getGlobalChat().getClientMessages().size() >= 1) {
             System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET);
-            for (int i = view.getGlobalChat().getClientMessages().size(); i > view.getGlobalChat().getClientMessages().size() - 16; i--) {
+            int minSize;
+            if(view.getGlobalChat().getClientMessages().size() - 16 < 0)
+                 minSize = 0;
+            else
+                minSize = view.getGlobalChat().getClientMessages().size() - 16;
+            for (int i = minSize; i < view.getGlobalChat().getClientMessages().size(); i++) {
                 ClientMessage message = view.getGlobalChat().getClientMessages().get(i);
                 System.out.println(ANSI_CREAM + message.getTimestamp() + " " + message.getSender() + ": " + ANSI_RESET + message.getMessage());
             }
