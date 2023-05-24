@@ -6,7 +6,6 @@ import it.polimi.ingsw.utils.NetworkMessage;
 import it.polimi.ingsw.view.CLI.CLIMenus;
 import it.polimi.ingsw.view.ClientViewObservable;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -32,13 +31,14 @@ public class ClientController {
 
     /**
      * This method allows the user to move the tiles from the board to the shelf. It creates a request to send at the sever for the approval.
-     * @param position is the list of position of the tiles (taken as a string)
+     * @param positions is the list of position of the tiles (taken as a string)
      * @param column is the column w
      * @param board is the current board. It is necessary to check if this movement is possible
      * @param shelf is the current shelf of the user. It is necessary to check if the movement is possible
      */
-    public void moveTiles(ArrayList<String> position, int column, Board board, Shelf shelf){
-        ArrayList<Position> listPosition = new ArrayList<Position>();
+    public void moveTiles(ArrayList<String> positions, int column, Board board, Shelf shelf){
+
+        /* ArrayList<Position> listPosition = new ArrayList<Position>();
         Tile[][] tilesTable = board.getTilesTable();
 
         for(int i = 0; i < position.size(); i++){
@@ -97,12 +97,15 @@ public class ClientController {
             clientViewObservable.refreshCLI();
             return;
         }
+
         if (shelf.freeRows(column - 1) < listPosition.size()) {
             clientViewObservable.setScreenMessage("You don't have enough free spots in this column.");
             clientViewObservable.setIsOccurredAnError(true);
             clientViewObservable.refreshCLI();
             return;
-        }
+        } */
+
+        ArrayList<Position> listPosition = convertStringListToPositionList(positions);
         NetworkMessage networkMessage = new NetworkMessage();
         networkMessage.addContent(listPosition);
         networkMessage.addContent(column-1);
@@ -116,6 +119,63 @@ public class ClientController {
             clientViewObservable.setPersonalTokens(t);
         clientViewObservable.refreshCLI();
     }
+    
+    public boolean checkNullTiles(int row, int column, Board board) {
+
+        Tile[][] tilesTable = board.getTilesTable();
+        if (tilesTable[row][column] == null) {
+            clientViewObservable.setScreenMessage("You can't select a spot that doesn't contain a tile.");
+            //clientViewObservable.setIsOccurredAnError(true);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkCanPullTile(int row, int column, Board board) {
+
+        if (!board.canPull(row, column)) {
+            clientViewObservable.setScreenMessage("You can't pick tiles that don't have at least one free edge.");
+            //clientViewObservable.setIsOccurredAnError(true);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkIsAlignedTiles(ArrayList<String> positions, Board board) {
+
+        ArrayList<Position> listPosition = convertStringListToPositionList(positions);
+        if (!board.areAligned(listPosition)) {
+            clientViewObservable.setScreenMessage("You have to pick aligned tiles");
+            //clientViewObservable.setIsOccurredAnError(true);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkFreeSpotsInColumnShelf (ArrayList<String> positions, Shelf shelf, int column) {
+
+        ArrayList<Position> listPosition = convertStringListToPositionList(positions);
+        if (shelf.freeRows(column - 1) < listPosition.size()) {
+            clientViewObservable.setScreenMessage("You don't have enough free spots in this column.");
+            //clientViewObservable.setIsOccurredAnError(true);
+            return false;
+        }
+        return true;
+    }
+
+    private ArrayList<Position> convertStringListToPositionList(ArrayList<String> positions) {
+
+        ArrayList<Position> listPosition = new ArrayList<>();
+        for (int i = 0; i < positions.size(); i++) {
+            int row = positions.get(i).charAt(0) - 49;
+            int column = positions.get(i).charAt(1) - 49;
+            Position newPosition = new Position(row, column);
+            listPosition.add(newPosition);
+        }
+        return listPosition;
+    }
+
+
 
     /**
      * This method allows the user to send a message in a chat

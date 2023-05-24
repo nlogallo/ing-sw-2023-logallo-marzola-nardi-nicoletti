@@ -1,5 +1,6 @@
 package it.polimi.ingsw.utils;
 
+import it.polimi.ingsw.controller.ClientController;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.view.CLI.CLIMenus;
 import it.polimi.ingsw.view.CLI.CLIView;
@@ -34,6 +35,7 @@ public class InputOutputHandler {
     public InputOutputHandler (CLIView view) {
         this.view = view;
         chatHandler = new ChatHandler(view);
+
     }
 
 
@@ -114,9 +116,7 @@ public class InputOutputHandler {
      */
     private void inputToMoveTile() {
 
-        ArrayList<String> tilePositions = new ArrayList<>();
-        ArrayList<String> rowPosition = new ArrayList<>();
-        ArrayList<String> columnPosition = new ArrayList<>();
+        ArrayList<String> positions = new ArrayList<>();
         String stringColumnShelf = null;
 
         int cont = 3;
@@ -124,43 +124,63 @@ public class InputOutputHandler {
         while (inWhile && cont != 0) {
 
             System.out.println("You can take " + cont + " more tiles.");
-            String stringRow = generateCorrectNumberString("Type the row: ", 9);
-            rowPosition.add(stringRow);
+            String stringRow = generateNumberString("Type the row: ", 9);
 
-            String stringColumn = generateCorrectNumberString("Type the column: ", 9);
-            columnPosition.add(stringColumn);
+            String stringColumn = generateNumberString("Type the column: ", 9);
 
-            cont--;
+            if (view.callCheckNullTiles(Integer.parseInt(stringRow), Integer.parseInt(stringColumn), view.getBoard())) {
+                if(view.callCheckCanPullTile(Integer.parseInt(stringRow), Integer.parseInt(stringColumn), view.getBoard())) {
+                    positions.add(stringRow + stringColumn);
+                    if(cont == 3) {
 
-            if (cont != 0) {
+                        cont--;
+                        System.out.print("If you want take an other tile press Y otherwise press N: ");
+                        String will = checkContinueString();
 
-                System.out.print("If you want take an other tile press Y otherwise press N: ");
-                String will = checkContinueString();
+                        if (will.equals("N")) {
+                            inWhile = false;
+                        }
 
-                if (will.equals("N")) {
-                    inWhile = false;
+                    } else {
+                        if(view.callCheckIsAlignedTiles(positions, view.getBoard())) {
+
+                            cont--;
+                            if (cont != 0) {
+
+                                System.out.print("If you want take an other tile press Y otherwise press N: ");
+                                String will = checkContinueString();
+
+                                if (will.equals("N")) {
+                                    inWhile = false;
+                                }
+                            }
+
+                        } else {
+                            System.out.println(ANSI_RED + "You have to pick aligned tiles. Retry!" + ANSI_RESET);
+                            positions.remove(positions.size()-1);
+                        }
+                    }
+                } else {
+                    System.out.println(ANSI_RED + "You can't pull this tile. Retry!" + ANSI_RESET);
                 }
+            } else {
+                System.out.println(ANSI_RED + "There isn't a tile in:   row: " + stringRow + "; column: " + stringColumn + ANSI_RESET);
             }
         }
 
-        stringColumnShelf = generateCorrectNumberString("Type the Shelf's column where you want to insert the tile: ", 5);
+        while (true) {
 
-        String tilePosition;
-
-        for (int i = 0; i < rowPosition.size(); i++) {
-            tilePosition = rowPosition.get(i) + columnPosition.get(i);
-            tilePositions.add(tilePosition);
+            stringColumnShelf = generateNumberString("Type the Shelf's column where you want to insert the tile: ", 5);
+            if (view.callCheckFreeSpotsInColumnShelf(positions, view.getShelf(), Integer.parseInt(stringColumnShelf))) {
+                break;
+            } else {
+                System.out.println(ANSI_RED + "You don't have enough free spots in this column. Retry!" + ANSI_RESET);
+            }
         }
 
-        tilePositions = adjustShelfColumnOrder(tilePositions, stringColumnShelf);
+        positions = adjustShelfColumnOrder(positions, stringColumnShelf);
+        view.moveTiles(positions, Integer.parseInt(stringColumnShelf));
 
-        view.moveTiles(tilePositions, Integer.parseInt(stringColumnShelf));
-        boolean isOccurredAnError = view.getOccurredAnError();
-        if (isOccurredAnError) {
-            System.out.println(ANSI_RED + "The numbers are incorrect. Retry!" + ANSI_RESET);
-            view.setIsOccurredAnError(false);
-            inputToMoveTile();
-        }
     }
 
 
@@ -173,7 +193,7 @@ public class InputOutputHandler {
      * @param rightExtreme is the right extreme of the range in which user input must be contained
      * @return the correct string
      */
-    private String generateCorrectNumberString(String name, int rightExtreme) {
+    private String generateNumberString(String name, int rightExtreme) {
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
