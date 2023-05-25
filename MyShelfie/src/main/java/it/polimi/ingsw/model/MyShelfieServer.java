@@ -16,6 +16,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Server class
@@ -56,7 +57,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     //Chat client handler
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.err.println("Exception in main: " + e);
             }
         }).start();
         new Thread(() -> {
@@ -69,7 +70,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 chatRegistry.rebind("chatServer", server);
                 System.out.println("RMI Server started on port " + port);
             } catch (Exception e) {
-                System.out.println("Exception in main: " + e);
+                System.err.println("Exception in main: " + e);
             }
         }).start();
     }
@@ -219,12 +220,26 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return games.get(gameId - 1).getMutexAtIndex(playerIndex);
     }
 
+    /**
+     * This RMI method sets the specified player mutex to false
+     * @param gameId
+     * @param playerIndex
+     * @throws RemoteException
+     */
     public synchronized void RMISetMutexFalseAtIndex(int gameId, int playerIndex) throws RemoteException{
         Game game = games.get(gameId - 1);
         game.setMutexFalseAtIndex(playerIndex);
         games.set(gameId - 1, game);
     }
 
+    /**
+     * This RMI method makes the tiles move
+     * @param networkMessage
+     * @param nickname
+     * @param gameId
+     * @return
+     * @throws RemoteException
+     */
     public synchronized NetworkMessage RMIMoveTiles(NetworkMessage networkMessage, String nickname, int gameId) throws RemoteException{
         VirtualView virtualView = RMIVirtualViews.get(nickname);
         if (networkMessage.getRequestId().equals("MT")) {
@@ -242,13 +257,27 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return null;
     }
 
+    /**
+     * This RMI method checks for new messages to send from client
+     * @param networkMessage
+     * @param nickname
+     * @param gameId
+     * @throws RemoteException
+     */
     public synchronized void RMISendMessage(NetworkMessage networkMessage, String nickname, int gameId) throws RemoteException {
         VirtualView view = new VirtualView(games.get(gameId - 1), nickname);
         view.sendMessage(networkMessage);
-        RMIVirtualViews.put(nickname, view);
         games.set(gameId - 1, view.getGame());
     }
 
+    /**
+     * This RMI method continuously checks for new messages from the chat
+     * @param nickname
+     * @param gameId
+     * @param numberMessages
+     * @return
+     * @throws RemoteException
+     */
     public synchronized NetworkMessage RMICheckForChatUpdates(String nickname, int gameId, HashMap<Integer, Integer> numberMessages) throws RemoteException{
         Game game = games.get(gameId - 1);
         ArrayList<Chat> chats = game.getChats();
@@ -265,12 +294,19 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 nm.addContent(m.getSender().getNickname());
                 nm.addContent(chat.getId());
                 nm.addContent(m.getMessage());
+                nm.addContent(numberMessages);
                 return nm;
             }
         }
         return null;
     }
 
+    /**
+     * This RMI method check if the game ended or not for client internal checks
+     * @param gameId
+     * @return
+     * @throws RemoteException
+     */
     public synchronized int RMIIsGameFinished(int gameId) throws RemoteException {
         Game game = games.get(gameId - 1);
         if(game.getState().equals(GameState.ENDED)){
@@ -472,6 +508,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         }
     }
 
+    /**
+     * This runnable class handles the connection to the chat checking for messages to send and to receive
+     */
     private static class ChatClientTCPHandler implements Runnable {
         private final Socket clientSocket;
         private final String nickname;
@@ -486,7 +525,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         public void run() {
             ObjectOutputStream outputStream = null;
             ObjectInputStream inputStream = null;
-            VirtualView view = new VirtualView(games.get(gameId - 1), nickname);
             try {
                 outputStream = new ObjectOutputStream(this.clientSocket.getOutputStream());
                 inputStream = new ObjectInputStream(this.clientSocket.getInputStream());
@@ -496,10 +534,11 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         try {
                             clientSocket.setKeepAlive(true);
                             NetworkMessage nm = (NetworkMessage) finalInputStream.readObject();
+                            VirtualView view = new VirtualView(games.get(gameId - 1), nickname);
                             view.sendMessage(nm);
                             games.set(gameId - 1, view.getGame());
                         } catch (IOException | ClassNotFoundException e) {
-                            throw new RuntimeException(e);
+                            System.err.println("User " + nickname + " left the chat!");
                         }
                     }
                 }).start();

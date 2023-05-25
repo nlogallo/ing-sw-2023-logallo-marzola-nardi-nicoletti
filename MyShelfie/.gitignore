@@ -10,6 +10,9 @@
 # Ignore game assets
 src/main/resources/assets/*
 
+# Ignore game data
+data/savedGame/*
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml

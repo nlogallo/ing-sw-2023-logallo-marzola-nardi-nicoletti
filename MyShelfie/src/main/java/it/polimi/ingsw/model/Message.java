@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -6,7 +7,7 @@ import java.util.ArrayList;
  * This class represents a single message in a Chat
  */
 
-public class Message {
+public class Message implements Serializable {
 
     private final String message;
     private final Player sender;

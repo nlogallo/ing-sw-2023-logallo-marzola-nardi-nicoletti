@@ -513,6 +513,11 @@ public class MyShelfieClient {
         }
     }
 
+    /**
+     * Chat handler for receiving messages (TCP)
+     * @param nickname
+     * @param chatSocket
+     */
     public void handleChatTCP(String nickname, Socket chatSocket) {
         try {
             while (true) {
@@ -528,6 +533,11 @@ public class MyShelfieClient {
         }
     }
 
+    /**
+     * Chat handler for receiving messages (RMI)
+     * @param nickname
+     * @param server
+     */
     public void handleChatRMI(String nickname, MyShelfieRMIInterface server){
         HashMap<Integer, Integer> numberMessages = new HashMap<>();
         while(true){
@@ -535,11 +545,12 @@ public class MyShelfieClient {
                 NetworkMessage answer = server.RMICheckForChatUpdates(nickname, gameId, numberMessages);
                 if(answer != null) {
                     if(answer.getRequestId().equals("UC")){
+                        numberMessages = (HashMap<Integer, Integer>) answer.getContent().get(3);
                         controller.updateChat(answer);
                     }
                 }
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.err.println("Chat connection lost!");
             }
         }
     }
