@@ -1,6 +1,5 @@
 package it.polimi.ingsw.utils;
 
-import it.polimi.ingsw.controller.ClientController;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.view.CLI.CLIMenus;
 import it.polimi.ingsw.view.CLI.CLIView;
@@ -121,12 +120,22 @@ public class InputOutputHandler {
 
         int cont = 3;
         boolean inWhile = true;
+        boolean repeatInputToMoveTile = false;
         while (inWhile && cont != 0) {
 
-            System.out.println("You can take " + cont + " more tiles.");
-            String stringRow = generateNumberString("Type the row: ", 9);
+            System.out.println("\n" + ANSI_BLUE + "You can take " + cont + " more tiles." + ANSI_RESET);
+            String stringRow = generateNumberString("Type the row (Q to quit): ", 9);
 
-            String stringColumn = generateNumberString("Type the column: ", 9);
+            if (checkQuitFromWhile(stringRow)) {
+                repeatInputToMoveTile = true;
+                break;
+            }
+
+            String stringColumn = generateNumberString("Type the column (Q to quit): ", 9);
+            if( checkQuitFromWhile(stringColumn)) {
+                repeatInputToMoveTile = true;
+                break;
+            }
 
             if (view.callCheckNullTiles(Integer.parseInt(stringRow), Integer.parseInt(stringColumn), view.getBoard())) {
                 if(view.callCheckCanPullTile(Integer.parseInt(stringRow), Integer.parseInt(stringColumn), view.getBoard())) {
@@ -168,24 +177,46 @@ public class InputOutputHandler {
             }
         }
 
-        while (true) {
+        if (repeatInputToMoveTile) {
+            System.out.println("\n" + "-+-".repeat(59) + "\n");
+            userPressButton();
+        } else {
+            while (true) {
 
-            stringColumnShelf = generateNumberString("Type the Shelf's column where you want to insert the tile: ", 5);
-            if (view.callCheckFreeSpotsInColumnShelf(positions, view.getShelf(), Integer.parseInt(stringColumnShelf))) {
-                break;
+                stringColumnShelf = generateNumberString("Type the Shelf's column where you want to insert the tile (Q to quit): ", 5);
+                if (stringColumnShelf.equalsIgnoreCase("Q")) {
+                    repeatInputToMoveTile = true;
+                    break;
+                } else if (view.callCheckFreeSpotsInColumnShelf(positions, view.getShelf(), Integer.parseInt(stringColumnShelf))) {
+                    break;
+                } else {
+                    System.out.println(ANSI_RED + "You don't have enough free spots in this column. Retry!" + ANSI_RESET);
+                }
+            }
+
+            if (!repeatInputToMoveTile) {
+                positions = adjustShelfColumnOrder(positions, stringColumnShelf);
+                view.moveTiles(positions, Integer.parseInt(stringColumnShelf));
             } else {
-                System.out.println(ANSI_RED + "You don't have enough free spots in this column. Retry!" + ANSI_RESET);
+                System.out.println("\n" + "-+-".repeat(59) + "\n");
+                userPressButton();
             }
         }
-
-        positions = adjustShelfColumnOrder(positions, stringColumnShelf);
-        view.moveTiles(positions, Integer.parseInt(stringColumnShelf));
-
     }
 
 
     /**
-     * This method checks if user's enter is a number
+     * This method checks if the user will is to exit from the while
+     * @param userWill is the user will
+     * @return false if the user will is to exit from the while, otherwise true
+     */
+    public boolean checkQuitFromWhile (String userWill) {
+        return userWill.equalsIgnoreCase("Q");
+    }
+
+
+    /**
+     * This method checks if user's enter is a number or Q to quit
      * @param name can be:
      *             - Type the row:
      *             - Type the column:
@@ -200,14 +231,14 @@ public class InputOutputHandler {
 
             System.out.print(name);
             String val = scanner.nextLine();
-            if (checkIfIsANumberString(val)) {
-                if (1 <= Integer.parseInt(val) && Integer.parseInt(val) <= rightExtreme) {
+            if (checkIfIsANumberStringOrQ(val)) {
+                if (val.equalsIgnoreCase("Q") || (1 <= Integer.parseInt(val) && Integer.parseInt(val) <= rightExtreme)) {
                     return val;
                 } else {
                     System.out.println(ANSI_RED + "The number must be between 1 and " + rightExtreme + ANSI_RESET);
                 }
             } else {
-                System.out.println(ANSI_RED + "The enter isn't a number!" + ANSI_RESET);
+                System.out.println(ANSI_RED + "The enter isn't a number or Q!" + ANSI_RESET);
             }
         }
     }
@@ -218,18 +249,20 @@ public class InputOutputHandler {
      * @param val is the String to check
      * @return tue if the String is composed only by number characters
      */
-    private boolean checkIfIsANumberString(String val) {
+    private boolean checkIfIsANumberStringOrQ(String val) {
 
         if (val.equals("")) {
             return false;
+        } else if (val.equalsIgnoreCase("Q")){
+            return true;
         } else {
             for (int i = 0; i < val.length(); i++) {
                 if(!Character.isDigit(val.charAt(i))) {
                     return false;
                 }
             }
-            return true;
         }
+        return true;
     }
 
 
@@ -320,7 +353,7 @@ public class InputOutputHandler {
         String val = scanner.nextLine();
         String outputString = val;
 
-        if (!checkIfIsANumberString(val) || idAlreadyTaken.contains(val) || (Integer.parseInt(val) < 0 || Integer.parseInt(val) > size)) {
+        if (!checkIfIsANumberStringOrQ(val) || idAlreadyTaken.contains(val) || (Integer.parseInt(val) < 0 || Integer.parseInt(val) > size)) {
 
             boolean isIncorrect = true;
             while (isIncorrect) {

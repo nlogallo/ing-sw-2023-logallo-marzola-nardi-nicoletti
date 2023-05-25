@@ -384,43 +384,15 @@ public class ChatHandler {
         String message;
         while(true) {
 
-            System.out.print(ANSI_CREAM + "If you want send a message press Y otherwise press N to come back to MENU: " + ANSI_RESET);
-            String userWill = checkContinueString();
-            if(userWill.equals("N")) {
+            System.out.print(ANSI_CREAM + "Type your message (Type Q to QUIT): " + ANSI_RESET);
+            message = scanner.nextLine();
+            if(message.equals("q") || message.equals("Q")) {
                 chatMenu();
                 break;
             } else {
-                System.out.print(ANSI_CREAM + "Type your message (Type Q to QUIT): " + ANSI_RESET);
-                message = scanner.nextLine();
-                if(message.equals("q") || message.equals("Q")) {
-                    chatMenu();
-                    break;
-                } else {
-                    sendMessage(view.getClientNickname(), chat.getChatMembers(), message);
-                }
+                sendMessage(view.getClientNickname(), chat.getChatMembers(), message);
             }
         }
-    }
-
-
-    /**
-     * This method checks if the player wants to send a new message or not
-     * @return the correct string that it could equal to Y or N
-     */
-    private String checkContinueString() {
-
-        String outputString;
-        while (true) {
-            String input = scanner.nextLine().toUpperCase();
-            if (input.equals("Y") || input.equals("N")) {
-                outputString = input;
-                break;
-            } else {
-                System.out.println(ANSI_RED + "The entry is incorrect. Retry!" + ANSI_RESET);
-                System.out.print("If you want send a message press Y otherwise press N: ");
-            }
-        }
-        return outputString;
     }
 
 
