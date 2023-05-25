@@ -56,11 +56,7 @@ public class ChatHandler {
                 String userInput = scanner.nextLine();
                 if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), 4)) {
                     switch (Integer.parseInt(userInput)) {
-                        case 1 -> {
-                            if(view.getGlobalChat() == null)
-                                view.setGlobalChat(new ClientChat(0, view.getPlayersNickname()));
-                            viewGlobalChat();
-                        }
+                        case 1 -> viewGlobalChat();
                         case 2 -> {
                             System.out.println();
                             System.out.println("-+-".repeat(59));
@@ -80,11 +76,7 @@ public class ChatHandler {
                 String userInput = scanner.nextLine();
                 if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), 4)) {
                     switch (Integer.parseInt(userInput)) {
-                        case 1 ->  {
-                            if(view.getGlobalChat() == null)
-                                view.setGlobalChat(new ClientChat(0, view.getPlayersNickname()));
-                            viewGlobalChat();
-                        }
+                        case 1 ->  viewGlobalChat();
                         case 2 ->  chooseDuoChat();
                         case 3 ->  createDuoChat();
                         case 4 -> {
@@ -127,9 +119,8 @@ public class ChatHandler {
         boolean isDuoChatAlreadyExist = false;
         if ((receivers.size() > 1) || (view.getPlayersNickname().size() == 1)) {
             if (view.getGlobalChat() == null) {
-                ArrayList<String> players = new ArrayList<>();
+                ArrayList<String> players = new ArrayList<>(view.getPlayersNickname());
                 players.add(view.getClientNickname());
-                players.addAll(view.getPlayersNickname());
                 view.setGlobalChat(new ClientChat(0, players));
             }
             view.addMessageInGlobalChat(text, sender, receivers, timestamp);
@@ -161,7 +152,6 @@ public class ChatHandler {
      */
     private boolean checkUserInput (String userInput) {
 
-        boolean isCorrect = false;
         if (userInput.equals("")) {
             return false;
         } else {
