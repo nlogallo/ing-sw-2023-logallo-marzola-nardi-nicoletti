@@ -22,6 +22,7 @@ public class ChatHandler {
     private static final String ANSI_MAGENTA = "\u001B[38;5;13m";
     private static final String ANSI_BLUE = "\u001B[38;5;33m";
     private static final String ANSI_CREAM = "\u001B[38;5;229m";
+    private static final String ANSI_GREEN = "\u001B[32m";
 
 
     /**
@@ -338,14 +339,14 @@ public class ChatHandler {
      */
     private void printMessage (ClientMessage message, ArrayList<String> chatMembers) {
 
-        String color;
-        if (message.getSender().equals(chatMembers.get(0))) {
-            color = ANSI_BLUE;
-        } else {
-            color = ANSI_MAGENTA;
+        String color = null;
+        switch (chatMembers.indexOf(message.getSender())) {
+            case 0 -> color = ANSI_BLUE;
+            case 1 -> color = ANSI_MAGENTA;
+            case 2 -> color = ANSI_CYAN;
+            case 3 -> color = ANSI_GREEN;
         }
-        System.out.println(ANSI_CREAM + message.getTimestamp() + " " + color + message.getSender() + ANSI_RESET + ": " + message.getMessage());
-
+        System.out.println(message.getTimestamp() + " " + ANSI_RESET +  color + message.getSender() + ANSI_RESET + ": " + message.getMessage());
     }
 
 
@@ -410,7 +411,7 @@ public class ChatHandler {
         }
 
         if (view.getGlobalChat().getClientMessages().size() >= 1) {
-            System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET);
+            System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET + "\n");
             int minSize;
             if(view.getGlobalChat().getClientMessages().size() - 16 < 0)
                  minSize = 0;
@@ -418,7 +419,7 @@ public class ChatHandler {
                 minSize = view.getGlobalChat().getClientMessages().size() - 16;
             for (int i = minSize; i < view.getGlobalChat().getClientMessages().size(); i++) {
                 ClientMessage message = view.getGlobalChat().getClientMessages().get(i);
-                System.out.println(ANSI_CREAM + message.getTimestamp() + " " + message.getSender() + ": " + ANSI_RESET + message.getMessage());
+                printMessage(message, view.getGlobalChat().getChatMembers());
             }
         } else {
             System.out.println(ANSI_RED + "There aren't messages in the global chat" + ANSI_RESET);
