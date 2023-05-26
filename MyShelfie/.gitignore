@@ -11,7 +11,7 @@
 src/main/resources/assets/*
 
 # Ignore game data
-data/savedGame/*
+data/savedGames/*
 
 # User-specific stuff
 .idea/**/workspace.xml

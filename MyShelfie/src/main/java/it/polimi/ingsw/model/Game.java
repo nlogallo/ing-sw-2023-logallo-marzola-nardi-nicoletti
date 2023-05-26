@@ -6,6 +6,8 @@ import it.polimi.ingsw.model.wrapperCustom.DescriptionWrapper;
 import it.polimi.ingsw.model.wrapperCustom.PersonalGoalWrapper;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -18,6 +20,7 @@ public class Game implements Serializable {
 
     int id;
     private final ArrayList<Player> players;
+    private final ArrayList<String> recoveredPlayers;
     private final int playersNumber;
     private Board board;
     private GameState state;
@@ -39,12 +42,13 @@ public class Game implements Serializable {
         this.id = id;
         this.playersNumber = playersNumber;
         this.players = new ArrayList<>();
+        this.recoveredPlayers = new ArrayList<>();
         this.board = null;
         this.state = GameState.WAITING_FOR_PLAYERS;
         this.firstToEnd = null;
         this.currentPlayer = null;
         this.commonGoals = null;
-        this.gameFile = new File("data/savedGame/game" + this.id + ".bin");
+        this.gameFile = new File("data/savedGames/game" + this.id + ".bin");
         this.winner = null;
         this.chats.add(startGlobalChat());
         for(int i = 0; i < playersNumber; i++)
@@ -69,7 +73,7 @@ public class Game implements Serializable {
         board = new Board(players.size());
         players.get(0).setSeat(true);
         setupFinished = true;
-        //saveGame();
+        saveGame();
     }
 
     /**
@@ -86,11 +90,11 @@ public class Game implements Serializable {
     public void endGame() {
         this.state = GameState.ENDED;
         this.currentPlayer = null;
-        /*try {
-            Files.delete(Path.of("data/savedGame/game" + this.id + ".bin"));
+        try {
+            Files.delete(Path.of("data/savedGames/game" + this.id + ".bin"));
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }*/
+        }
     }
 
 
@@ -111,26 +115,6 @@ public class Game implements Serializable {
 
 
     /**
-     * This method restore the infos of the game
-     *
-     * @return a Game object
-     */
-    public Game restoreGame() {
-        Object object;
-        byte[] data = new byte[(int) this.gameFile.length()];
-        try {
-            FileInputStream fileInputStream = new FileInputStream(this.gameFile);
-            fileInputStream.read(data, 0, data.length);
-            fileInputStream.close();
-            object = deserializeObject(data);
-        } catch (ClassNotFoundException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        return (Game) object;
-    }
-
-
-    /**
      * This method serialize an Object
      *
      * @param object is the object to serialize
@@ -142,21 +126,6 @@ public class Game implements Serializable {
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
         objectOutputStream.writeObject(object);
         return byteArrayOutputStream.toByteArray();
-    }
-
-
-    /**
-     * This method deserialize in an Object
-     *
-     * @param data is an array of byte
-     * @return an Object
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private Object deserializeObject(byte[] data) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-        return objectInputStream.readObject();
     }
 
 
@@ -369,6 +338,7 @@ public class Game implements Serializable {
         this.currentPlayer = players.get(0);
         if(firstToEnd != null && currentPlayer.hasSeat())
             throw new IllegalStateException("No phase remained");
+        saveGame();
         return this.currentPlayer;
     }
 
@@ -528,6 +498,18 @@ public class Game implements Serializable {
      */
     public Player getFirstToEnd() {
         return firstToEnd;
+    }
+
+    public void addRecoveredPlayer(String nickname){
+        this.recoveredPlayers.add(nickname);
+    }
+
+    public void clearRecoveredPlayers(){
+        this.recoveredPlayers.clear();
+    }
+
+    public ArrayList<String> getRecoveredPlayers() {
+        return this.recoveredPlayers;
     }
 }
 
