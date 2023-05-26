@@ -142,8 +142,9 @@ public class CLIFormatter {
 
         //forty-third line
         System.out.print("\n" + String.format("%-36s", " " ) + "4.Read the description" + String.format("%-28s", " " ) + "5.Read the description" + "\n");
-        
-        System.out.print("\n\n" + "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+        System.out.println("\nTo open the menu press enter");
+        System.out.print("\n" + "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         System.out.print("\n");
     }
 

@@ -37,7 +37,6 @@ public class InputOutputHandler {
 
     }
 
-
     /**
      * This method checks if the player clicks the right buttons in the right phase of the game.
      * When is its turn the player can type :       1: Make move Tiles

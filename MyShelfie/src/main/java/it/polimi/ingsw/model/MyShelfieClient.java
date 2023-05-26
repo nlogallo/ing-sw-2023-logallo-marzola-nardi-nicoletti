@@ -40,6 +40,7 @@ public class MyShelfieClient {
     static ClientViewObservable view;
     static ClientController controller;
     private final Object lock = new Object();
+    private final Object inputLock = new Object();
     static GUIView guiView;
     private static int interfaceChosen;
     boolean responseReceived = false;
@@ -422,23 +423,44 @@ public class MyShelfieClient {
             if (interfaceChosen == 2)
                 SceneController.createMainStage("MainStage.fxml");
             NetworkMessage nm = (NetworkMessage) inputStream.readObject();
+            if(interfaceChosen == 1) {
+                new Thread(() -> {
+                    String textFromUser;
+                    while(true){
+                        Scanner scanner = new Scanner(System.in);
+                        synchronized (inputLock){
+                            try {
+                                inputLock.wait();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        System.out.println("To quit insert the command: \u001B[1m/quitGame");
+
+                        textFromUser = scanner.nextLine();
+                        if(textFromUser.equals("/quitGame"))
+                            break;
+                        else
+                            controller.enableInput();
+                    }
+                    //user left the game
+                }).start();
+            }
             controller.playerSetup(nm);
             NetworkMessage currentPlayer = (NetworkMessage) inputStream.readObject();
-            controller.updateResults(currentPlayer);
-            if (interfaceChosen == 1 && currentPlayer.getContent().get(0).equals(nickname)) {
-                controller.enableInput();
+            synchronized (inputLock) {
+                controller.updateResults(currentPlayer);
+                inputLock.notifyAll();
             }
-
+            /*if (interfaceChosen == 1 && currentPlayer.getContent().get(0).equals(nickname)) {
+                controller.enableInput();
+            }*/
             ArrayList<NetworkMessage> result = null;
             while (true) {
-                if (result != null && interfaceChosen == 1) {
-                    if (result.get(2).getContent().get(0).equals(nickname)) {
-                        controller.enableInput();
-                    }
-                }
-                if (interfaceChosen == 2 && ((currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname)))) {
-                    synchronized (lock) {   //firstOne = false;
+                if ((currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname))) {
+                    synchronized (lock) {
                         lock.wait();
+                        TimeUnit.MILLISECONDS.sleep(100);
                     }
                 }
                 result = (ArrayList<NetworkMessage>) inputStream.readObject();
@@ -453,7 +475,10 @@ public class MyShelfieClient {
                     NetworkMessage token = result.get(1);
                     controller.updateGameTokens(token);
                     NetworkMessage res = result.get(2);
-                    controller.updateResults(res);
+                    synchronized (inputLock) {
+                        controller.updateResults(res);
+                        inputLock.notifyAll();
+                    }
                 }
             }
         } catch (IOException ex) {
@@ -528,11 +553,34 @@ public class MyShelfieClient {
                 SceneController.createMainStage("MainStage.fxml");
             NetworkMessage nm = RMIServer.RMIHandlePlayerSetup(game, nickname);
             game = (Game) nm.getContent().get(nm.getContent().size() - 1);
+            if(interfaceChosen == 1) {
+                new Thread(() -> {
+                    String textFromUser;
+                    while(true){
+                        Scanner scanner = new Scanner(System.in);
+                        synchronized (inputLock){
+                            try {
+                                inputLock.wait();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        System.out.println("To quit insert the command: \u001B[1m/quitGame");
+
+                        textFromUser = scanner.nextLine();
+                        if(textFromUser.equals("/quitGame"))
+                            break;
+                        else
+                            controller.enableInput();
+                    }
+                    //user left the game
+                }).start();
+            }
             controller.playerSetup(nm);
             NetworkMessage currentPlayer = RMIServer.RMIGetFirstPlayer(nickname);
-            controller.updateResults(currentPlayer);
-            if (currentPlayer.getContent().get(0).equals(nickname)) {
-                controller.enableInput();
+            synchronized (inputLock) {
+                controller.updateResults(currentPlayer);
+                inputLock.notifyAll();
             }
             ArrayList<NetworkMessage> result = null;
             int playerIndex = -1;
@@ -545,9 +593,10 @@ public class MyShelfieClient {
                 game = RMIServer.RMIGetGame(game.getId());
                 int isFinished = RMIServer.RMIIsGameFinished(gameId);
                 if(isFinished == 0) {
-                    if (result != null) {
-                        if (result.get(2).getContent().get(0).equals(nickname)) {
-                            controller.enableInput();
+                    if ((currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname))) {
+                        synchronized (lock) {
+                            lock.wait();
+                            TimeUnit.MILLISECONDS.sleep(100);
                         }
                     }
                     if (RMIServer.RMIGetMutexAtIndex(game.getId(), playerIndex)) {
@@ -562,7 +611,10 @@ public class MyShelfieClient {
                         }
                         controller.updateBoard(board);
                         controller.updateGameTokens(token);
-                        controller.updateResults(res);
+                        synchronized (inputLock) {
+                            controller.updateResults(res);
+                            inputLock.notifyAll();
+                        }
                         RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);
                     }
                 }else if (isFinished == 1) {
@@ -594,7 +646,9 @@ public class MyShelfieClient {
             //System.err.println("\nConnection lost!");
         } /*catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
-        }*/
+        }*/ catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -630,7 +684,12 @@ public class MyShelfieClient {
         } else {
             if (networkMessage.getRequestId().equals("MT")) {
                 try {
-                    return RMIServer.RMIMoveTiles(networkMessage, remoteNickname, gameId);
+                    NetworkMessage tilesMoved = new NetworkMessage();
+                    synchronized (lock) {
+                        tilesMoved = RMIServer.RMIMoveTiles(networkMessage, remoteNickname, gameId);
+                        lock.notifyAll();
+                        return tilesMoved;
+                    }
                 } catch (RemoteException e) {
                     return null;
                 }
