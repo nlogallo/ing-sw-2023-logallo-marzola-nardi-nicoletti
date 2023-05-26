@@ -22,6 +22,7 @@ public class ChatHandler {
     private static final String ANSI_MAGENTA = "\u001B[38;5;13m";
     private static final String ANSI_BLUE = "\u001B[38;5;33m";
     private static final String ANSI_CREAM = "\u001B[38;5;229m";
+    private static final String ANSI_GREEN = "\u001B[32m";
 
 
     /**
@@ -55,11 +56,7 @@ public class ChatHandler {
                 String userInput = scanner.nextLine();
                 if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), 4)) {
                     switch (Integer.parseInt(userInput)) {
-                        case 1 -> {
-                            if(view.getGlobalChat() == null)
-                                view.setGlobalChat(new ClientChat(0, view.getPlayersNickname()));
-                            viewGlobalChat();
-                        }
+                        case 1 -> viewGlobalChat();
                         case 2 -> {
                             System.out.println();
                             System.out.println("-+-".repeat(59));
@@ -79,11 +76,7 @@ public class ChatHandler {
                 String userInput = scanner.nextLine();
                 if (checkUserInput(userInput) && checkChoosePlayer(Integer.parseInt(userInput), 4)) {
                     switch (Integer.parseInt(userInput)) {
-                        case 1 ->  {
-                            if(view.getGlobalChat() == null)
-                                view.setGlobalChat(new ClientChat(0, view.getPlayersNickname()));
-                            viewGlobalChat();
-                        }
+                        case 1 ->  viewGlobalChat();
                         case 2 ->  chooseDuoChat();
                         case 3 ->  createDuoChat();
                         case 4 -> {
@@ -126,9 +119,8 @@ public class ChatHandler {
         boolean isDuoChatAlreadyExist = false;
         if ((receivers.size() > 1) || (view.getPlayersNickname().size() == 1)) {
             if (view.getGlobalChat() == null) {
-                ArrayList<String> players = new ArrayList<>();
+                ArrayList<String> players = new ArrayList<>(view.getPlayersNickname());
                 players.add(view.getClientNickname());
-                players.addAll(view.getPlayersNickname());
                 view.setGlobalChat(new ClientChat(0, players));
             }
             view.addMessageInGlobalChat(text, sender, receivers, timestamp);
@@ -160,7 +152,6 @@ public class ChatHandler {
      */
     private boolean checkUserInput (String userInput) {
 
-        boolean isCorrect = false;
         if (userInput.equals("")) {
             return false;
         } else {
@@ -338,14 +329,14 @@ public class ChatHandler {
      */
     private void printMessage (ClientMessage message, ArrayList<String> chatMembers) {
 
-        String color;
-        if (message.getSender().equals(chatMembers.get(0))) {
-            color = ANSI_BLUE;
-        } else {
-            color = ANSI_MAGENTA;
+        String color = null;
+        switch (chatMembers.indexOf(message.getSender())) {
+            case 0 -> color = ANSI_BLUE;
+            case 1 -> color = ANSI_MAGENTA;
+            case 2 -> color = ANSI_CYAN;
+            case 3 -> color = ANSI_GREEN;
         }
-        System.out.println(ANSI_CREAM + message.getTimestamp() + " " + color + message.getSender() + ANSI_RESET + ": " + message.getMessage());
-
+        System.out.println(message.getTimestamp() + " " + ANSI_RESET +  color + message.getSender() + ANSI_RESET + ": " + message.getMessage());
     }
 
 
@@ -384,43 +375,15 @@ public class ChatHandler {
         String message;
         while(true) {
 
-            System.out.print(ANSI_CREAM + "If you want send a message press Y otherwise press N to come back to MENU: " + ANSI_RESET);
-            String userWill = checkContinueString();
-            if(userWill.equals("N")) {
+            System.out.print(ANSI_CREAM + "Type your message (Type Q to QUIT): " + ANSI_RESET);
+            message = scanner.nextLine();
+            if(message.equals("q") || message.equals("Q")) {
                 chatMenu();
                 break;
             } else {
-                System.out.print(ANSI_CREAM + "Type your message (Type Q to QUIT): " + ANSI_RESET);
-                message = scanner.nextLine();
-                if(message.equals("q") || message.equals("Q")) {
-                    chatMenu();
-                    break;
-                } else {
-                    sendMessage(view.getClientNickname(), chat.getChatMembers(), message);
-                }
+                sendMessage(view.getClientNickname(), chat.getChatMembers(), message);
             }
         }
-    }
-
-
-    /**
-     * This method checks if the player wants to send a new message or not
-     * @return the correct string that it could equal to Y or N
-     */
-    private String checkContinueString() {
-
-        String outputString;
-        while (true) {
-            String input = scanner.nextLine().toUpperCase();
-            if (input.equals("Y") || input.equals("N")) {
-                outputString = input;
-                break;
-            } else {
-                System.out.println(ANSI_RED + "The entry is incorrect. Retry!" + ANSI_RESET);
-                System.out.print("If you want send a message press Y otherwise press N: ");
-            }
-        }
-        return outputString;
     }
 
 
@@ -438,7 +401,7 @@ public class ChatHandler {
         }
 
         if (view.getGlobalChat().getClientMessages().size() >= 1) {
-            System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET);
+            System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET + "\n");
             int minSize;
             if(view.getGlobalChat().getClientMessages().size() - 16 < 0)
                  minSize = 0;
@@ -446,7 +409,7 @@ public class ChatHandler {
                 minSize = view.getGlobalChat().getClientMessages().size() - 16;
             for (int i = minSize; i < view.getGlobalChat().getClientMessages().size(); i++) {
                 ClientMessage message = view.getGlobalChat().getClientMessages().get(i);
-                System.out.println(ANSI_CREAM + message.getTimestamp() + " " + message.getSender() + ": " + ANSI_RESET + message.getMessage());
+                printMessage(message, view.getGlobalChat().getChatMembers());
             }
         } else {
             System.out.println(ANSI_RED + "There aren't messages in the global chat" + ANSI_RESET);
