@@ -79,7 +79,7 @@ public class GUIView  implements Observer {
     }
 
     @Override
-    public void updateChat(String sender, int idChat, String text) {
+    public void updateChat(String sender, ArrayList<String> receivers, String text) {
         //if not exists create a new chat with that id
         //add in the arrayList<ClientChat>
     }

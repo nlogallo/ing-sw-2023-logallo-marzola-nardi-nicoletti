@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.PersonalGoal;
 import it.polimi.ingsw.model.Shelf;
 import it.polimi.ingsw.model.Token;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
-import it.polimi.ingsw.utils.ClientChat;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -62,11 +61,11 @@ public class ClientViewObservable {
     /**
      * This method notifies that someone has sent a new message in the chat.
      * @param sender is the nickname of the sender
-     * @param idChat is the chat id
+     * @param receivers is the list of the receivers of the message
      * @param text is the text message
      */
-    public void setChat(String sender, int idChat, String text) {
-        view.updateChat(sender, idChat, text);
+    public void setChat(String sender, ArrayList<String> receivers, String text) {
+        view.updateChat(sender, receivers, text);
     }
 
     /**

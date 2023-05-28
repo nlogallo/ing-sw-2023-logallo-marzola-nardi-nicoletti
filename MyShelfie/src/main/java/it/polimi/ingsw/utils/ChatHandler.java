@@ -381,7 +381,19 @@ public class ChatHandler {
                 chatMenu();
                 break;
             } else {
-                sendMessage(view.getClientNickname(), chat.getChatMembers(), message);
+                ArrayList<String> receivers = new ArrayList<>();
+                if(chat.getChatMembers().size() == 2) {
+                    for (int i = 0; i < 2; i++) {
+                        if (!chat.getChatMembers().get(i).equals(view.getClientNickname())) {
+                            receivers.add(chat.getChatMembers().get(i));
+                            break;
+                        }
+                    }
+                }
+                else
+                    receivers.addAll(chat.getChatMembers());
+
+                sendMessage(view.getClientNickname(), receivers, message);
             }
         }
     }

@@ -80,27 +80,13 @@ public class CLIView implements Observer {
     /**
      * This method add the new message send by someone in a chat
      * @param sender is the nickname of the sender
-     * @param chatId is the id of the chat
+     * @param receivers are the receivers of the message
      * @param text is the text message
      */
     @Override
-    public void updateChat(String sender, int chatId, String text){
+    public void updateChat(String sender, ArrayList<String> receivers, String text){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        if (chatId == 0) {
-            chatHandler.addMessage(sender, getPlayersNickname(), text, timestamp);
-        } else {
-            for (ClientChat duoChat : duoChats) {
-                if(duoChat.getId() == chatId) {
-                    ArrayList<String> receivers = new ArrayList<>();
-                    if (duoChat.getChatMembers().get(0).equals(clientNickname)) {
-                        receivers.add(duoChat.getChatMembers().get(1));
-                    } else {
-                        receivers.add(duoChat.getChatMembers().get(0));
-                    }
-                    chatHandler.addMessage(sender, receivers, text, timestamp);
-                }
-            }
-        }
+        chatHandler.addMessage(sender, receivers, text, timestamp);
     }
 
     /**

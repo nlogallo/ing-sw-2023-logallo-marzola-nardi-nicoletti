@@ -117,7 +117,8 @@ public class ServerController {
         Message message = new Message(text, sender, receivers);
 
         if (receivers.size() == 1) {
-            for (Chat c : chats) {
+            for (int i = 1; i < chats.size(); i++) {
+                Chat c = chats.get(i);
                 ArrayList<Player> playerList = c.getChatMembers();
                 if ((playerList.get(0).equals(sender) && playerList.get(1).equals(receivers.get(0))) ||
                         (playerList.get(0).equals(receivers.get(0)) && (playerList.get(1).equals(sender)))) {

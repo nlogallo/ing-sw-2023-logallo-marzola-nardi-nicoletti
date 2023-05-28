@@ -20,7 +20,7 @@ public interface Observer {
     public void updateCommonGoal(CommonGoal commonGoal);
     public void updatePersonalTokens(Token token);
     public void updateGameTokens(ArrayList<Token> tokens);
-    public void updateChat(String sender, int idChat, String text);
+    public void updateChat(String sender, ArrayList<String> receivers, String text);
     public void updateSeat(boolean seat);
     public void updateScreenMessage(String text);
     public void updatePlayersNickname(ArrayList<String> playersNickname);

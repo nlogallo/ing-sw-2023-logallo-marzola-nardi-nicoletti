@@ -6,14 +6,12 @@ import it.polimi.ingsw.view.VirtualView;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Server class
@@ -344,7 +342,12 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 NetworkMessage nm = new NetworkMessage();
                 nm.setRequestId("UC");
                 nm.addContent(m.getSender().getNickname());
-                nm.addContent(chat.getId());
+                ArrayList<String> receivers = new ArrayList<>();
+                for(String nick : chat.getNameChatMembers()){
+                    if(!nick.equals(m.getSender().getNickname()))
+                        receivers.add(nick);
+                }
+                nm.addContent(receivers);
                 nm.addContent(m.getMessage());
                 nm.addContent(numberMessages);
                 return nm;
@@ -656,7 +659,16 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                     NetworkMessage nm = new NetworkMessage();
                                     nm.setRequestId("UC");
                                     nm.addContent(m.getSender().getNickname());
-                                    nm.addContent(chat.getId());
+                                    ArrayList<String> receivers = new ArrayList<>();
+                                    if(chat.getId() == 0)
+                                        receivers.addAll(chat.getNameChatMembers());
+                                    else {
+                                        for (String nick : chat.getNameChatMembers()) {
+                                            if (!nick.equals(m.getSender().getNickname()))
+                                                receivers.add(nick);
+                                        }
+                                    }
+                                    nm.addContent(receivers);
                                     nm.addContent(m.getMessage());
                                     finalOutputStream.writeObject(nm);
                                 }

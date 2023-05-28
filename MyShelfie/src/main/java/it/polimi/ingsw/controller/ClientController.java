@@ -235,7 +235,7 @@ public class ClientController {
      * @param networkMessage is the NetworkMessage received from the Server
      */
     public void updateChat(NetworkMessage networkMessage){
-        clientViewObservable.setChat((String) networkMessage.getContent().get(0), (int) networkMessage.getContent().get(1), (String) networkMessage.getContent().get(2));
+        clientViewObservable.setChat((String) networkMessage.getContent().get(0), (ArrayList<String>) networkMessage.getContent().get(1), (String) networkMessage.getContent().get(2));
     }
 
     /**
