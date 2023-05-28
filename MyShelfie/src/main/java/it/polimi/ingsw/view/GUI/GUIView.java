@@ -2,11 +2,17 @@ package it.polimi.ingsw.view.GUI;
 
 
 import it.polimi.ingsw.controller.ClientController;
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Board;
+import it.polimi.ingsw.model.PersonalGoal;
+import it.polimi.ingsw.model.Shelf;
+import it.polimi.ingsw.model.Token;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
+import it.polimi.ingsw.utils.ClientChat;
 import it.polimi.ingsw.view.GUI.GUIControllers.MainStageController;
 import it.polimi.ingsw.view.Observer;
+import javafx.application.Platform;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +27,8 @@ public class GUIView  implements Observer {
     private Shelf shelf;
     private PersonalGoal personalGoal;
     private ArrayList<CommonGoal> commonGoals = new ArrayList<>();
-    private ArrayList<Chat> chats = new ArrayList<>();
+    private ClientChat globalChat;
+    private ArrayList<ClientChat> chats = new ArrayList<>();
     private boolean seat;
     private ArrayList<Token> personalTokens = new ArrayList<>();
     private ArrayList<Token> gameTokens;
@@ -80,8 +87,39 @@ public class GUIView  implements Observer {
 
     @Override
     public void updateChat(String sender, ArrayList<String> receivers, String text) {
-        //if not exists create a new chat with that id
-        //add in the arrayList<ClientChat>
+        if(receivers.size() > 1){
+            if(globalChat == null)
+                globalChat = new ClientChat(0, playersNickname);
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            globalChat.addMessage(text, sender, receivers, timestamp);
+            Platform.runLater(() ->
+            {
+                stageController.addMessage(sender, receivers, text, timestamp);
+            });;
+        }
+        else{
+            for(ClientChat c : chats){
+                if(c.getChatMembers().contains(receivers.get(0)) && c.getChatMembers().contains(sender)){
+                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                    globalChat.addMessage(text, sender, receivers, timestamp);
+                    Platform.runLater(() ->
+                    {
+                        stageController.addMessage(sender, receivers, text, timestamp);
+                    });
+                    return;
+                }
+            }
+            ArrayList<String> partecipants = new ArrayList();
+            partecipants.add(sender);
+            partecipants.addAll(receivers);
+            ClientChat duoChat = new ClientChat(chats.size() + 1, partecipants);
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            duoChat.addMessage(text, sender, receivers, timestamp);
+            Platform.runLater(() ->
+            {
+                stageController.addMessage(sender, receivers, text, timestamp);
+            });
+        }
     }
 
     @Override

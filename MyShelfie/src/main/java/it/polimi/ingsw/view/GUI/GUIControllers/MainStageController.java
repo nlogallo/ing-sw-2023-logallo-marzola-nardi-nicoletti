@@ -3,16 +3,21 @@ package it.polimi.ingsw.view.GUI.GUIControllers;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.view.GUI.GUIView;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 
 import java.net.URL;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -69,9 +74,18 @@ public class MainStageController implements GenericSceneController, Initializabl
     private ImageView tokenAchieved0, tokenAchieved1, tokenAchieved2;
     @FXML
     private ImageView personalGoal, commonGoal1, commonGoal2;
+    @FXML
+    private ChoiceBox choiceBox;
+    @FXML
+    private Button sendMessageButton;
+    @FXML
+    private TextArea messageField;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private Pane pane;
 
-
-
+    private double textHeigth = 0.0;
 
     @Override
     public void setGui(GUIView gui) {
@@ -82,6 +96,10 @@ public class MainStageController implements GenericSceneController, Initializabl
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Platform.runLater(this::initAll);
+        Platform.runLater(() ->
+        {
+            sendMessageButton.addEventHandler(MouseEvent.MOUSE_CLICKED, this::sendMessage);
+        });
     }
 
     private void initAll(){
@@ -90,7 +108,6 @@ public class MainStageController implements GenericSceneController, Initializabl
         gui.setStageController(this);
         turnPhase = 0;
         setTurnPhaseLabel(turnPhase);
-
 
         initButtons();
     }
@@ -1093,6 +1110,15 @@ public class MainStageController implements GenericSceneController, Initializabl
                 otherPlayerButton2.setText(gui.getPlayersNickname().get(2));
 
             } else otherPlayerButton2.setOpacity(0);
+            if(choiceBox.getItems().size() == 0) {
+                ArrayList<String> nicknameList = new ArrayList<>();
+                nicknameList.add("Everyone");
+                if(gui.getPlayersNickname().size() > 1)
+                    nicknameList.addAll(gui.getPlayersNickname());
+                ObservableList<String> list = FXCollections.observableArrayList(nicknameList);
+                choiceBox.getItems().addAll(list);
+                choiceBox.getSelectionModel().selectFirst();
+            }
         }
     }
 
@@ -1351,6 +1377,36 @@ public class MainStageController implements GenericSceneController, Initializabl
                 case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/end game.jpg"))));
             }
         }
+    }
+
+    private void sendMessage(Event event){
+        if(messageField != null && !messageField.getText().isEmpty()){
+            ArrayList<String> receivers = new ArrayList<>();
+            if(choiceBox.getValue().toString().equals("Everyone"))
+                receivers.addAll(gui.getPlayersNickname());
+            else
+                receivers.add(choiceBox.getValue().toString());
+            gui.getClientController().sendMessage(gui.getClientNickname(), receivers, messageField.getText());
+        }
+    }
+
+    public void addMessage(String sender, ArrayList<String> receivers, String text, Timestamp timestamp){
+        String receiversText;
+        if(receivers.size() > 1 || gui.getPlayersNickname().size() == 1)
+            receiversText = "everyone";
+        else
+            receiversText = receivers.get(0);
+        Time time = new Time(timestamp.getTime());
+        Label labelHeader = new Label(sender + " to " + receiversText + " at " + time);
+        labelHeader.setPadding(new Insets(textHeigth, 0, 0, 0));
+        textHeigth += 15;
+        Label labelMessage = new Label(text);
+        labelMessage.setPadding(new Insets(textHeigth, 0, 0, 0));
+        String[] lines = text.split("\r\n|\r|\n");
+        textHeigth += 22 + lines.length * 18;
+        pane.getChildren().add(labelHeader);
+        pane.getChildren().add(labelMessage);
+        scrollPane.setContent(pane);
     }
 
 }

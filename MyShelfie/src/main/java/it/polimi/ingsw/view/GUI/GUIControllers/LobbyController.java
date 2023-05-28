@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -24,6 +25,8 @@ public class LobbyController implements GenericSceneController, Initializable {
     private boolean mutex = false;
     @FXML
     private ProgressIndicator progressIndicator;
+    @FXML
+    private Text text;
 
     @Override
     public void setGui(GUIView gui) {
@@ -42,6 +45,7 @@ public class LobbyController implements GenericSceneController, Initializable {
         gameId = (int) parameters.get(1);
         nickname = (String) parameters.get(2);
         mutex = true;
+        text.setText("Hi " + nickname + " wait here until the game is fullfilled");
     }
 
     private void gameStarting(){
