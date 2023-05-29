@@ -48,7 +48,7 @@ public class MainStageController implements GenericSceneController, Initializabl
     private ImageView board00, board01, board02, board03, board04, board05, board06, board07, board08, board10, board11, board12, board13, board14, board15, board16, board17, board18, board20, board21, board22, board23, board24, board25, board26, board27, board28, board30, board31, board32, board33, board34, board35, board36, board37, board38, board40, board41, board42, board43, board44, board45, board46, board47, board48, board50, board51, board52, board53, board54, board55, board56, board57, board58, board60, board61, board62, board63, board64, board65, board66, board67, board68, board70, board71, board72, board73, board74, board75, board76, board77, board78, board80, board81, board82, board83, board84, board85, board86, board87, board88;
     private ImageView[][] boardImage = new ImageView[9][9];
     @FXML
-    private Button otherPlayerButton0, otherPlayerButton1, otherPlayerButton2;
+    private Button myShelf, otherPlayerButton0, otherPlayerButton1, otherPlayerButton2;
     @FXML
     private Button boardButton03, boardButton04, boardButton13, boardButton14, boardButton15, boardButton22, boardButton23, boardButton24, boardButton25, boardButton26, boardButton31, boardButton32, boardButton33, boardButton34, boardButton35, boardButton36, boardButton37, boardButton38, boardButton40, boardButton41, boardButton42, boardButton43, boardButton44, boardButton45, boardButton46, boardButton47, boardButton48, boardButton50, boardButton51, boardButton52, boardButton53, boardButton54, boardButton55, boardButton56, boardButton57, boardButton62, boardButton63, boardButton64, boardButton65, boardButton66, boardButton73, boardButton74, boardButton75, boardButton84, boardButton85;
     @FXML
@@ -256,9 +256,7 @@ public class MainStageController implements GenericSceneController, Initializabl
         }
     }
 
-    public void setShelfImage() {
-        Shelf shelf = gui.getShelf();
-
+    public void setShelfImage(Shelf shelf) {
         TileType[][] types = shelf.getShelfTypes();
         for(int i = 0; i<6; i++) {
             for (int j = 0; j<5; j++) {
@@ -341,7 +339,7 @@ public class MainStageController implements GenericSceneController, Initializabl
                         pickedTileMiddle.setOpacity(0);
                         pickedTileTop.setOpacity(0);
                         setBoardImage();
-                        setShelfImage();
+                        setShelfImage(gui.getShelf());
                         turnPhase = 0;
                         setTurnPhaseLabel(turnPhase);
                         selectedColumn = -1;
@@ -1097,20 +1095,23 @@ public class MainStageController implements GenericSceneController, Initializabl
         }
     }
 
-    public void setShelfPlayerNickname() {
-        if (gui.getPlayersNickname().size() >= 1) {
-            otherPlayerButton0.setText(gui.getPlayersNickname().get(0));
+    public void setOtherPlayersAssets() {
+        if(choiceBox.getItems().size() == 0) {
+            myShelf.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+            if (gui.getPlayersNickname().size() >= 1) {
+                otherPlayerButton0.setText(gui.getPlayersNickname().get(0));
+                otherPlayerButton0.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+                if(gui.getPlayersNickname().size() >= 2) {
+                    otherPlayerButton1.setText(gui.getPlayersNickname().get(1));
+                    otherPlayerButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+                } else otherPlayerButton1.setOpacity(0);
 
-            if(gui.getPlayersNickname().size() >= 2) {
-                otherPlayerButton1.setText(gui.getPlayersNickname().get(1));
-
-            } else otherPlayerButton1.setOpacity(0);
-
-            if(gui.getPlayersNickname().size() >= 3) {
-                otherPlayerButton2.setText(gui.getPlayersNickname().get(2));
-
-            } else otherPlayerButton2.setOpacity(0);
-            if(choiceBox.getItems().size() == 0) {
+                if(gui.getPlayersNickname().size() >= 3) {
+                    otherPlayerButton2.setText(gui.getPlayersNickname().get(2));
+                    otherPlayerButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+                }
+                else
+                    otherPlayerButton2.setOpacity(0);
                 ArrayList<String> nicknameList = new ArrayList<>();
                 nicknameList.add("Everyone");
                 if(gui.getPlayersNickname().size() > 1)
@@ -1118,7 +1119,42 @@ public class MainStageController implements GenericSceneController, Initializabl
                 ObservableList<String> list = FXCollections.observableArrayList(nicknameList);
                 choiceBox.getItems().addAll(list);
                 choiceBox.getSelectionModel().selectFirst();
+                }
             }
+    }
+
+    private void setOtherPlayersShelves(Event event){
+        if(event.getSource().equals(myShelf)){
+            setShelfImage(gui.getShelf());
+            firstColumnButton.setDisable(false);
+            secondColumnButton.setDisable(false);
+            thirdColumnButton.setDisable(false);
+            fourthColumnButton.setDisable(false);
+            fifthColumnButton.setDisable(false);
+            firstColumnButton.setOpacity(100);
+            secondColumnButton.setOpacity(100);
+            thirdColumnButton.setOpacity(100);
+            fourthColumnButton.setOpacity(100);
+            fifthColumnButton.setOpacity(100);
+        }else {
+            int getIndex;
+            if (event.getSource().equals(otherPlayerButton0))
+                getIndex = 0;
+            else if (event.getSource().equals(otherPlayerButton1)) {
+                getIndex = 1;
+            } else getIndex = 2;
+            Shelf playerShelf = gui.getPlayersShelf().get(gui.getPlayersNickname().get(getIndex));
+            setShelfImage(playerShelf);
+            firstColumnButton.setDisable(true);
+            secondColumnButton.setDisable(true);
+            thirdColumnButton.setDisable(true);
+            fourthColumnButton.setDisable(true);
+            fifthColumnButton.setDisable(true);
+            firstColumnButton.setOpacity(0);
+            secondColumnButton.setOpacity(0);
+            thirdColumnButton.setOpacity(0);
+            fourthColumnButton.setOpacity(0);
+            fifthColumnButton.setOpacity(0);
         }
     }
 

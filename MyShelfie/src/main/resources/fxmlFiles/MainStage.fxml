@@ -842,6 +842,7 @@
             <Font name="American Typewriter" size="14.0" />
          </font>
       </Button>
+      <Button fx:id="myShelf" layoutX="15.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="You"/>
       <Button fx:id="otherPlayerButton0" layoutX="67.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="Button" />
       <Button fx:id="otherPlayerButton1" layoutX="174.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="Button" />
       <Button fx:id="otherPlayerButton2" layoutX="281.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="Button" />
