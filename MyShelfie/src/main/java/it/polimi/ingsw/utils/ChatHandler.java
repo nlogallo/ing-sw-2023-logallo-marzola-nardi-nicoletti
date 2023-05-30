@@ -45,7 +45,7 @@ public class ChatHandler {
         while (true) {
 
             System.out.println();
-            System.out.println("-+-".repeat(59));
+            System.out.println("-+-".repeat(58));
             System.out.println();
 
             //PlayersNickname doesn't contain ClientNickname, so for a game with two players, playersNickname has size = 1
@@ -81,7 +81,7 @@ public class ChatHandler {
                         case 3 ->  createDuoChat();
                         case 4 -> {
                             System.out.println();
-                            System.out.println("-+-".repeat(59));
+                            System.out.println("-+-".repeat(58));
                             System.out.println();
                         }
                     }
@@ -125,6 +125,7 @@ public class ChatHandler {
             }
             view.addMessageInGlobalChat(text, sender, receivers, timestamp);
         } else {
+
             ArrayList<String> senderPlusReceiver = new ArrayList<>();
             senderPlusReceiver.add(sender);
             senderPlusReceiver.addAll(receivers);
@@ -138,7 +139,7 @@ public class ChatHandler {
             }
 
             if(!isDuoChatAlreadyExist) {
-                view.getDuoChats().add(new ClientChat(view.getDuoChats().size(), senderPlusReceiver ));
+                view.getDuoChats().add(new ClientChat(view.getDuoChats().size()+1, senderPlusReceiver ));
                 view.getDuoChats().get(view.getDuoChats().size()-1).addMessage(text, sender, receivers, timestamp);
             }
         }
@@ -206,7 +207,7 @@ public class ChatHandler {
         int contOption = 0;
         //isHappen is a boolean variable which is used to make a correct print
         boolean isHappen = false;
-        System.out.println("\n" + "-+-".repeat(59) + "\n");
+        System.out.println("\n" + "-+-".repeat(58) + "\n");
 
         while (true) {
             if (view.getDuoChats().size() < view.getPlayersNickname().size()) {
@@ -254,7 +255,7 @@ public class ChatHandler {
     private void chooseDuoChat () {
 
         int cont;
-        System.out.println("\n" + "-+-".repeat(59) + "\n");
+        System.out.println("\n" + "-+-".repeat(58) + "\n");
         while (true) {
             cont = 0;
             if (view.getDuoChats().size() > 0) {
@@ -302,7 +303,7 @@ public class ChatHandler {
 
         String otherPlayer = chat.getChatMembers().get(chat.getChatMembers().size() - chat.getChatMembers().indexOf(view.getClientNickname()) -1);
         System.out.println();
-        System.out.println("-+-".repeat(59));
+        System.out.println("-+-".repeat(58));
         System.out.println();
         System.out.println("Chat with: " + ANSI_CYAN + otherPlayer + ANSI_RESET);
         System.out.println();
@@ -382,17 +383,16 @@ public class ChatHandler {
                 break;
             } else {
                 ArrayList<String> receivers = new ArrayList<>();
-                if(chat.getChatMembers().size() == 2) {
-                    for (int i = 0; i < 2; i++) {
-                        if (!chat.getChatMembers().get(i).equals(view.getClientNickname())) {
-                            receivers.add(chat.getChatMembers().get(i));
-                            break;
-                        }
+                if (chat.getChatMembers().size() > 2) {
+                    receivers.addAll(view.getPlayersNickname());
+                } else {
+                    if (chat.getChatMembers().get(0).equals(view.getClientNickname())) {
+                        receivers.add(chat.getChatMembers().get(1));
+                    } else {
+                        receivers.add(chat.getChatMembers().get(0));
                     }
                 }
-                else
-                    receivers.addAll(chat.getChatMembers());
-
+                System.out.println(receivers);
                 sendMessage(view.getClientNickname(), receivers, message);
             }
         }
@@ -404,7 +404,7 @@ public class ChatHandler {
      */
     private void viewGlobalChat () {
 
-        System.out.println("-+-".repeat(59) + "\n");
+        System.out.println("-+-".repeat(58) + "\n");
         if (view.getGlobalChat() == null) {
             ArrayList<String> players = new ArrayList<>();
             players.add(view.getClientNickname());
@@ -416,7 +416,7 @@ public class ChatHandler {
             System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET + "\n");
             int minSize;
             if(view.getGlobalChat().getClientMessages().size() - 16 < 0)
-                 minSize = 0;
+                minSize = 0;
             else
                 minSize = view.getGlobalChat().getClientMessages().size() - 16;
             for (int i = minSize; i < view.getGlobalChat().getClientMessages().size(); i++) {
