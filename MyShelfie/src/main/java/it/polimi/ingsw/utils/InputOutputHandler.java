@@ -177,7 +177,7 @@ public class InputOutputHandler {
         }
 
         if (repeatInputToMoveTile) {
-            System.out.println("\n" + "-+-".repeat(59) + "\n");
+            System.out.println("\n" + "-+-".repeat(58) + "\n");
             userPressButton();
         } else {
             while (true) {
@@ -197,7 +197,7 @@ public class InputOutputHandler {
                 positions = adjustShelfColumnOrder(positions, stringColumnShelf);
                 view.moveTiles(positions, Integer.parseInt(stringColumnShelf));
             } else {
-                System.out.println("\n" + "-+-".repeat(59) + "\n");
+                System.out.println("\n" + "-+-".repeat(58) + "\n");
                 userPressButton();
             }
         }
@@ -403,10 +403,10 @@ public class InputOutputHandler {
      */
     private void showCommonGoalDescription (CommonGoal commonGoal, int id) {
         System.out.println();
-        System.out.println("-+-".repeat(59));
+        System.out.println("-+-".repeat(58));
         System.out.println(ANSI_CREAM + "Common Goal number:  " + ANSI_RESET + (id+1));
         System.out.println(ANSI_CREAM + "Description: " + ANSI_RESET + commonGoal.getDescription());
-        System.out.println("-+-".repeat(59));
+        System.out.println("-+-".repeat(58));
         System.out.println();
     }
 }
