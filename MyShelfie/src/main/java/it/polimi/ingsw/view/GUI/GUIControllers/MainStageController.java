@@ -1434,10 +1434,12 @@ public class MainStageController implements GenericSceneController, Initializabl
             receiversText = receivers.get(0);
         Time time = new Time(timestamp.getTime());
         Label labelHeader = new Label(sender + " to " + receiversText + " at " + time);
+        labelHeader.setId("chatHeader");
         labelHeader.setPadding(new Insets(textHeigth, 0, 0, 0));
         textHeigth += 15;
         Label labelMessage = new Label(text);
         labelMessage.setPadding(new Insets(textHeigth, 0, 0, 0));
+        labelMessage.setId("chatContent");
         String[] lines = text.split("\r\n|\r|\n");
         textHeigth += 22 + lines.length * 18;
         pane.getChildren().add(labelHeader);

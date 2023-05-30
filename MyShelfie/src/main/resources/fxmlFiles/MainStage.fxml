@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
-<AnchorPane prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.MainStageController">
+<AnchorPane prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.MainStageController"  stylesheets="@../MainStageStyle.css">
    <children>
       <ImageView fitHeight="414.0" fitWidth="1400.0" layoutY="405.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -212,11 +212,11 @@
                   <Image url="@../assets/boards/bookshelf.png" />
                </image>
             </ImageView>
-            <Button fx:id="firstColumnButton" layoutX="53.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
-            <Button fx:id="secondColumnButton" layoutX="109.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
-            <Button fx:id="thirdColumnButton" layoutX="163.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
-            <Button fx:id="fourthColumnButton" layoutX="219.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
-            <Button fx:id="fifthColumnButton" layoutX="273.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" />
+            <Button fx:id="firstColumnButton" layoutX="53.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" text="1"/>
+            <Button fx:id="secondColumnButton" layoutX="109.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" text="2"/>
+            <Button fx:id="thirdColumnButton" layoutX="163.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0"  text="3"/>
+            <Button fx:id="fourthColumnButton" layoutX="219.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" text="4"/>
+            <Button fx:id="fifthColumnButton" layoutX="273.0" layoutY="321.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="28.0" text="5"/>
          </children>
       </AnchorPane>
       <AnchorPane layoutX="636.0" layoutY="60.0" prefHeight="420.0" prefWidth="420.0">
@@ -737,9 +737,6 @@
             <ImageView fx:id="tokenAchieved1" fitHeight="44.0" fitWidth="44.0" layoutX="79.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="tokenAchieved2" fitHeight="44.0" fitWidth="44.0" layoutX="141.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" />
             <Label layoutX="4.0" text="Your Tokens:" textFill="#d7b89c">
-               <font>
-                  <Font name="American Typewriter" size="24.0" />
-               </font>
             </Label>
          </children>
       </AnchorPane>
@@ -750,9 +747,6 @@
                <children>
                   <ImageView fx:id="pickedTileTop" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" />
                   <Label fx:id="topLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <font>
-                        <Font name="American Typewriter" size="25.0" />
-                     </font>
                   </Label>
                   <Button fx:id="pickedTopButton" mnemonicParsing="false" opacity="0.0" prefHeight="44.0" prefWidth="53.5" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
@@ -761,9 +755,6 @@
                <children>
                   <ImageView fx:id="pickedTileMiddle" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" />
                   <Label fx:id="middleLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER">
-                     <font>
-                        <Font name="American Typewriter" size="25.0" />
-                     </font>
                   </Label>
                   <Button fx:id="pickedMiddleButton" mnemonicParsing="false" opacity="0.0" prefHeight="44.0" prefWidth="53.5" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
@@ -772,9 +763,6 @@
                <children>
                   <ImageView fx:id="pickedTileBottom" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" />
                   <Label fx:id="bottomLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER">
-                     <font>
-                        <Font name="American Typewriter" size="25.0" />
-                     </font>
                   </Label>
                   <Button fx:id="pickedBottomButton" mnemonicParsing="false" opacity="0.0" prefHeight="44.0" prefWidth="53.5" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
@@ -782,28 +770,16 @@
          </children>
       </AnchorPane>
       <Label layoutX="71.0" layoutY="466.0" text="Personal Goal">
-         <font>
-            <Font name="American Typewriter" size="24.0" />
-         </font>
       </Label>
       <Label layoutX="352.0" layoutY="466.0" text="Common Goals">
-         <font>
-            <Font name="American Typewriter" size="24.0" />
-         </font>
       </Label>
       <AnchorPane layoutX="630.0" layoutY="493.0" prefHeight="152.0" prefWidth="434.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a66e49" height="137.0" layoutX="10.0" layoutY="8.0" stroke="#464545" strokeType="INSIDE" strokeWidth="2.0" width="412.0" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f8f1ed" height="90.0" layoutX="19.0" layoutY="47.0" stroke="#464545" strokeType="INSIDE" strokeWidth="2.0" width="392.0" />
             <Label layoutX="17.0" layoutY="15.0" prefHeight="15.0" prefWidth="397.0">
-               <font>
-                  <Font name="American Typewriter" size="24.0" />
-               </font>
             </Label>
             <Label fx:id="turnPhaseLabel" layoutX="32.0" layoutY="52.0" prefHeight="72.0" prefWidth="358.0" wrapText="true">
-               <font>
-                  <Font name="American Typewriter" size="18.0" />
-               </font>
             </Label>
          </children>
       </AnchorPane>
@@ -811,40 +787,47 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <ScrollPane fx:id="scrollPane" hbarPolicy="AS_NEEDED" layoutX="23.0" layoutY="156.0" prefHeight="637.0" prefWidth="281.0" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <ScrollPane fx:id="scrollPane" hbarPolicy="AS_NEEDED" layoutX="23.0" layoutY="156.0" prefHeight="637.0" prefWidth="281.0" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"  stylesheets="@../MainStageStyle.css">
                     <content>
-                      <AnchorPane fx:id="pane" minHeight="200.0" minWidth="200.0" />
+                      <AnchorPane fx:id="pane" minHeight="637.0" minWidth="281.0" styleClass="anchor-pane"/>
                     </content>
                   </ScrollPane>
                </children>
           </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="86.0" prefWidth="281.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" maxHeight="100.0" prefWidth="281.0" styleClass="anchor-pane-bottom">
                <children>
-                  <Button fx:id="sendMessageButton" layoutX="245.0" layoutY="51.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="32.0" text="-&gt;" />
-                  <TextArea fx:id="messageField" layoutX="9.0" layoutY="47.0" prefHeight="40.0" prefWidth="231.0" />
-                  <ChoiceBox fx:id="choiceBox" layoutX="9.0" layoutY="13.0" prefHeight="26.0" prefWidth="266.0" />
+                  <Button fx:id="sendMessageButton" layoutX="234.0" layoutY="47.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="sendButton">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="15.0">
+                           <Image url="@../assets/icons/send.png" preserveRatio="false" />
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <TextArea fx:id="messageField" layoutX="9.0" layoutY="47.0" maxHeight="30.0" prefHeight="30.0" prefWidth="220.0" />
+                  <ChoiceBox fx:id="choiceBox" layoutX="9.0" layoutY="8.0" prefHeight="26.0" prefWidth="266.0" />
                </children>
             </AnchorPane>
         </items>
       </SplitPane>
-      <Button fx:id="vButton" layoutX="513.0" layoutY="362.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="41.0" text="V" textFill="#141414">
-         <font>
-            <Font name="American Typewriter" size="23.0" />
-         </font>
+      <Button fx:id="vButton" layoutX="510.0" layoutY="360.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="41.0">
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="40.0">
+               <Image url="@../assets/icons/check.png" preserveRatio="true" />
+            </ImageView>
+         </graphic>
       </Button>
-      <Button fx:id="backButton" layoutX="437.0" layoutY="362.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="41.0" text="&lt;-" textFill="#141414">
-         <font>
-            <Font name="American Typewriter" size="23.0" />
-         </font>
+      <Button fx:id="backButton" layoutX="439.0" layoutY="360.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="41.0" >
+         <graphic>
+            <ImageView fitHeight="40.0" fitWidth="40.0">
+               <Image url="@../assets/icons/undo.png" preserveRatio="true" />
+            </ImageView>
+         </graphic>
       </Button>
       <Button fx:id="makeMoveButton" layoutX="439.0" layoutY="412.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="118.0" text="Make move" textFill="#141414">
-         <font>
-            <Font name="American Typewriter" size="14.0" />
-         </font>
       </Button>
-      <Button fx:id="myShelf" layoutX="15.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="You"/>
-      <Button fx:id="otherPlayerButton0" layoutX="67.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="Button" />
-      <Button fx:id="otherPlayerButton1" layoutX="174.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="Button" />
-      <Button fx:id="otherPlayerButton2" layoutX="281.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="107.0" text="Button" />
+      <Button fx:id="myShelf" layoutX="73.0" layoutY="45.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="You"/>
+      <Button fx:id="otherPlayerButton0" layoutX="233.0" layoutY="45.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Button" />
+      <Button fx:id="otherPlayerButton1" layoutX="73.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Button" />
+      <Button fx:id="otherPlayerButton2" layoutX="233.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Button" />
    </children>
 </AnchorPane>

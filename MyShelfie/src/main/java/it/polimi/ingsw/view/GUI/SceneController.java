@@ -87,7 +87,7 @@ public class SceneController {
         }
         activeSceneController = fmxlLoader.getController();
         MyShelfieClient.getGuiView().setStageController((MainStageController) activeSceneController);
-        activeScene = new Scene(root);
+        activeScene = new Scene(root, 1400, 815);
         Platform.runLater(() -> {
             stage.setScene(activeScene);
             stage.setResizable(false);
