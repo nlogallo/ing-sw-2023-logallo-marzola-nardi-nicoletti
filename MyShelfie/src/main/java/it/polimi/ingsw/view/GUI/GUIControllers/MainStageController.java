@@ -48,7 +48,7 @@ public class MainStageController implements GenericSceneController, Initializabl
     private ImageView board00, board01, board02, board03, board04, board05, board06, board07, board08, board10, board11, board12, board13, board14, board15, board16, board17, board18, board20, board21, board22, board23, board24, board25, board26, board27, board28, board30, board31, board32, board33, board34, board35, board36, board37, board38, board40, board41, board42, board43, board44, board45, board46, board47, board48, board50, board51, board52, board53, board54, board55, board56, board57, board58, board60, board61, board62, board63, board64, board65, board66, board67, board68, board70, board71, board72, board73, board74, board75, board76, board77, board78, board80, board81, board82, board83, board84, board85, board86, board87, board88;
     private ImageView[][] boardImage = new ImageView[9][9];
     @FXML
-    private Button myShelf, otherPlayerButton0, otherPlayerButton1, otherPlayerButton2;
+    private ToggleButton myShelf, otherPlayerButton0, otherPlayerButton1, otherPlayerButton2;
     @FXML
     private Button boardButton03, boardButton04, boardButton13, boardButton14, boardButton15, boardButton22, boardButton23, boardButton24, boardButton25, boardButton26, boardButton31, boardButton32, boardButton33, boardButton34, boardButton35, boardButton36, boardButton37, boardButton38, boardButton40, boardButton41, boardButton42, boardButton43, boardButton44, boardButton45, boardButton46, boardButton47, boardButton48, boardButton50, boardButton51, boardButton52, boardButton53, boardButton54, boardButton55, boardButton56, boardButton57, boardButton62, boardButton63, boardButton64, boardButton65, boardButton66, boardButton73, boardButton74, boardButton75, boardButton84, boardButton85;
     @FXML
@@ -100,6 +100,7 @@ public class MainStageController implements GenericSceneController, Initializabl
         {
             sendMessageButton.addEventHandler(MouseEvent.MOUSE_CLICKED, this::sendMessage);
         });
+        myShelf.setSelected(true);
     }
 
     private void initAll(){
@@ -1124,6 +1125,10 @@ public class MainStageController implements GenericSceneController, Initializabl
     }
 
     private void setOtherPlayersShelves(Event event){
+        myShelf.setSelected(false);
+        otherPlayerButton0.setSelected(false);
+        otherPlayerButton1.setSelected(false);
+        otherPlayerButton2.setSelected(false);
         if(event.getSource().equals(myShelf)){
             setShelfImage(gui.getShelf());
             firstColumnButton.setDisable(false);
@@ -1136,13 +1141,20 @@ public class MainStageController implements GenericSceneController, Initializabl
             thirdColumnButton.setOpacity(100);
             fourthColumnButton.setOpacity(100);
             fifthColumnButton.setOpacity(100);
+            myShelf.setSelected(true);
         }else {
             int getIndex;
-            if (event.getSource().equals(otherPlayerButton0))
+            if (event.getSource().equals(otherPlayerButton0)) {
+                otherPlayerButton0.setSelected(true);
                 getIndex = 0;
+            }
             else if (event.getSource().equals(otherPlayerButton1)) {
                 getIndex = 1;
-            } else getIndex = 2;
+                otherPlayerButton1.setSelected(true);
+            } else {
+                getIndex = 2;
+                otherPlayerButton2.setSelected(true);
+            }
             Shelf playerShelf = gui.getPlayersShelf().get(gui.getPlayersNickname().get(getIndex));
             setShelfImage(playerShelf);
             firstColumnButton.setDisable(true);
