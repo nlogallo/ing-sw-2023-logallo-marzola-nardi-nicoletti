@@ -71,7 +71,11 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         restoreGames();
     }
 
-    private static int firstAvailableId(){
+    /**
+     * This method check for the first available gameId
+     * @return the first available id
+     */
+    private static int getFirstAvailableId(){
         int maxId = -1;
         Object[] keySet = games.keySet().toArray();
         for(int i = 0; i < keySet.length; i++){
@@ -120,8 +124,24 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             } catch (ClassNotFoundException | IOException e) {
                 throw new RuntimeException(e);
             }
-            int gameId = Integer.parseInt(gameFile.getName().substring(4));
+            int gameId = Integer.parseInt(gameFile.getName().substring(4, gameFile.getName().indexOf('.')));
             games.put(gameId, (Game) object);
+        }
+    }
+
+    /**
+     * This method deletes the game file with the given id
+     * @param gameId
+     */
+    private static void deleteGame(int gameId){
+        String filename = "game" + gameId + ".bin";
+        File file = new File("data/savedGames/" + filename);
+        if(file.exists()){
+            if (file.delete()) {
+                System.out.println("Game with id " + gameId + " deleted!");
+            } else {
+                System.out.println("Failed to delete game with id " + gameId);
+            }
         }
     }
 
@@ -151,10 +171,36 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         System.out.println("RMI client connected with nickname: " + message);
         String nickname = message;
         Game game = findAvailableGame(nickname);
-        if(game == null) return game;
+        //if(game == null) return game;
+        return game;
+    }
+
+    public synchronized Game RMISetPlayer(int gameId, String nickname) throws RemoteException {
+        Game game = games.get(gameId);
         game.addPlayer(new Player(false, new Shelf(), nickname, game));
         System.out.println("Added " + nickname + " to game with id " + game.getId());
+        games.put(gameId, game);
         return game;
+    }
+
+    /**
+     *
+     * @param answer
+     * @param gameId
+     * @param nickname
+     * @return
+     */
+    public synchronized Game RMIDoWantToRecover(boolean answer, int gameId, String nickname) {
+        if (!answer) {
+            deleteGame(gameId);
+            games.remove(gameId);
+            return findAvailableGame(nickname);
+        } else {
+            Game game = games.get(gameId);
+            game.addRecoveredPlayer(nickname);
+            games.put(gameId, game);
+            return game;
+        }
     }
 
     /**
@@ -178,16 +224,20 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @param nickname
      * @return
      */
-    public synchronized NetworkMessage RMIHandlePlayerSetup(Game game, String nickname) throws RemoteException {
-        boolean seat = nickname.equals(game.getPlayers().get(0).getNickname());
-        if(seat){
-            game.startGame();
-            games.put(game.getId(), game);
-        }else {
-            while (true) {
-                if (games.get(game.getId()).isSetupFinished()) {
-                    game = games.get(game.getId());
-                    break;
+    public synchronized NetworkMessage RMIHandlePlayerSetup(Game game, String nickname, boolean isRecovered) throws RemoteException {
+        if(!isRecovered){
+            boolean seat = nickname.equals(game.getPlayers().get(0).getNickname());
+            if (seat) {
+                game.startGame();
+                games.put(game.getId(), game);
+            } else {
+                while (true) {
+                    if (games.get(game.getId()).isSetupFinished()) {
+                        game = games.get(game.getId());
+                        game.clearRecoveredPlayers();
+                        games.put(game.getId(), game);
+                        break;
+                    }
                 }
             }
         }
@@ -215,12 +265,22 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @param gameId
      * @return
      */
-    public synchronized boolean RMICheckForStart(int gameId, boolean hasSeat) throws RemoteException {
+    public synchronized String RMICheckForStart(int gameId, boolean isRecovered) throws RemoteException {
         Game game = games.get(gameId);
-        if(game.getPlayers().size() == game.getPlayersNumber()) {
-            return true;
+        if(game != null) {
+            if(!isRecovered){
+                if (game.getPlayers().size() == game.getPlayersNumber()) {
+                    return "startGame";
+                }
+            }else{
+                if (game.getRecoveredPlayers().size() == game.getPlayersNumber()) {
+                    return "startGame";
+                }
+            }
+        }else {
+            return "stopWaitingAndRepeat";
         }
-        return false;
+        return "wait";
     }
 
     /**
@@ -241,22 +301,14 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @throws RemoteException
      */
     public synchronized ArrayList<NetworkMessage> RMIGetResult(int gameId, String nickname) throws RemoteException {
-        //int playerIndex = 0;
         ArrayList<NetworkMessage> result = new ArrayList<>();
         Game game = games.get(gameId);
         VirtualView virtualView = RMIVirtualViews.get(nickname);
-        /*for (int i=0; i<game.getPlayers().size(); i++){
-            if(game.getPlayers().get(i).getNickname().equals(nickname))
-                playerIndex = i;
-        }*/
-        //if (games.get(gameId - 1).getMutexAtIndex(playerIndex)) {
-            result.add(virtualView.updateBoard());
-            result.add(virtualView.updateGameTokens());
-            result.add(virtualView.updateResult());
-            games.put(gameId, virtualView.getGame());
-            return result;
-        //}
-        //return null;
+        result.add(virtualView.updateBoard());
+        result.add(virtualView.updateGameTokens());
+        result.add(virtualView.updateResult());
+        games.put(gameId, virtualView.getGame());
+        return result;
     }
 
     /**
@@ -391,8 +443,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 ArrayList<Player> players = game.getPlayers();
                 for(Player player: players){
                     if(player.getNickname().equals(nickname)){
-                        game.addRecoveredPlayer(nickname);
-                        games.put(game.getId(), game);
                         return game;
                     }
                 }
@@ -415,7 +465,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @return game
      */
     private static Game createNewGame(int playersNumber) {
-        int id = firstAvailableId();
+        int id = getFirstAvailableId();
         return new Game(id, playersNumber);
     }
 
@@ -458,51 +508,88 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 nicknames.add(nickname);
                 boolean seat = false;
                 game = findAvailableGame(nickname);
-                if (game == null) {
-                    outputStream.writeObject("newGame");
-                    outputStream.flush();
-                    int playersNumber = (Integer) inputStream.readObject();
-                    game = createNewGame(playersNumber);
-                    games.put(game.getId(), game);
-                    System.out.println("New game created with id " + game.getId() + " for " + game.getPlayersNumber() + " players");
-                    seat = true;
-                } else {
-                    outputStream.writeObject("addedToGame");
-                    outputStream.flush();
-                }
-                if(game.getRecoveredPlayers().size() == 0) {
-                    Player player = new Player(seat, new Shelf(), nickname, game);
-                    game.addPlayer(player);
-                    System.out.println("Added " + nickname + " to game with id " + game.getId());
-                }
-                outputStream.writeObject(game.getId());
-                outputStream.flush();
 
-                boolean isRecovered = game.getRecoveredPlayers().size() > 0;
-                while (true) {
-                    this.clientSocket.setKeepAlive(true);
-                    if(!isRecovered){
-                        if (game.getPlayers().size() == game.getPlayersNumber()) {
-                            game.setState(GameState.STARTED);
-                            if (seat) {
-                                System.out.println("Game with id " + game.getId() + " started!");
-                            }
-                            outputStream.writeObject("startGame");
-                            outputStream.flush();
-                            break;
+                if (game != null && game.getPlayers().size() == game.getPlayersNumber()) {
+                    outputStream.writeObject("recoverableGameFound");
+                    outputStream.flush();
+                    if (!(boolean) inputStream.readObject()) {
+                        deleteGame(game.getId());
+                        games.remove(game.getId());
+                        game = findAvailableGame(nickname);
+                    } else {
+                        game.addRecoveredPlayer(nickname);
+                        games.put(game.getId(), game);
+                    }
+                } else {
+                    outputStream.writeObject("noRecoverableGameFound");
+                    outputStream.flush();
+                }
+
+                boolean isRecovered;
+                boolean repeat;
+
+                do {
+                    repeat = false;
+                    if (game == null) {
+                        outputStream.writeObject("newGame");
+                        outputStream.flush();
+                        int playersNumber = (Integer) inputStream.readObject();
+                        game = createNewGame(playersNumber);
+                        games.put(game.getId(), game);
+                        System.out.println("New game created with id " + game.getId() + " for " + game.getPlayersNumber() + " players");
+                        seat = true;
+                    } else {
+                        outputStream.writeObject("addedToGame");
+                        outputStream.flush();
+                    }
+                    if (game.getRecoveredPlayers().size() == 0) {
+                        Player player = new Player(seat, new Shelf(), nickname, game);
+                        game.addPlayer(player);
+                        System.out.println("Added " + nickname + " to game with id " + game.getId());
+                    } else {
+                        if (game.getPlayers().get(0).getNickname().equals(nickname)) {
+                            seat = true;
                         }
-                    }else{
-                        if (game.getPlayers().size() == game.getRecoveredPlayers().size()) {
-                            game.setState(GameState.STARTED);
-                            if (seat) {
-                                System.out.println("Game with id " + game.getId() + " started!");
+                        System.out.println("Recovered " + nickname + " to game with id " + game.getId());
+                    }
+                    outputStream.writeObject(game.getId());
+                    outputStream.flush();
+
+                    isRecovered = game.getRecoveredPlayers().size() > 0;
+                    while (true) {
+                        this.clientSocket.setKeepAlive(true);
+                        if (!isRecovered) {
+                            if (game.getPlayers().size() == game.getPlayersNumber()) {
+                                game.setState(GameState.STARTED);
+                                if (seat) {
+                                    System.out.println("Game with id " + game.getId() + " started!");
+                                }
+                                outputStream.writeObject("startGame");
+                                outputStream.flush();
+                                break;
                             }
-                            outputStream.writeObject("startGame");
-                            outputStream.flush();
-                            break;
+                        } else {
+                            game = games.get(game.getId());
+                            if (game != null) {
+                                if (game.getPlayers().size() == game.getRecoveredPlayers().size()) {
+                                    game.setState(GameState.STARTED);
+                                    if (seat) {
+                                        System.out.println("Game with id " + game.getId() + " recovered!");
+                                    }
+                                    outputStream.writeObject("startGame");
+                                    outputStream.flush();
+                                    break;
+                                }
+                            } else {
+                                game = findAvailableGame(nickname);
+                                isRecovered = false;
+                                repeat = true;
+                                outputStream.writeObject("stopWaitingAndRepeat");
+                                break;
+                            }
                         }
                     }
-                }
+                } while (repeat);
 
                 int playerIndex = 0;
                 for (int i=0; i<game.getPlayers().size(); i++){
@@ -515,20 +602,22 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
 
                 game = games.get(game.getId());
 
-                //if !isRecovered
-                if(seat){
-                    game.startGame();
-                    games.put(game.getId(), game);
-                }else {
-                    while (true) {
-                        this.clientSocket.setKeepAlive(true);
-                        if (games.get(game.getId()).isSetupFinished()) {
-                            game = games.get(game.getId());
-                            break;
+                if (!isRecovered) {
+                    if (seat) {
+                        game.startGame();
+                        games.put(game.getId(), game);
+                    } else {
+                        while (true) {
+                            this.clientSocket.setKeepAlive(true);
+                            if (games.get(game.getId()).isSetupFinished()) {
+                                game = games.get(game.getId());
+                                game.clearRecoveredPlayers();
+                                games.put(game.getId(), game);
+                                break;
+                            }
                         }
                     }
                 }
-                //???endIf
                 outputStream.flush();
                 VirtualView virtualView = new VirtualView(game, game.getCurrentPlayer().getNickname());
                 NetworkMessage setup = virtualView.playerSetup(nickname);
@@ -537,7 +626,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 NetworkMessage firstPlayer = virtualView.updateResult();
                 outputStream.writeObject(firstPlayer);
                 outputStream.flush();
-                ///?endIf
                 while (true) {
                     this.clientSocket.setKeepAlive(true);
                     if(games.get(game.getId()).getState() == GameState.STARTED && games.get(game.getId()).getCurrentPlayer() != null) {
@@ -581,6 +669,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             endMessage.setRequestId("ER");
                             endMessage.setTextMessage("Game ended! Thank you for playing!");
                         }
+                        deleteGame(game.getId());
                         outputStream.writeObject(endMessage);
                     }
                 }
@@ -590,9 +679,10 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 }else{
                     System.err.println("User from " + clientSocket.getInetAddress().getHostAddress() + " left the server.");
                 }
-                if(game.getId() != -1){
+                if(game != null && game.getId() != -1){
                     System.err.println("Game with id " + game.getId() + " has been terminated.");
                     games.get(game.getId()).setState(GameState.ENDED);
+                    //deleteGame(game.getId());
                 }
             } catch (IOException e) {
                 System.err.println("User " + nickname + " left the server.");
@@ -643,11 +733,18 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 ObjectOutputStream finalOutputStream = outputStream;
                 new Thread(() -> {
                     HashMap<Integer, Integer> numberMessages = new HashMap<>();
+                    Game game = games.get(gameId);
+                    ArrayList<Chat> chats = game.getChats();
+                    if (chats.size() > 0) {
+                        for (Chat chat : chats) {
+                            numberMessages.put(chat.getId(), chat.getMessages().size());
+                        }
+                    }
                     while(true){
                         try {
                             clientSocket.setKeepAlive(true);
-                            Game game = games.get(gameId);
-                            ArrayList<Chat> chats = game.getChats();
+                            game = games.get(gameId);
+                            chats = game.getChats();
                             for(int i = 0; i < chats.size(); i++) {
                                 Chat chat = chats.get(i);
                                 if(!numberMessages.containsKey(chat.getId())){
