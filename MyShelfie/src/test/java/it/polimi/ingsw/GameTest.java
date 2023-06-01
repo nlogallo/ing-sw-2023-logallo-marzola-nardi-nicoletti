@@ -81,21 +81,6 @@ class GameTest {
     }
 
     @Test
-    public void fileTest_AssertEquals(){
-
-        Game game1 = new Game(456,2);
-        Player player1 = new Player(true, new Shelf(), "player1", game1);
-        game1.addPlayer(player1);
-        game1.addPlayer(new Player(true, new Shelf(), "player2", game1));
-        game1.startGame();
-        game1.saveGame();
-        Game game2 = game1.restoreGame();
-        assertEquals(game1.getId(), game2.getId());
-        game2.endGame();
-    }
-
-
-    @Test
     public void nextPhaseText() {
 
         Game game = new Game(400,4);

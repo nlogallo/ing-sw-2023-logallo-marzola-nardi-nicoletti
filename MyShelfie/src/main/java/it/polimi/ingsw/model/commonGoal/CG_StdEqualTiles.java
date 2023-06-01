@@ -51,16 +51,23 @@ public class CG_StdEqualTiles extends CommonGoal{
      */
     private boolean check2Tiles(TileType[][] tileTypes){
         int countTimes = 0;
-        for(int i = 0; i < tileTypes.length; i++){
+        for(int i = tileTypes.length - 1; i >= 0 ; i--){
             for(int j = 0; j < tileTypes[i].length; j++){
-                if(j != tileTypes[i].length - 1 && tileTypes[i][j] != TileType.EMPTY && tileTypes[i][j] == tileTypes[i][j + 1])
+                if(j != tileTypes[i].length - 1 && tileTypes[i][j] != TileType.EMPTY && tileTypes[i][j] == tileTypes[i][j + 1]) {
                     countTimes++;
-                if(i != tileTypes.length - 1 && tileTypes[i][j] != TileType.EMPTY && tileTypes[i][j] == tileTypes[i + 1][j])
+                    tileTypes[i][j] = TileType.EMPTY;
+                    tileTypes[i][j + 1] = TileType.EMPTY;
+                }
+                if(i != 0 && tileTypes[i][j] != TileType.EMPTY && tileTypes[i][j] == tileTypes[i - 1][j]) {
                     countTimes++;
+                    tileTypes[i][j] = TileType.EMPTY;
+                    tileTypes[i - 1][j] = TileType.EMPTY;
+                }
                 if(countTimes >= 6)
                     return true;
             }
         }
+        System.out.println(countTimes);
         return false;
     }
 
@@ -80,8 +87,11 @@ public class CG_StdEqualTiles extends CommonGoal{
                         for (int d = 1; j + d < 5; d++)
                             if(tileType == tileTypes[i][j + d])
                                 countEquals++;
-                        if (countEquals > 3)
+                        if (countEquals > 3) {
                             countTimes++;
+                            for(int k = 0; k < 4; k++)
+                                tileTypes[i][j + k] = TileType.EMPTY;
+                        }
                     }
                     if (i < 3) {
                         countEquals = 1;
@@ -89,8 +99,11 @@ public class CG_StdEqualTiles extends CommonGoal{
                             if(tileType == tileTypes[i + d][j])
                                 countEquals++;
                         }
-                        if (countEquals > 3)
+                        if (countEquals > 3) {
                             countTimes++;
+                            for(int k = 0; k < 4; k++)
+                                tileTypes[i + k][j] = TileType.EMPTY;
+                        }
                     }
                 }
                 if(countTimes > 3)

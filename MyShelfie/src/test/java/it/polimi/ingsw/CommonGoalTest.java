@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.commonGoal.*;
 import it.polimi.ingsw.model.TileType;
+import it.polimi.ingsw.model.commonGoal.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -104,6 +104,8 @@ public class CommonGoalTest {
         playerShelf[3][1] = TileType.GAME;
         playerShelf[3][2] = TileType.GAME;
         playerShelf[3][3] = TileType.GAME;
+        playerShelf[3][4] = TileType.FRAME;
+        playerShelf[2][4] = TileType.FRAME;
         assertTrue(commonGoal.checkCommonGoal(playerShelf));
     }
 
@@ -220,23 +222,22 @@ public class CommonGoalTest {
             for(int j = 0; j < 5; j++)
                 playerShelf[i][j] = TileType.EMPTY;
         playerShelf[5][0] = TileType.PLANT;
-        playerShelf[5][1] = TileType.TROPHY;
-        playerShelf[5][2] = TileType.TROPHY;
+        playerShelf[5][1] = TileType.CAT;
+        playerShelf[5][2] = TileType.PLANT;
         playerShelf[5][3] = TileType.PLANT;
         playerShelf[4][0] = TileType.PLANT;
-        playerShelf[4][1] = TileType.TROPHY;
-        playerShelf[4][2] = TileType.CAT;
+        playerShelf[4][1] = TileType.CAT;
+        playerShelf[4][2] = TileType.TROPHY;
         playerShelf[4][3] = TileType.PLANT;
         playerShelf[3][0] = TileType.PLANT;
         playerShelf[3][1] = TileType.CAT;
         playerShelf[3][2] = TileType.TROPHY;
         playerShelf[3][3] = TileType.PLANT;
         playerShelf[2][0] = TileType.PLANT;
-        playerShelf[2][1] = TileType.PLANT;
-        playerShelf[2][2] = TileType.PLANT;
+        playerShelf[2][1] = TileType.CAT;
+        playerShelf[2][2] = TileType.TROPHY;
         playerShelf[2][3] = TileType.PLANT;
-        playerShelf[1][3] = TileType.PLANT;
-        playerShelf[0][3] = TileType.PLANT;
+        playerShelf[1][2] = TileType.TROPHY;
         assertTrue(commonGoal.checkCommonGoal(playerShelf));
     }
 
@@ -393,6 +394,8 @@ public class CommonGoalTest {
         playerShelf[4][1] = TileType.GAME;
         playerShelf[3][0] = TileType.GAME;
         playerShelf[3][1] = TileType.GAME;
+        playerShelf[2][0] = TileType.GAME;
+        playerShelf[2][1] = TileType.GAME;
         assertTrue(commonGoal.checkCommonGoal(playerShelf));
     }
 

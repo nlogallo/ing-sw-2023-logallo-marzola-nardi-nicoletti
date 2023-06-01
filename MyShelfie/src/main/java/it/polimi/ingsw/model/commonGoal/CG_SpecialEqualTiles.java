@@ -93,8 +93,12 @@ public class CG_SpecialEqualTiles extends CommonGoal{
                                 stillPossible = false;
                         }
                     }
-                    if (stillPossible)
+                    if (stillPossible) {
                         countTimes++;
+                        for(int c = 0; c < 2; c++)
+                            for(int r = 0; r < 2; r++)
+                                tileTypes[i + r][j + c] = TileType.EMPTY;
+                    }
                     if (countTimes > 1)
                         return true;
                 }

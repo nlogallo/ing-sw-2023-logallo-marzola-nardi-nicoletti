@@ -72,7 +72,7 @@ public class LobbyController implements GenericSceneController, Initializable {
         }else{
             while (true) {
                 try {
-                    if (MyShelfieClient.RMICheckForGameStart(gameId, true)) {
+                    if (MyShelfieClient.RMICheckForGameStart(gameId).equals("startGame")) {
                         new MyShelfieClient().handleGameRMI(MyShelfieClient.RMIGetGame(gameId), nickname);
                         break;
                     }
