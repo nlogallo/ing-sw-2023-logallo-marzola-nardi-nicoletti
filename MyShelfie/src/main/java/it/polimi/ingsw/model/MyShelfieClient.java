@@ -43,38 +43,7 @@ public class MyShelfieClient {
     private final Object inputLock = new Object();
     static GUIView guiView;
     private static int interfaceChosen;
-    boolean responseReceived = false;
-    /*private final Lock lock1 = new Lock() {
-        @Override
-        public void lock() {
-
-        }
-
-        @Override
-        public void lockInterruptibly() throws InterruptedException {
-
-        }
-
-        @Override
-        public boolean tryLock() {
-            return false;
-        }
-
-        @Override
-        public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
-            return false;
-        }
-
-        @Override
-        public void unlock() {
-
-        }
-
-        @Override
-        public Condition newCondition() {
-            return null;
-        }
-    };*/
+    private static boolean isRecovered;
 
     /**
      * Main method: Asks to the user to choose between TCP and RMI connection and establishes the connection with the chosen protocol.
@@ -120,8 +89,8 @@ public class MyShelfieClient {
         if (connect(hostname, port, protocol)) {
             if (protocol == 1) {
                 try {
-                    String nickname = "";
-                    String serverAnswer = "";
+                    String nickname;
+                    String serverAnswer;
                     do {
                         System.out.println("Enter your nickname: "); //inserisce nickname
                         nickname = sc.nextLine();
@@ -133,31 +102,50 @@ public class MyShelfieClient {
                         }
                     } while (!serverAnswer.equals("nicknameOk"));
                     remoteNickname = nickname;
-                    String command = TCPCheckForAvailableGames();
-                    if (command.equals("newGame")) {
-                        System.out.println("No games available, creating a new one...");
-                        int playersNumber;
+                    String command = TCPCheckForRecoverableGames();
+                    String input;
+                    if (command.equals("recoverableGameFound")){
                         do {
-                            System.out.println("Choose players number: ");
-                            playersNumber = Integer.parseInt(sc.nextLine());
-                            if (playersNumber > 4 || playersNumber < 2) {
-                                System.out.println("Players number must be 2, 3 or 4");
+                            System.out.println("A recoverable game has been found!\nPress 'y' to recover this game 'n' to search for a new one!");
+                            input = sc.nextLine();
+                            if (!input.equals("y") && !input.equals("Y") && !input.equals("n") && !input.equals("N")) {
+                                System.out.println("Please insert a valid answer! ('y' or 'n')");
                             }
-                        } while (playersNumber > 4 || playersNumber < 2);
-                        TCPSetPlayersNumber(playersNumber);
+                            TCPDoWantToRecover(input);
+                        } while (!input.equals("y") && !input.equals("Y") && !input.equals("n") && !input.equals("N"));
                     }
-                    gameId = TCPGetGameId();
-                    System.out.println("Hi " + nickname + "!\nYou have been added to game with id " + gameId + "\nYour game will start when the players number is fulfilled");
-
-                    while (true) {
-                        command = TCPCheckForGameStart();
-                        if (command.equals("startGame")) {
-                            System.out.println("GAME STARTED!");
-                            String finalNickname = nickname;
-                            new MyShelfieClient().handleGameTCP(nickname);
-                            break;
+                    boolean repeat;
+                    do {
+                        repeat = false;
+                        command = TCPCheckForAvailableGames();
+                        if (command.equals("newGame")) {
+                            System.out.println("No games available, creating a new one...");
+                            int playersNumber;
+                            do {
+                                System.out.println("Choose players number: ");
+                                playersNumber = Integer.parseInt(sc.nextLine());
+                                if (playersNumber > 4 || playersNumber < 2) {
+                                    System.out.println("Players number must be 2, 3 or 4");
+                                }
+                            } while (playersNumber > 4 || playersNumber < 2);
+                            TCPSetPlayersNumber(playersNumber);
                         }
-                    }
+                        gameId = TCPGetGameId();
+                        System.out.println("Hi " + nickname + "!\nYou have been added to game with id " + gameId + "\nYour game will start when the players number is fulfilled");
+
+                        while (true) {
+                            command = TCPCheckForGameStart();
+                            if (command.equals("startGame")) {
+                                System.out.println("GAME STARTED!");
+                                String finalNickname = nickname;
+                                new MyShelfieClient().handleGameTCP(nickname);
+                                break;
+                            }else if(command.equals("stopWaitingAndRepeat")){
+                                repeat = true;
+                                break;
+                            }
+                        }
+                    } while (repeat);
                 } catch (SocketTimeoutException e) {
                     System.err.println("Socket timed out");
                 } catch (StringIndexOutOfBoundsException e) {
@@ -183,30 +171,58 @@ public class MyShelfieClient {
                     } while (!serverAnswer.equals("nicknameOk"));
                     remoteNickname = nickname;
                     Game game = RMICheckForAvailableGame();
-                    boolean seat = false;
-                    if (game == null) {
-                        System.out.println("No games available, creating a new one...");
-                        int playersNumber;
+                    String input;
+                    if (game != null && game.getPlayers().size() == game.getPlayersNumber()){
+                        gameId = game.getId();
                         do {
-                            System.out.println("Choose players number: ");
-                            playersNumber = Integer.parseInt(sc.nextLine());
-                            if (playersNumber > 4 || playersNumber < 2) {
-                                System.err.println("Players number must be 2, 3 or 4");
+                            System.out.println("A recoverable game has been found!\nPress 'y' to recover this game 'n' to search for a new one!");
+                            input = sc.nextLine();
+                            if (!input.equals("y") && !input.equals("Y") && !input.equals("n") && !input.equals("N")) {
+                                System.out.println("Please insert a valid answer! ('y' or 'n')");
                             }
-                        } while (playersNumber > 4);
-                        game = RMIHandleGameCreation(playersNumber);
-                        seat = true;
+                            game = RMIDoWantToRecover(input);
+                        } while (!input.equals("y") && !input.equals("Y") && !input.equals("n") && !input.equals("N"));
                     }
-                    gameId = game.getId();
-                    System.out.println("Hi " + nickname + "!\nYou have been added to game with id " + game.getId() + "\nYour game will start when the players number is fulfilled");
-                    while (true) {
-                        if (RMICheckForGameStart(game.getId(), seat)) {
-                            break;
+                    boolean repeat;
+                    boolean seat = false;
+                    isRecovered = false;
+                    do {
+                        repeat = false;
+                        if (game == null) {
+                            System.out.println("No games available, creating a new one...");
+                            int playersNumber;
+                            do {
+                                System.out.println("Choose players number: ");
+                                playersNumber = Integer.parseInt(sc.nextLine());
+                                if (playersNumber > 4 || playersNumber < 2) {
+                                    System.err.println("Players number must be 2, 3 or 4");
+                                }
+                            } while (playersNumber > 4);
+                            game = RMIHandleGameCreation(playersNumber);
+                            seat = true;
+                        }else if(game.getPlayers().size() != game.getPlayersNumber()){
+                            gameId = game.getId();
+                            game = RMISetPlayer();
+                        }else{
+                            isRecovered = true;
                         }
-                    }
-                    game = RMIGetGame(game.getId());
-                    System.out.println("GAME STARTED!");
-                    new MyShelfieClient().handleGameRMI(game, nickname);
+                        gameId = game.getId();
+                        System.out.println("Hi " + nickname + "!\nYou have been added to game with id " + game.getId() + "\nYour game will start when the players number is fulfilled");
+                        String command;
+                        while (true) {
+                            command = RMICheckForGameStart(gameId);
+                            if (command.equals("startGame")) {
+                                game = RMIGetGame(game.getId());
+                                System.out.println("GAME STARTED!");
+                                new MyShelfieClient().handleGameRMI(game, nickname);
+                                break;
+                            }else if(command.equals("stopWaitingAndRepeat")){
+                                repeat = true;
+                                game = RMICheckForAvailableGame();
+                                break;
+                            }
+                        }
+                    } while (repeat);
                 } catch (Exception e) {
                     System.err.println("Connection lost! :(");
                 }
@@ -289,6 +305,25 @@ public class MyShelfieClient {
     }
 
     /**
+     * Method which checks if a recoverable game exists (TCP)
+     * @return recoverableGameFound if a recoverable game exists
+     * noRecoverableGameFound vice-versa
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    static public String TCPCheckForRecoverableGames() throws IOException, ClassNotFoundException {
+        return (String) inputStream.readObject();
+    }
+
+    static public void TCPDoWantToRecover(String input) throws IOException, ClassNotFoundException {
+        if (input.equals("y") || input.equals("Y")){
+            outputStream.writeObject(true);
+        } else if (input.equals("n") || input.equals("N")) {
+            outputStream.writeObject(false);
+        }
+    }
+
+    /**
      * Method which checks if a game is available (TCP)
      *
      * @return newGame if no game exists
@@ -317,6 +352,19 @@ public class MyShelfieClient {
      */
     static public Game RMICheckForAvailableGame() throws RemoteException {
         return RMIServer.RMICheckforAvailableGame(remoteNickname);
+    }
+
+    static public Game RMIDoWantToRecover(String input) throws RemoteException {
+        if (input.equals("y") || input.equals("Y")){
+            return RMIServer.RMIDoWantToRecover(true, gameId, remoteNickname);
+        } else if (input.equals("n") || input.equals("N")) {
+            return RMIServer.RMIDoWantToRecover(false, gameId, remoteNickname);
+        }
+        return null;
+    }
+
+    static public Game RMISetPlayer() throws RemoteException {
+        return RMIServer.RMISetPlayer(gameId, remoteNickname);
     }
 
     /**
@@ -367,12 +415,11 @@ public class MyShelfieClient {
      * Method which checks for the start game command (RMI)
      *
      * @param gameId
-     * @param seat
      * @return true if the game started
      * @throws RemoteException
      */
-    static public boolean RMICheckForGameStart(int gameId, boolean seat) throws RemoteException {
-        return RMIServer.RMICheckForStart(gameId, seat);
+    static public String RMICheckForGameStart(int gameId) throws RemoteException {
+        return RMIServer.RMICheckForStart(gameId, isRecovered);
     }
 
     /**
@@ -384,25 +431,6 @@ public class MyShelfieClient {
      */
     static public Game RMIGetGame(int gameId) throws RemoteException {
         return RMIServer.RMIGetGame(gameId);
-    }
-
-    public static class MenuHandler implements Runnable {
-        private volatile boolean isRunning = true;
-
-        @Override
-        public void run() {
-            isRunning = true;
-            try {
-                TimeUnit.MILLISECONDS.sleep(1500);
-                controller.enableInput();
-            } catch (InterruptedException e) {
-                //throw new RuntimeException(e);
-            }
-        }
-
-        public void stopThread() {
-            isRunning = false;
-        }
     }
 
     /**
@@ -482,7 +510,7 @@ public class MyShelfieClient {
                 }
             }
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            System.err.println("Connection lost!");
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         } catch (InterruptedException ex) {
@@ -504,7 +532,7 @@ public class MyShelfieClient {
                 }
             }
         } catch (IOException e){
-            throw new RuntimeException(e);
+            System.err.println("Chat connection lost!");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -551,7 +579,7 @@ public class MyShelfieClient {
             new Thread(() -> handleChatRMI(nickname, RMIChatServer)).start();
             if (interfaceChosen == 2)
                 SceneController.createMainStage("MainStage.fxml");
-            NetworkMessage nm = RMIServer.RMIHandlePlayerSetup(game, nickname);
+            NetworkMessage nm = RMIServer.RMIHandlePlayerSetup(game, nickname, isRecovered);
             game = (Game) nm.getContent().get(nm.getContent().size() - 1);
             if(interfaceChosen == 1) {
                 new Thread(() -> {
@@ -636,7 +664,6 @@ public class MyShelfieClient {
                     System.out.println("Game ended! Thank you for playing!");
                     break;
                 } else if (isFinished == 2) {
-
                     System.err.println("A player left the game. Game end here.");
                     break;
                 }
@@ -644,9 +671,7 @@ public class MyShelfieClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
             //System.err.println("\nConnection lost!");
-        } /*catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }*/ catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -719,11 +744,11 @@ interface MyShelfieRMIInterface extends Remote {
 
     Game RMIHandleGameCreation(int playersNumber, String nickname) throws RemoteException;
 
-    boolean RMICheckForStart(int gameId, boolean hasSeat) throws RemoteException;
+    String RMICheckForStart(int gameId, boolean isRecovered) throws RemoteException;
 
     Game RMIGetGame(int gameId) throws RemoteException;
 
-    NetworkMessage RMIHandlePlayerSetup(Game game, String nickname) throws RemoteException;
+    NetworkMessage RMIHandlePlayerSetup(Game game, String nickname, boolean isRecovered) throws RemoteException;
 
     NetworkMessage RMIGetFirstPlayer(String nickname) throws RemoteException;
 
@@ -740,4 +765,7 @@ interface MyShelfieRMIInterface extends Remote {
     int RMIIsGameFinished(int gameId) throws RemoteException;
 
     NetworkMessage RMICheckForChatUpdates(String nickname, int gameId, HashMap<Integer, Integer> numberMessages) throws RemoteException;
+
+    Game RMIDoWantToRecover(boolean answer, int gameId, String nickname) throws RemoteException;
+    Game RMISetPlayer(int gameId, String nickname) throws RemoteException;
 }
