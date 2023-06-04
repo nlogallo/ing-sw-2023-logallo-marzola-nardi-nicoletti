@@ -167,12 +167,16 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @return
      * @throws RemoteException
      */
-    public synchronized Game RMICheckforAvailableGame(String message) throws RemoteException {
+    public synchronized NetworkMessage RMICheckforAvailableGame(String message) throws RemoteException {
         System.out.println("RMI client connected with nickname: " + message);
         String nickname = message;
-        Game game = findAvailableGame(nickname);
-        //if(game == null) return game;
-        return game;
+        NetworkMessage networkMessage = new NetworkMessage();
+        networkMessage.setRequestId("SYN");
+        ArrayList<Game> gamesResult = findAvailableGame(nickname, false);
+        for(Game game : gamesResult){
+            networkMessage.addContent(game);
+        }
+        return networkMessage;
     }
 
     public synchronized Game RMISetPlayer(int gameId, String nickname) throws RemoteException {
@@ -183,24 +187,30 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return game;
     }
 
-    /**
-     *
-     * @param answer
-     * @param gameId
-     * @param nickname
-     * @return
-     */
-    public synchronized Game RMIDoWantToRecover(boolean answer, int gameId, String nickname) {
-        if (!answer) {
+    public synchronized Game RMIDoWantToRecover(NetworkMessage networkMessage) {
+        Game game = null;
+        int gameId = (int) networkMessage.getContent().get(0);
+        String nickname = (String) networkMessage.getContent().get(1);
+        if (networkMessage.getRequestId().equals("DELGAME")) {
             deleteGame(gameId);
             games.remove(gameId);
-            return findAvailableGame(nickname);
-        } else {
-            Game game = games.get(gameId);
+            ArrayList<Game> gamesResult = findAvailableGame(nickname, true);
+            if(gamesResult.isEmpty())
+                game = null;
+            else
+                game = gamesResult.get(0);
+        } else if (networkMessage.getRequestId().equals("RECGAME")) {
+            game = games.get(gameId);
             game.addRecoveredPlayer(nickname);
             games.put(gameId, game);
-            return game;
+        } else if (networkMessage.getRequestId().equals("NEWGAME")) {
+            ArrayList<Game> gamesResult = findAvailableGame(nickname, true);
+            if(gamesResult.isEmpty())
+                game = null;
+            else
+                game = gamesResult.get(0);
         }
+        return game;
     }
 
     /**
@@ -429,34 +439,39 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * This method searches for an available game
      * @return game
      */
-    private static Game findAvailableGame(String nickname) {
+    private static ArrayList<Game> findAvailableGame(String nickname, boolean newGame) {
         int maxId = -1;
+        ArrayList<Game> gamesResult = new ArrayList<>();
         Object[] keySet = games.keySet().toArray();
         for(int i = 0; i < keySet.length; i++){
             if(maxId < (Integer)keySet[i]){
                 maxId = (Integer)keySet[i];
             }
         }
-        for (int i = 0; i < maxId+1; i++) {
-            Game game = games.get(i);
-            if(game != null){
-                ArrayList<Player> players = game.getPlayers();
-                for(Player player: players){
-                    if(player.getNickname().equals(nickname)){
-                        return game;
+        if(!newGame){
+            for (int i = 0; i < maxId + 1; i++) {
+                Game game = games.get(i);
+                if (game != null) {
+                    ArrayList<Player> players = game.getPlayers();
+                    for (Player player : players) {
+                        if (player.getNickname().equals(nickname)) {
+                            gamesResult.add(game);
+                        }
                     }
                 }
             }
         }
-        for (int i = 0; i < maxId+1; i++) {
-            Game game = games.get(i);
-            if(game != null){
-                if (game.getPlayers().size() < game.getPlayersNumber() && game.getState() == GameState.WAITING_FOR_PLAYERS) {
-                    return game;
+        if(gamesResult.isEmpty()) {
+            for (int i = 0; i < maxId + 1; i++) {
+                Game game = games.get(i);
+                if (game != null) {
+                    if (game.getPlayers().size() < game.getPlayersNumber() && game.getState() == GameState.WAITING_FOR_PLAYERS) {
+                        gamesResult.add(game);
+                    }
                 }
             }
         }
-        return null;
+        return gamesResult;
     }
 
     /**
@@ -507,21 +522,49 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 outputStream.flush();
                 nicknames.add(nickname);
                 boolean seat = false;
-                game = findAvailableGame(nickname);
-
-                if (game != null && game.getPlayers().size() == game.getPlayersNumber()) {
-                    outputStream.writeObject("recoverableGameFound");
-                    outputStream.flush();
-                    if (!(boolean) inputStream.readObject()) {
-                        deleteGame(game.getId());
-                        games.remove(game.getId());
-                        game = findAvailableGame(nickname);
+                ArrayList<Game> gamesResult = findAvailableGame(nickname, false);
+                /*if(gamesResult.isEmpty())
+                    game = null;
+                else
+                    game = gamesResult.get(0);*/
+                NetworkMessage syn = new NetworkMessage();
+                syn.setRequestId("SYN");
+                if (!gamesResult.isEmpty()) {
+                    for(Game result : gamesResult){
+                        if(result.getPlayers().size() == result.getPlayersNumber()){
+                            syn.addContent(result);
+                        }
+                    }
+                    if(!syn.getContent().isEmpty()) {
+                        outputStream.writeObject(syn);
+                        outputStream.flush();
+                        NetworkMessage networkMessage = (NetworkMessage) inputStream.readObject();
+                        int toRecoverGameId = (int) networkMessage.getContent().get(0);
+                        if (networkMessage.getRequestId().equals("NEWGAME")) {
+                            gamesResult = findAvailableGame(nickname, true);
+                            if (gamesResult.isEmpty())
+                                game = null;
+                            else
+                                game = gamesResult.get(0);
+                        } else if(networkMessage.getRequestId().equals("DELGAME")){
+                            deleteGame(toRecoverGameId);
+                            games.remove(toRecoverGameId);
+                            gamesResult = findAvailableGame(nickname, true);
+                            if (gamesResult.isEmpty())
+                                game = null;
+                            else
+                                game = gamesResult.get(0);
+                        } else {
+                            game = games.get(toRecoverGameId);
+                            game.addRecoveredPlayer(nickname);
+                            games.put(game.getId(), game);
+                        }
                     } else {
-                        game.addRecoveredPlayer(nickname);
-                        games.put(game.getId(), game);
+                        outputStream.writeObject(syn);
+                        outputStream.flush();
                     }
                 } else {
-                    outputStream.writeObject("noRecoverableGameFound");
+                    outputStream.writeObject(syn);
                     outputStream.flush();
                 }
 
@@ -581,7 +624,11 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                     break;
                                 }
                             } else {
-                                game = findAvailableGame(nickname);
+                                gamesResult = findAvailableGame(nickname, false);
+                                if(gamesResult.isEmpty())
+                                    game = null;
+                                else
+                                    game = gamesResult.get(0);
                                 isRecovered = false;
                                 repeat = true;
                                 outputStream.writeObject("stopWaitingAndRepeat");

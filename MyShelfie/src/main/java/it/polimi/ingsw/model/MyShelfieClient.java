@@ -8,6 +8,7 @@ import it.polimi.ingsw.view.GUI.GUIView;
 import it.polimi.ingsw.view.GUI.MyShelfieFX;
 import it.polimi.ingsw.view.GUI.SceneController;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -92,7 +93,7 @@ public class MyShelfieClient {
                     String nickname;
                     String serverAnswer;
                     do {
-                        System.out.println("Enter your nickname: "); //inserisce nickname
+                        System.out.println("Enter your nickname: ");
                         nickname = sc.nextLine();
                         serverAnswer = checkNickname(nickname, protocol);
                         if (serverAddress.equals("nicknameExists")) {
@@ -102,22 +103,79 @@ public class MyShelfieClient {
                         }
                     } while (!serverAnswer.equals("nicknameOk"));
                     remoteNickname = nickname;
-                    String command = TCPCheckForRecoverableGames();
+                    ArrayList<Object> recoverableGames = TCPCheckForRecoverableGames();
                     String input;
-                    if (command.equals("recoverableGameFound")){
-                        do {
-                            System.out.println("A recoverable game has been found!\nPress 'y' to recover this game 'n' to search for a new one!");
-                            input = sc.nextLine();
-                            if (!input.equals("y") && !input.equals("Y") && !input.equals("n") && !input.equals("N")) {
-                                System.out.println("Please insert a valid answer! ('y' or 'n')");
+                    if (!recoverableGames.isEmpty()){
+                        int integerInput = 0;
+                        goBack: do {
+                            ArrayList<Integer> recoverableIds = new ArrayList<>();
+                            System.out.println("\nOne or more recoverable games have been found:" + recoverableGames.size());
+                            for (int i = 0; i < recoverableGames.size(); i++) {
+                                Game recoverable = (Game) recoverableGames.get(i);
+                                recoverableIds.add(recoverable.getId());
+                                System.out.print("\nId:" + recoverable.getId() + " -> with players: ");
+                                for (int j = 0; j < recoverable.getPlayersNumber(); j++) {
+                                    System.out.print(recoverable.getPlayers().get(j).getNickname());
+                                    if (j < recoverable.getPlayersNumber() - 1) {
+                                        System.out.print(", ");
+                                    }
+                                }
                             }
-                            TCPDoWantToRecover(input);
-                        } while (!input.equals("y") && !input.equals("Y") && !input.equals("n") && !input.equals("N"));
+                            int handledGameId = -1;
+                            do {
+                                System.out.println("\nPlease type the id of the game you want to handle or type 'newGame' to search for a new game: ");
+                                input = sc.nextLine();
+                                if (!input.equals("newGame")) {
+                                    try {
+                                        handledGameId = Integer.parseInt(input);
+                                        if (!recoverableIds.contains(handledGameId)) {
+                                            System.out.println("Please type a valid id!");
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Please type a valid id!");
+                                        handledGameId = -1;
+                                    }
+                                } else {
+                                    TCPDoWantToRecover("NEWGAME", handledGameId);
+                                    break goBack;
+                                }
+                            } while (!recoverableIds.contains(handledGameId));
+                            if (!input.equals("newGame")) {
+                                Game handledGame = null;
+                                for (int i = 0; i < recoverableIds.size(); i++) {
+                                    handledGame = (Game) recoverableGames.get(i);
+                                    if (handledGame.getId() == handledGameId) {
+                                        break;
+                                    }
+                                }
+                                do {
+                                    System.out.println("1. Restore");
+                                    if (handledGame.getPlayers().get(0).getNickname().equals(nickname)) {
+                                        System.out.println("2. Delete");
+                                    }
+                                    System.out.println("3. Go back");
+                                    input = sc.nextLine();
+                                    integerInput = Integer.parseInt(input);
+                                    if (integerInput != 1 && integerInput != 2 && integerInput != 3) {
+                                        System.out.println("Please insert a valid answer!");
+                                    }
+                                } while (integerInput != 1 && integerInput != 2 && integerInput != 3);
+                                if (integerInput == 1) {
+                                    TCPDoWantToRecover("RECGAME", handledGameId);
+                                    System.out.println("Recovering game with id " + handledGameId + "...");
+                                    break;
+                                } else if (integerInput == 2) {
+                                    TCPDoWantToRecover("DELGAME", handledGameId);
+                                    System.out.println("Game with id " + handledGameId + " deleted!");
+                                    break;
+                                }
+                            }
+                        } while(integerInput == 3);
                     }
                     boolean repeat;
                     do {
                         repeat = false;
-                        command = TCPCheckForAvailableGames();
+                        String command = TCPCheckForAvailableGames();
                         if (command.equals("newGame")) {
                             System.out.println("No games available, creating a new one...");
                             int playersNumber;
@@ -148,7 +206,7 @@ public class MyShelfieClient {
                     } while (repeat);
                 } catch (SocketTimeoutException e) {
                     System.err.println("Socket timed out");
-                } catch (StringIndexOutOfBoundsException e) {
+                } catch (StringIndexOutOfBoundsException | EOFException e) {
                     System.err.println("Server went offline!");
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
@@ -170,18 +228,78 @@ public class MyShelfieClient {
                         }
                     } while (!serverAnswer.equals("nicknameOk"));
                     remoteNickname = nickname;
-                    Game game = RMICheckForAvailableGame();
+                    ArrayList<Object> recoverableGames = RMICheckForAvailableGame();
                     String input;
+                    Game game = null;
+                    if(!recoverableGames.isEmpty()){
+                        game = (Game) recoverableGames.get(0);
+                    }
                     if (game != null && game.getPlayers().size() == game.getPlayersNumber()){
-                        gameId = game.getId();
-                        do {
-                            System.out.println("A recoverable game has been found!\nPress 'y' to recover this game 'n' to search for a new one!");
-                            input = sc.nextLine();
-                            if (!input.equals("y") && !input.equals("Y") && !input.equals("n") && !input.equals("N")) {
-                                System.out.println("Please insert a valid answer! ('y' or 'n')");
+                        int integerInput = 0;
+                        goBack: do {
+                            ArrayList<Integer> recoverableIds = new ArrayList<>();
+                            System.out.println("\nOne or more recoverable games have been found:" + recoverableGames.size());
+                            for (int i = 0; i < recoverableGames.size(); i++) {
+                                Game recoverable = (Game) recoverableGames.get(i);
+                                recoverableIds.add(recoverable.getId());
+                                System.out.print("\nId:" + recoverable.getId() + " -> with players: ");
+                                for (int j = 0; j < recoverable.getPlayersNumber(); j++) {
+                                    System.out.print(recoverable.getPlayers().get(j).getNickname());
+                                    if (j < recoverable.getPlayersNumber() - 1) {
+                                        System.out.print(", ");
+                                    }
+                                }
                             }
-                            game = RMIDoWantToRecover(input);
-                        } while (!input.equals("y") && !input.equals("Y") && !input.equals("n") && !input.equals("N"));
+                            int handledGameId = -1;
+                            do {
+                                System.out.println("\nPlease type the id of the game you want to handle or type 'newGame' to search for a new game: ");
+                                input = sc.nextLine();
+                                if (!input.equals("newGame")) {
+                                    try {
+                                        handledGameId = Integer.parseInt(input);
+                                        if (!recoverableIds.contains(handledGameId)) {
+                                            System.out.println("Please type a valid id!");
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Please type a valid id!");
+                                        handledGameId = -1;
+                                    }
+                                } else {
+                                    game = RMIDoWantToRecover("NEWGAME", handledGameId);
+                                    break goBack;
+                                }
+                            } while (!recoverableIds.contains(handledGameId));
+                            if (!input.equals("newGame")) {
+                                Game handledGame = null;
+                                for (int i = 0; i < recoverableIds.size(); i++) {
+                                    handledGame = (Game) recoverableGames.get(i);
+                                    if (handledGame.getId() == handledGameId) {
+                                        break;
+                                    }
+                                }
+                                do {
+                                    System.out.println("1. Restore");
+                                    if (handledGame.getPlayers().get(0).getNickname().equals(nickname)) {
+                                        System.out.println("2. Delete");
+                                    }
+                                    System.out.println("3. Go back");
+                                    input = sc.nextLine();
+                                    integerInput = Integer.parseInt(input);
+                                    if (integerInput != 1 && integerInput != 2 && integerInput != 3) {
+                                        System.out.println("Please insert a valid answer!");
+                                    }
+                                } while (integerInput != 1 && integerInput != 2 && integerInput != 3);
+                                if (integerInput == 1) {
+                                    game = RMIDoWantToRecover("RECGAME", handledGameId);
+                                    System.out.println("Recovering game with id " + handledGameId + "...");
+                                    break;
+                                } else if (integerInput == 2) {
+                                    game = RMIDoWantToRecover("DELGAME", handledGameId);
+                                    System.out.println("Game with id " + handledGameId + " deleted!");
+                                    break;
+                                }
+                            }
+                        } while(integerInput == 3);
                     }
                     boolean repeat;
                     boolean seat = false;
@@ -218,7 +336,12 @@ public class MyShelfieClient {
                                 break;
                             }else if(command.equals("stopWaitingAndRepeat")){
                                 repeat = true;
-                                game = RMICheckForAvailableGame();
+                                recoverableGames = RMICheckForAvailableGame();
+                                if(recoverableGames.isEmpty()){
+                                    game = null;
+                                }else{
+                                    game = (Game) recoverableGames.get(0);
+                                }
                                 break;
                             }
                         }
@@ -306,21 +429,29 @@ public class MyShelfieClient {
 
     /**
      * Method which checks if a recoverable game exists (TCP)
+     *
      * @return recoverableGameFound if a recoverable game exists
      * noRecoverableGameFound vice-versa
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    static public String TCPCheckForRecoverableGames() throws IOException, ClassNotFoundException {
-        return (String) inputStream.readObject();
+    static public ArrayList<Object> TCPCheckForRecoverableGames() throws IOException, ClassNotFoundException {
+        NetworkMessage networkMessage = (NetworkMessage) inputStream.readObject();
+        return networkMessage.getContent();
     }
 
-    static public void TCPDoWantToRecover(String input) throws IOException, ClassNotFoundException {
-        if (input.equals("y") || input.equals("Y")){
-            outputStream.writeObject(true);
-        } else if (input.equals("n") || input.equals("N")) {
-            outputStream.writeObject(false);
-        }
+    /**
+     * This method handle the game saves options
+     * @param operation can be NEWGAME to search for a new game, DELGAME to delete the game with id specified in handledGameId, RECGAME to recover the game with id specified in handledGameId
+     * @param handledGameId
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    static public void TCPDoWantToRecover(String operation, int handledGameId) throws IOException, ClassNotFoundException {
+        NetworkMessage networkMessage = new NetworkMessage();
+        networkMessage.setRequestId(operation);
+        networkMessage.addContent(handledGameId);
+        outputStream.writeObject(networkMessage);
     }
 
     /**
@@ -350,17 +481,16 @@ public class MyShelfieClient {
      * @return the Game where the player has been added to or null if there was no available game to join
      * @throws RemoteException
      */
-    static public Game RMICheckForAvailableGame() throws RemoteException {
-        return RMIServer.RMICheckforAvailableGame(remoteNickname);
+    static public ArrayList<Object> RMICheckForAvailableGame() throws RemoteException {
+        return RMIServer.RMICheckforAvailableGame(remoteNickname).getContent();
     }
 
-    static public Game RMIDoWantToRecover(String input) throws RemoteException {
-        if (input.equals("y") || input.equals("Y")){
-            return RMIServer.RMIDoWantToRecover(true, gameId, remoteNickname);
-        } else if (input.equals("n") || input.equals("N")) {
-            return RMIServer.RMIDoWantToRecover(false, gameId, remoteNickname);
-        }
-        return null;
+    static public Game RMIDoWantToRecover(String operation, int handledGameId) throws RemoteException {
+        NetworkMessage networkMessage = new NetworkMessage();
+        networkMessage.setRequestId(operation);
+        networkMessage.addContent(handledGameId);
+        networkMessage.addContent(remoteNickname);
+        return RMIServer.RMIDoWantToRecover(networkMessage);
     }
 
     static public Game RMISetPlayer() throws RemoteException {
@@ -738,7 +868,7 @@ public class MyShelfieClient {
  * RMI interface for server methods
  */
 interface MyShelfieRMIInterface extends Remote {
-    Game RMICheckforAvailableGame(String message) throws RemoteException;
+    NetworkMessage RMICheckforAvailableGame(String message) throws RemoteException;
 
     String RMICheckNickname(String nickname) throws RemoteException;
 
@@ -766,6 +896,6 @@ interface MyShelfieRMIInterface extends Remote {
 
     NetworkMessage RMICheckForChatUpdates(String nickname, int gameId, HashMap<Integer, Integer> numberMessages) throws RemoteException;
 
-    Game RMIDoWantToRecover(boolean answer, int gameId, String nickname) throws RemoteException;
+    Game RMIDoWantToRecover(NetworkMessage networkMessage) throws RemoteException;
     Game RMISetPlayer(int gameId, String nickname) throws RemoteException;
 }
