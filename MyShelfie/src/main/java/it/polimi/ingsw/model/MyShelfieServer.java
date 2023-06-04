@@ -498,7 +498,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
 
         public void run() {
             String nickname = "";
-            Game game = new Game(-1, 0);
+            Game game = null;
             ObjectOutputStream outputStream = null;
             ObjectInputStream inputStream = null;
             try {
@@ -523,10 +523,10 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 nicknames.add(nickname);
                 boolean seat = false;
                 ArrayList<Game> gamesResult = findAvailableGame(nickname, false);
-                /*if(gamesResult.isEmpty())
+                if(gamesResult.isEmpty())
                     game = null;
                 else
-                    game = gamesResult.get(0);*/
+                    game = gamesResult.get(0);
                 NetworkMessage syn = new NetworkMessage();
                 syn.setRequestId("SYN");
                 if (!gamesResult.isEmpty()) {
