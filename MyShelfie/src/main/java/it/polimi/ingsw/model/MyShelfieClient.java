@@ -498,6 +498,15 @@ public class MyShelfieClient {
     }
 
     /**
+     * Method which sets the isRecovered variable
+     * @param value
+     * @throws RemoteException
+     */
+    static public void RMISetIsRecovered(boolean value) throws RemoteException {
+        isRecovered = value;
+    }
+
+    /**
      * Method which sets the player number (TCP)
      *
      * @param playersNumber
