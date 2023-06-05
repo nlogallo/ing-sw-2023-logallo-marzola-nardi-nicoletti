@@ -320,7 +320,7 @@ public class MyShelfieClient {
                             seat = true;
                         }else if(game.getPlayers().size() != game.getPlayersNumber()){
                             gameId = game.getId();
-                            game = RMISetPlayer();
+                            game = RMISetPlayer(gameId);
                         }else{
                             isRecovered = true;
                         }
@@ -493,7 +493,7 @@ public class MyShelfieClient {
         return RMIServer.RMIDoWantToRecover(networkMessage);
     }
 
-    static public Game RMISetPlayer() throws RemoteException {
+    static public Game RMISetPlayer(int gameId) throws RemoteException {
         return RMIServer.RMISetPlayer(gameId, remoteNickname);
     }
 
