@@ -107,11 +107,12 @@ public class MyShelfieClient {
                     String input;
                     if (!recoverableGames.isEmpty()){
                         int integerInput = 0;
-                        goBack: do {
+                        goBack: while (true) {
                             ArrayList<Integer> recoverableIds = new ArrayList<>();
+                            Game recoverable = null;
                             System.out.println("\nOne or more recoverable games have been found:" + recoverableGames.size());
                             for (int i = 0; i < recoverableGames.size(); i++) {
-                                Game recoverable = (Game) recoverableGames.get(i);
+                                recoverable = (Game) recoverableGames.get(i);
                                 recoverableIds.add(recoverable.getId());
                                 System.out.print("\nId:" + recoverable.getId() + " -> with players: ");
                                 for (int j = 0; j < recoverable.getPlayersNumber(); j++) {
@@ -166,11 +167,13 @@ public class MyShelfieClient {
                                     break;
                                 } else if (integerInput == 2) {
                                     TCPDoWantToRecover("DELGAME", handledGameId);
+                                    recoverableGames.remove(recoverableIds.indexOf(handledGameId));
+                                    recoverableIds.remove(handledGameId);
                                     System.out.println("Game with id " + handledGameId + " deleted!");
-                                    break;
+                                    //break;
                                 }
                             }
-                        } while(integerInput == 3);
+                        }/* while(integerInput != 1)*/
                     }
                     boolean repeat;
                     do {
@@ -236,7 +239,7 @@ public class MyShelfieClient {
                     }
                     if (game != null && game.getPlayers().size() == game.getPlayersNumber()){
                         int integerInput = 0;
-                        goBack: do {
+                        goBack: while (true) {
                             ArrayList<Integer> recoverableIds = new ArrayList<>();
                             System.out.println("\nOne or more recoverable games have been found:" + recoverableGames.size());
                             for (int i = 0; i < recoverableGames.size(); i++) {
@@ -295,11 +298,12 @@ public class MyShelfieClient {
                                     break;
                                 } else if (integerInput == 2) {
                                     game = RMIDoWantToRecover("DELGAME", handledGameId);
+                                    recoverableGames.remove(recoverableIds.indexOf(handledGameId));
+                                    recoverableIds.remove(handledGameId);
                                     System.out.println("Game with id " + handledGameId + " deleted!");
-                                    break;
                                 }
                             }
-                        } while(integerInput == 3);
+                        }
                     }
                     boolean repeat;
                     boolean seat = false;

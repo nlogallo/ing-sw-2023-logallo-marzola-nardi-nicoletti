@@ -538,27 +538,30 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     if(!syn.getContent().isEmpty()) {
                         outputStream.writeObject(syn);
                         outputStream.flush();
-                        NetworkMessage networkMessage = (NetworkMessage) inputStream.readObject();
-                        int toRecoverGameId = (int) networkMessage.getContent().get(0);
-                        if (networkMessage.getRequestId().equals("NEWGAME")) {
-                            gamesResult = findAvailableGame(nickname, true);
-                            if (gamesResult.isEmpty())
-                                game = null;
-                            else
-                                game = gamesResult.get(0);
-                        } else if(networkMessage.getRequestId().equals("DELGAME")){
-                            deleteGame(toRecoverGameId);
-                            games.remove(toRecoverGameId);
-                            gamesResult = findAvailableGame(nickname, true);
-                            if (gamesResult.isEmpty())
-                                game = null;
-                            else
-                                game = gamesResult.get(0);
-                        } else {
-                            game = games.get(toRecoverGameId);
-                            game.addRecoveredPlayer(nickname);
-                            games.put(game.getId(), game);
-                        }
+                        NetworkMessage networkMessage;
+                        do {
+                            networkMessage = (NetworkMessage) inputStream.readObject();
+                            int toRecoverGameId = (int) networkMessage.getContent().get(0);
+                            if (networkMessage.getRequestId().equals("NEWGAME")) {
+                                gamesResult = findAvailableGame(nickname, true);
+                                if (gamesResult.isEmpty())
+                                    game = null;
+                                else
+                                    game = gamesResult.get(0);
+                            } else if (networkMessage.getRequestId().equals("DELGAME")) {
+                                deleteGame(toRecoverGameId);
+                                games.remove(toRecoverGameId);
+                                /*gamesResult = findAvailableGame(nickname, true);
+                                if (gamesResult.isEmpty())
+                                    game = null;
+                                else
+                                    game = gamesResult.get(0);*/
+                            } else {
+                                game = games.get(toRecoverGameId);
+                                game.addRecoveredPlayer(nickname);
+                                games.put(game.getId(), game);
+                            }
+                        } while(networkMessage.getRequestId().equals("DELGAME"));
                     } else {
                         outputStream.writeObject(syn);
                         outputStream.flush();
