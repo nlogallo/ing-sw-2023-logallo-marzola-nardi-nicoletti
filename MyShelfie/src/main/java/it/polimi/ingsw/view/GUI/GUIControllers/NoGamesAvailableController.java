@@ -64,9 +64,8 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
             parameters.add(1);
             try {
                 MyShelfieClient.TCPSetPlayersNumber((int)spinner.getValue());
-                int gameId = MyShelfieClient.TCPGetGameId();
-                parameters.add(gameId);
-            } catch (IOException | ClassNotFoundException e) {
+                parameters.add(-1);
+            } catch (IOException e) {
                 Stage primaryStage = SceneController.getStage();
                 Stage stage = new Stage();
                 stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));

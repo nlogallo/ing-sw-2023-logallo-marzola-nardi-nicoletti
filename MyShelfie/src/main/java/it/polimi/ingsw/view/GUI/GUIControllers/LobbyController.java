@@ -52,6 +52,17 @@ public class LobbyController implements GenericSceneController, Initializable {
         while(!mutex){}
         if(protocol == 1){
             String command = "";
+            try {
+                gameId = MyShelfieClient.TCPGetGameId();
+            } catch (IOException | ClassNotFoundException e) {
+                Stage primaryStage = SceneController.getStage();
+                Stage stage = new Stage();
+                stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
+                stage.setTitle("My Shelfie Connection Error");
+                SceneController.setStage(stage);
+                SceneController.changeScene(gui, "ErrorStage.fxml");
+                SceneController.setStage(primaryStage);
+            }
             while (true) {
                 try {
                     command = MyShelfieClient.TCPCheckForGameStart();

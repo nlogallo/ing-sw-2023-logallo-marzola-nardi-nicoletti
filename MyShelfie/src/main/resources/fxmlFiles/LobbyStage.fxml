@@ -11,7 +11,7 @@
                 <Image url="@../assets/misc/sfondo parquet.jpg" />
             </image>
         </ImageView>
-        <Text fx:id="text" layoutX="180.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+        <Text fx:id="text" layoutX="195.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" />
         <ProgressIndicator fx:id="progressIndicator" layoutX="350.0" layoutY="450.0" minHeight="120.0" minWidth="120.0"/>
         <ImageView fitHeight="115.0" fitWidth="105.0" layoutX="677.0" layoutY="466.0" pickOnBounds="true" preserveRatio="true">
             <image>

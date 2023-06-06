@@ -70,31 +70,53 @@ public class EnterNicknameController implements GenericSceneController, Initiali
                     ArrayList<Object> parameters = new ArrayList<>();
                     MyShelfieClient.setRemoteNickname(nicknameText.getText());
                     if(protocolValue == 1) {
-                        if(MyShelfieClient.TCPCheckForAvailableGames().equals("newGame")) {
+                        ArrayList<Object> recoverableGames = MyShelfieClient.TCPCheckForRecoverableGames();
+                        if (!recoverableGames.isEmpty()) {
+                            parameters.add(nicknameText.getText());
+                            parameters.add(recoverableGames);
+                            parameters.add(protocolValue);
                             parameters.add(serverSocket.getText());
-                            parameters.add(protocolValue);
-                            parameters.add(nicknameText.getText());
-                            SceneController.changeScene("NoGamesAvailable.fxml", parameters);
-                        }
-                        else{
-                            parameters.add(protocolValue);
-                            parameters.add(MyShelfieClient.TCPGetGameId());
-                            parameters.add(nicknameText.getText());
-                            SceneController.changeScene("LobbyStage.fxml", parameters);
+                            SceneController.changeScene("SavingsScene.fxml", parameters);
+                        } else {
+                            if (MyShelfieClient.TCPCheckForAvailableGames().equals("newGame")) {
+                                parameters.add(serverSocket.getText());
+                                parameters.add(protocolValue);
+                                parameters.add(nicknameText.getText());
+                                SceneController.changeScene("NoGamesAvailable.fxml", parameters);
+                            } else {
+                                parameters.add(protocolValue);
+                                parameters.add(-1);
+                                parameters.add(nicknameText.getText());
+                                SceneController.changeScene("LobbyStage.fxml", parameters);
+                            }
                         }
                     }
                     else{
-                        Game game = MyShelfieClient.RMICheckForAvailableGame();
+                        ArrayList<Object> recoverableGames = MyShelfieClient.RMICheckForAvailableGame();
+                        Game game = null;
+                        if(!recoverableGames.isEmpty())
+                            game = (Game) recoverableGames.get(0);
                         if(game == null) {
                             parameters.add(serverSocket.getText());
                             parameters.add(protocolValue);
                             parameters.add(nicknameText.getText());
+                            MyShelfieClient.RMISetIsRecovered(false);
                             SceneController.changeScene("NoGamesAvailable.fxml", parameters);
+                        }
+                        else if(game.getPlayers().size() == game.getPlayersNumber()){
+                                parameters.add(nicknameText.getText());
+                                parameters.add(recoverableGames);
+                                parameters.add(protocolValue);
+                                parameters.add(serverSocket.getText());
+                                MyShelfieClient.RMISetIsRecovered(true);
+                                SceneController.changeScene("SavingsScene.fxml", parameters);
                         }
                         else {
                             parameters.add(protocolValue);
+                            game = MyShelfieClient.RMISetPlayer(game.getId());
                             parameters.add(game.getId());
                             parameters.add(nicknameText.getText());
+                            MyShelfieClient.RMISetIsRecovered(false);
                             SceneController.changeScene("LobbyStage.fxml", parameters);
                         }
                     }

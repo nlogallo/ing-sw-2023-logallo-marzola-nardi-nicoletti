@@ -7,6 +7,13 @@ Text{
     -fx-font-size: 22;
 }
 
+.label{
+    -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
+    -fx-font-weight: bold;
+    -fx-alignment:center;
+    -fx-font-size: 22;
+}
+
 .button{
     -fx-pref-height: 40px;
     -fx-pref-width: 120px;
@@ -87,3 +94,20 @@ TextField{
     -fx-accent: orange;
     -fx-pref-height: 100px;
 }
+
+.table-view{
+    -fx-background-color: linear-gradient(to left top, #8f4614, #372112);
+    -fx-alignment: center;
+    -fx-border-color: #7f3e12;
+    -fx-font-size: 15;
+    -fx-text-fill: linear-gradient(to left top, #ffffff, #dcdbd6);
+}
+
+.table-view .column-header,
+.table-view .column-header .filler,
+.table-view .column-header-background .filler {
+    -fx-background-color: #dcdbd6;
+}
+
+
+

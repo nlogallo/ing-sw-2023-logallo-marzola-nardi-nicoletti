@@ -1100,27 +1100,42 @@ public class MainStageController implements GenericSceneController, Initializabl
         if(choiceBox.getItems().size() == 0) {
             myShelf.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
             if (gui.getPlayersNickname().size() >= 1) {
-                otherPlayerButton0.setText(gui.getPlayersNickname().get(0));
-                otherPlayerButton0.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+                Platform.runLater( () -> {
+                    otherPlayerButton0.setText(gui.getPlayersNickname().get(0));
+                    otherPlayerButton0.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+                });
                 if(gui.getPlayersNickname().size() >= 2) {
-                    otherPlayerButton1.setText(gui.getPlayersNickname().get(1));
-                    otherPlayerButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
-                } else otherPlayerButton1.setOpacity(0);
+                    Platform.runLater( () -> {
+                                otherPlayerButton1.setText(gui.getPlayersNickname().get(1));
+                                otherPlayerButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+                            }
+                    );
+                } else {
+                    Platform.runLater(() -> {
+                        otherPlayerButton1.setOpacity(0);
+                    });
+                }
 
                 if(gui.getPlayersNickname().size() >= 3) {
+                    Platform.runLater( () -> {
                     otherPlayerButton2.setText(gui.getPlayersNickname().get(2));
                     otherPlayerButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+                });}
+                else {
+                    Platform.runLater(() -> {
+                        otherPlayerButton2.setOpacity(0);
+                    });
                 }
-                else
-                    otherPlayerButton2.setOpacity(0);
                 ArrayList<String> nicknameList = new ArrayList<>();
                 nicknameList.add("Everyone");
                 if(gui.getPlayersNickname().size() > 1)
-                    nicknameList.addAll(gui.getPlayersNickname());
+                    Platform.runLater(() -> {nicknameList.addAll(gui.getPlayersNickname());});
                 ObservableList<String> list = FXCollections.observableArrayList(nicknameList);
-                choiceBox.getItems().addAll(list);
-                choiceBox.getSelectionModel().selectFirst();
-                }
+                Platform.runLater(()-> {
+                            choiceBox.getItems().addAll(list);
+                            choiceBox.getSelectionModel().selectFirst();
+                        }
+                );}
             }
     }
 

@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ public class MyShelfieFX extends Application {
         primaryStage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
         primaryStage.setTitle("My Shelfie");
         primaryStage.centerOnScreen();
+        primaryStage.initStyle(StageStyle.UNDECORATED);
         SceneController.setStage(primaryStage);
         SceneController.changeScene("LoadingScreen.fxml");
     }
