@@ -64,6 +64,10 @@ public class MainStageController implements GenericSceneController, Initializabl
     @FXML
     private Label turnPhaseLabel;
     @FXML
+    private Label currentlyPlayingLabel;
+    @FXML
+    private Label commonGoal1AchievedLabel, commonGoal2AchievedLabel;
+    @FXML
     private ImageView boardEndGameToken, commonGoal1Token, commonGoal2Token;
     @FXML
     private ImageView shelf00, shelf01, shelf02, shelf03, shelf04, shelf10, shelf11, shelf12, shelf13, shelf14, shelf20, shelf21, shelf22, shelf23, shelf24, shelf30, shelf31, shelf32, shelf33, shelf34, shelf40, shelf41, shelf42, shelf43, shelf44, shelf50, shelf51, shelf52, shelf53, shelf54;
@@ -311,7 +315,7 @@ public class MainStageController implements GenericSceneController, Initializabl
                         pickedTileMiddle.setOpacity(1);
                         middleLabel.setOpacity(0);
                         if (positionsToOrder.size() == 3) {
-                            setTilePicture(pickedTileTop, gui.getBoard().getTilesTable()[positionsToPick.get(2).getRow()][positionsToOrder.get(2).getColumn()]);
+                            setTilePicture(pickedTileTop, gui.getBoard().getTilesTable()[positionsToOrder.get(2).getRow()][positionsToOrder.get(2).getColumn()]);
                             pickedTileTop.setOpacity(1);
                             topLabel.setOpacity(0);
                         }
@@ -458,6 +462,16 @@ public class MainStageController implements GenericSceneController, Initializabl
         setAchievedTokenPicture(tokenAchieved0, 0);
         setAchievedTokenPicture(tokenAchieved1, 1);
         setAchievedTokenPicture(tokenAchieved2, 2);
+        setAchievedLabel();
+    }
+
+    private void setAchievedLabel() {
+        for (int i = 0; i< gui.getPersonalTokens().size(); i++) {
+            if ((gui.getPersonalTokens().get(i).getId() != 0) && ((gui.getPersonalTokens().get(i).getId() % 2) == 0))
+                commonGoal1AchievedLabel.setOpacity(1);
+            if ((gui.getPersonalTokens().get(i).getId() % 2) == 1)
+                commonGoal2AchievedLabel.setOpacity(1);
+        }
     }
 
     public void setSeatPicture() {

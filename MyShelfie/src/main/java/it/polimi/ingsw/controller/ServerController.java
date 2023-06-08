@@ -55,7 +55,7 @@ public class ServerController {
         if(!player.getCommonGoals(1)) {
             if (commonGoal2.checkCommonGoal(player.getShelf().getShelfTypes())) {
                 gameController.updateToken(commonGoal2, player.getShelf().getShelfTypes(), player);
-                this.isTokenChange = false;
+                this.isTokenChange = true;
             }
         }
 
