@@ -42,7 +42,6 @@ public class ServerController {
             return networkMessage;
         }
         stringToSend = gameController.moveTiles(positions, player, column);
-        gameController.nextPhase();
         if (!stringToSend.equals("Tiles cannot be pulled")) {
             String stringPart2 = null;
 
@@ -58,6 +57,8 @@ public class ServerController {
                 this.isTokenChange = true;
             }
         }
+        gameController.revertMutex();
+        gameController.nextPhase();
 
             /*if (commonGoal1.checkCommonGoal(player.getShelf().getShelfTypes())) {
                 if (!commonGoal2.checkCommonGoal(player.getShelf().getShelfTypes())) {

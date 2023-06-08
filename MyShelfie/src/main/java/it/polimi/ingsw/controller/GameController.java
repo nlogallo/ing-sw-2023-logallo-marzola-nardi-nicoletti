@@ -58,7 +58,6 @@ public class GameController {
         player.makeMove(column, tiles);
         player.checkFirstToEnd();
         game.boardRefill();
-        game.revertMutex();
         return "Tiles moved";
     }
 
@@ -176,5 +175,11 @@ public class GameController {
         return shelvesMap;
     }
 
+    /**
+     * This method allows to revert the mutex of the specific game
+     */
+    public void revertMutex(){
+        game.revertMutex();
+    }
 
 }
