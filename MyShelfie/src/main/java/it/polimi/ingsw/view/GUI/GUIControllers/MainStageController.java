@@ -474,6 +474,14 @@ public class MainStageController implements GenericSceneController, Initializabl
         }
     }
 
+    public void setCurrentlyPlayingLabel (String currentPlayer){
+        if (currentPlayer != null && !currentPlayer.equals(gui.getClientNickname())) {
+            Platform.runLater( () -> {currentlyPlayingLabel.setText("It's "+ currentPlayer+ " turn");});
+        } else if (currentPlayer != null && currentPlayer.equals(gui.getClientNickname())) {
+                Platform.runLater( () -> {currentlyPlayingLabel.setText("It's your turn");});
+        } else {currentlyPlayingLabel.setText("IDK who is playing");}
+    }
+
     public void setSeatPicture() {
         if (gui.isSeat() == true)
             seat.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/misc/firstplayertoken.png"))));;
@@ -1112,32 +1120,30 @@ public class MainStageController implements GenericSceneController, Initializabl
 
     public void setOtherPlayersAssets() {
         if(choiceBox.getItems().size() == 0) {
-            myShelf.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+
             if (gui.getPlayersNickname().size() >= 1) {
                 Platform.runLater( () -> {
                     otherPlayerButton0.setText(gui.getPlayersNickname().get(0));
-                    otherPlayerButton0.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
                 });
                 if(gui.getPlayersNickname().size() >= 2) {
                     Platform.runLater( () -> {
                                 otherPlayerButton1.setText(gui.getPlayersNickname().get(1));
-                                otherPlayerButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
-                            }
-                    );
+                            });
                 } else {
                     Platform.runLater(() -> {
                         otherPlayerButton1.setOpacity(0);
+                        otherPlayerButton1.setDisable(true);
                     });
                 }
 
                 if(gui.getPlayersNickname().size() >= 3) {
                     Platform.runLater( () -> {
                     otherPlayerButton2.setText(gui.getPlayersNickname().get(2));
-                    otherPlayerButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
                 });}
                 else {
                     Platform.runLater(() -> {
                         otherPlayerButton2.setOpacity(0);
+                        otherPlayerButton2.setDisable(true);
                     });
                 }
                 ArrayList<String> nicknameList = new ArrayList<>();
@@ -1203,9 +1209,10 @@ public class MainStageController implements GenericSceneController, Initializabl
 
 
     private void initButtons() {
-        //otherPlayerButton0.addEventHandler(MouseEvent.MOUSE_RELEASED, this::);
-        //otherPlayerButton1.addEventHandler(MouseEvent.MOUSE_RELEASED, this::);
-        //otherPlayerButton2.addEventHandler(MouseEvent.MOUSE_RELEASED, this::);
+        myShelf.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+        otherPlayerButton0.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+        otherPlayerButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
+        otherPlayerButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
         makeMoveButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::makeMoveButtonClick);
         backButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::backButtonClick);
         vButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::vButtonClick);
@@ -1273,20 +1280,20 @@ public class MainStageController implements GenericSceneController, Initializabl
 
     private void setTurnPhaseLabel (int phase) {
         switch(phase) {
-            case 0 -> turnPhaseLabel.setText("When it's your turn tap on 'Make move' to pick tiles");
+            case 0 -> turnPhaseLabel.setText("When it's your turn click on 'Make move' to pick tiles.");
 
             case 1 -> {
                 String maxTiles;
                 if (gui.getShelf().freeSpots() < 3 ) {
                     maxTiles = String.valueOf(gui.getShelf().freeSpots());
                 } else {maxTiles = "3";}
-                turnPhaseLabel.setText("You can pick no more than " + maxTiles + " aligned Tiles that have at least one free edge, and tap on V");
+                turnPhaseLabel.setText("Choose no more than " + maxTiles + " aligned Tiles and click on V.");
             }
              case 2 -> {
-                turnPhaseLabel.setText("Tap on the tiles to choose the order to put them in the shelf and press V");
+                turnPhaseLabel.setText("Tap on the tiles to choose the order and click on V.");
              }
              case 3 -> {
-                turnPhaseLabel.setText("Chose the column and tap on V");
+                turnPhaseLabel.setText("Choose the column and click on V.");
              }
         }
     }
@@ -1300,49 +1307,49 @@ public class MainStageController implements GenericSceneController, Initializabl
             switch (type) {
                 case PLANT -> {
                     switch (imageType) {
-                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.1.png"))));
-                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.2.png"))));
-                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.3.png"))));
+                        case 0 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.1.png"))));});
+                        case 1 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.2.png"))));});
+                        case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Piante1.3.png"))));});
                     }
                     image.setOpacity(1);
                 }
                 case TROPHY -> {
                     switch (imageType) {
-                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.1.png"))));
-                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.2.png"))));
-                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.3.png"))));
+                        case 0 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.1.png"))));});
+                        case 1 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.2.png"))));});
+                        case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Trofei1.3.png"))));});
                     }
                     image.setOpacity(1);
                 }
                 case GAME -> {
                     switch (imageType) {
-                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.1.png"))));
-                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.2.png"))));
-                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.3.png"))));
+                        case 0 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.1.png"))));});
+                        case 1 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.2.png"))));});
+                        case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Giochi1.3.png"))));});
                     }
                     image.setOpacity(1);
                 }
                 case CAT -> {
                     switch (imageType) {
-                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.1.png"))));
-                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.2.png"))));
-                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.3.png"))));
+                        case 0 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.1.png"))));});
+                        case 1 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.2.png"))));});
+                        case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Gatti1.3.png"))));});
                     }
                     image.setOpacity(1);
                 }
                 case BOOK -> {
                     switch (imageType) {
-                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.1.png"))));
-                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.2.png"))));
-                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.3.png"))));
+                        case 0 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.1.png"))));});
+                        case 1 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.2.png"))));});
+                        case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Libri1.3.png"))));});
                     }
                     image.setOpacity(1);
                 }
                 case FRAME -> {
                     switch (imageType) {
-                        case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.1.png"))));
-                        case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.2.png"))));
-                        case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.3.png"))));
+                        case 0 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.1.png"))));});
+                        case 1 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.2.png"))));});
+                        case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/item tiles/Cornici1.3.png"))));});
                     }
                     image.setOpacity(1);
                 }
@@ -1352,35 +1359,35 @@ public class MainStageController implements GenericSceneController, Initializabl
 
     private void setCommonGoalPicture(ImageView image, int id) {
         switch (id) {
-            case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/4.jpg"))));
-            case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/11.jpg"))));
-            case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/3.jpg"))));
-            case 3 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/7.jpg"))));
-            case 4 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/8.jpg"))));
-            case 5 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/2.jpg"))));
-            case 6 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/1.jpg"))));
-            case 7 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/6.jpg"))));
-            case 8 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/5.jpg"))));
-            case 9 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/10.jpg"))));
-            case 10 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/9.jpg"))));
-            case 11 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/12.jpg"))));
+            case 0 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/4.jpg"))));});
+            case 1 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/11.jpg"))));});
+            case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/3.jpg"))));});
+            case 3 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/7.jpg"))));});
+            case 4 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/8.jpg"))));});
+            case 5 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/2.jpg"))));});
+            case 6 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/1.jpg"))));});
+            case 7 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/6.jpg"))));});
+            case 8 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/5.jpg"))));});
+            case 9 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/10.jpg"))));});
+            case 10 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/9.jpg"))));});
+            case 11 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/12.jpg"))));});
         }
     }
 
     private void setPersonalGoalPicture(ImageView image, int id) {
         switch (id) {
-            case 0 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals.png"))));
-            case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals2.png"))));
-            case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals3.png"))));
-            case 3 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals4.png"))));
-            case 4 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals5.png"))));
-            case 5 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals6.png"))));
-            case 6 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals7.png"))));
-            case 7 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals8.png"))));
-            case 8 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals9.png"))));
-            case 9 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals10.png"))));
-            case 10 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals11.png"))));
-            case 11 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals12.png"))));
+            case 0 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals.png"))));});
+            case 1 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals2.png"))));});
+            case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals3.png"))));});
+            case 3 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals4.png"))));});
+            case 4 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals5.png"))));});
+            case 5 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals6.png"))));});
+            case 6 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals7.png"))));});
+            case 7 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals8.png"))));});
+            case 8 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals9.png"))));});
+            case 9 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals10.png"))));});
+            case 10 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals11.png"))));});
+            case 11 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals12.png"))));});
         }
     }
 
@@ -1397,7 +1404,7 @@ public class MainStageController implements GenericSceneController, Initializabl
                         present = true;
                 }
                 if (present) {
-                    image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/end game.jpg"))));
+                    Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/end game.jpg"))));});
                 } else {image.setOpacity(0);}
             }
 
@@ -1412,10 +1419,10 @@ public class MainStageController implements GenericSceneController, Initializabl
                     }
                 }
                 switch(maxToken) {
-                    case 8 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_8.jpg"))));
-                    case 6 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_6.jpg"))));
-                    case 4 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_4.jpg"))));
-                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_2.jpg"))));
+                    case 8 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_8.jpg"))));});
+                    case 6 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_6.jpg"))));});
+                    case 4 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_4.jpg"))));});
+                    case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_2.jpg"))));});
                     case 0 -> image.setOpacity(0);
                 }
             }
@@ -1432,10 +1439,10 @@ public class MainStageController implements GenericSceneController, Initializabl
                 }
 
                 switch(maxToken) {
-                    case 8 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_8.jpg"))));
-                    case 6 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_6.jpg"))));
-                    case 4 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_4.jpg"))));
-                    case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_2.jpg"))));
+                    case 8 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_8.jpg"))));});
+                    case 6 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_6.jpg"))));});
+                    case 4 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_4.jpg"))));});
+                    case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_2.jpg"))));});
                     case 0 -> image.setOpacity(0);
                 }
             }
@@ -1447,11 +1454,11 @@ public class MainStageController implements GenericSceneController, Initializabl
         if (size == tokenNo + 1) {
             int points = gui.getPersonalTokens().get(tokenNo).getPoints();
             switch (points) {
-                case 8 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_8.jpg"))));
-                case 6 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_6.jpg"))));
-                case 4 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_4.jpg"))));
-                case 2 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_2.jpg"))));
-                case 1 -> image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/end game.jpg"))));
+                case 8 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_8.jpg"))));});
+                case 6 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_6.jpg"))));});
+                case 4 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_4.jpg"))));});
+                case 2 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/scoring_2.jpg"))));});
+                case 1 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/scoring tokens/end game.jpg"))));});
             }
         }
     }

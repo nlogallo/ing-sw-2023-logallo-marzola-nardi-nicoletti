@@ -36,7 +36,7 @@ public class LobbyController implements GenericSceneController, Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-        new Thread(this::gameStarting).start();
+        //new Thread(this::gameStarting).start();
     }
 
     @Override
@@ -46,10 +46,11 @@ public class LobbyController implements GenericSceneController, Initializable {
         nickname = (String) parameters.get(2);
         mutex = true;
         text.setText("Hi " + nickname + " wait here until the game is fullfilled");
+        new Thread(this::gameStarting).start();
     }
 
     private void gameStarting(){
-        while(!mutex){}
+        //while(!mutex){}
         if(protocol == 1){
             String command = "";
             try {

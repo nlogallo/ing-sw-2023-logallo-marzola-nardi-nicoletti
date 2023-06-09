@@ -140,6 +140,7 @@ public class GUIView  implements Observer {
     @Override
     public void updateCurrentPlayer(String nickname) {
         this.currentPlayer = nickname;
+        stageController.setCurrentlyPlayingLabel(nickname);
     }
 
     @Override
