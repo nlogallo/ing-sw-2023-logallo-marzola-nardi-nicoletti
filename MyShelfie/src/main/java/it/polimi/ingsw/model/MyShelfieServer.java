@@ -241,14 +241,13 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 game.startGame();
                 games.put(game.getId(), game);
             } else {
-                while (true) {
-                    if (games.get(game.getId()).isSetupFinished()) {
-                        game = games.get(game.getId());
-                        game.clearRecoveredPlayers();
-                        games.put(game.getId(), game);
-                        break;
-                    }
+                if (games.get(game.getId()).isSetupFinished()) {
+                    game = games.get(game.getId());
+                    game.clearRecoveredPlayers();
+                    games.put(game.getId(), game);
                 }
+                else
+                    return null;
             }
         }
         VirtualView virtualView = new VirtualView(game, nickname);

@@ -599,13 +599,13 @@ public class MyShelfieClient {
                     String textFromUser;
                     while(true){
                         Scanner scanner = new Scanner(System.in);
-                        /*synchronized (inputLock){
+                        synchronized (inputLock){
                             try {
                                 inputLock.wait();
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
-                        }*/
+                        }
                         System.out.println("To quit insert the command: \u001B[1m/quitGame");
 
                         textFromUser = scanner.nextLine();
@@ -619,10 +619,10 @@ public class MyShelfieClient {
             }
             controller.playerSetup(nm);
             NetworkMessage currentPlayer = (NetworkMessage) inputStream.readObject();
-            //synchronized (inputLock) {
+            synchronized (inputLock) {
                 controller.updateResults(currentPlayer);
-                //inputLock.notifyAll();
-            //}
+                inputLock.notifyAll();
+            }
             /*if (interfaceChosen == 1 && currentPlayer.getContent().get(0).equals(nickname)) {
                 controller.enableInput();
             }*/
@@ -646,10 +646,10 @@ public class MyShelfieClient {
                     NetworkMessage token = result.get(1);
                     controller.updateGameTokens(token);
                     NetworkMessage res = result.get(2);
-                    //synchronized (inputLock) {
+                    synchronized (inputLock) {
                         controller.updateResults(res);
-                    //inputLock.notifyAll();
-                    //}
+                    inputLock.notifyAll();
+                    }
                 }
             }
         } catch (IOException ex) {
@@ -722,7 +722,10 @@ public class MyShelfieClient {
             new Thread(() -> handleChatRMI(nickname, RMIChatServer)).start();
             if (interfaceChosen == 2)
                 SceneController.createMainStage("MainStage.fxml");
-            NetworkMessage nm = RMIServer.RMIHandlePlayerSetup(game, nickname, isRecovered);
+            NetworkMessage nm;
+            do {
+                nm = RMIServer.RMIHandlePlayerSetup(game, nickname, isRecovered);
+            }while (nm == null);
             game = (Game) nm.getContent().get(nm.getContent().size() - 1);
             if(interfaceChosen == 1) {
                 new Thread(() -> {
