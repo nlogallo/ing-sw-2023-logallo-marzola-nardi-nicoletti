@@ -1149,13 +1149,11 @@ public class MainStageController implements GenericSceneController, Initializabl
                 ArrayList<String> nicknameList = new ArrayList<>();
                 nicknameList.add("Everyone");
                 if(gui.getPlayersNickname().size() > 1)
-                    Platform.runLater(() -> {nicknameList.addAll(gui.getPlayersNickname());});
+                    nicknameList.addAll(gui.getPlayersNickname());
                 ObservableList<String> list = FXCollections.observableArrayList(nicknameList);
-                Platform.runLater(()-> {
-                            choiceBox.getItems().addAll(list);
-                            choiceBox.getSelectionModel().selectFirst();
-                        }
-                );}
+                choiceBox.getItems().addAll(list);
+                choiceBox.getSelectionModel().selectFirst();
+                }
             }
     }
 
