@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 
 import static java.lang.String.valueOf;
 
-public class MainStageController implements GenericSceneController, Initializable {
+public class MainSceneController implements GenericSceneController, Initializable {
 
     private GUIView gui;
     private ArrayList<Position> positionsToPick = new ArrayList<>();
@@ -40,7 +40,7 @@ public class MainStageController implements GenericSceneController, Initializabl
     3->select column;
     */
 
-    public MainStageController(GUIView gui){
+    public MainSceneController(GUIView gui){
         this.gui = gui;
     }
 

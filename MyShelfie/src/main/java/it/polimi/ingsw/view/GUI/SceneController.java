@@ -2,7 +2,7 @@ package it.polimi.ingsw.view.GUI;
 
 import it.polimi.ingsw.model.MyShelfieClient;
 import it.polimi.ingsw.view.GUI.GUIControllers.GenericSceneController;
-import it.polimi.ingsw.view.GUI.GUIControllers.MainStageController;
+import it.polimi.ingsw.view.GUI.GUIControllers.MainSceneController;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -80,13 +80,13 @@ public class SceneController {
         FXMLLoader fmxlLoader = new FXMLLoader(SceneController.class.getResource("/fxmlFiles/" + fxmlName));
         Parent root = null;
         try {
-            fmxlLoader.setControllerFactory(controllerClass -> new MainStageController(MyShelfieClient.getGuiView()));
+            fmxlLoader.setControllerFactory(controllerClass -> new MainSceneController(MyShelfieClient.getGuiView()));
             root = fmxlLoader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         activeSceneController = fmxlLoader.getController();
-        MyShelfieClient.getGuiView().setStageController((MainStageController) activeSceneController);
+        MyShelfieClient.getGuiView().setStageController((MainSceneController) activeSceneController);
         activeScene = new Scene(root, 1400, 815);
         Platform.runLater(() -> {
             stage.setScene(activeScene);

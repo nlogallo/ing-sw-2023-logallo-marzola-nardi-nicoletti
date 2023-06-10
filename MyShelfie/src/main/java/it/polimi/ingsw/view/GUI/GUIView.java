@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.Shelf;
 import it.polimi.ingsw.model.Token;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.utils.ClientChat;
-import it.polimi.ingsw.view.GUI.GUIControllers.MainStageController;
+import it.polimi.ingsw.view.GUI.GUIControllers.MainSceneController;
 import it.polimi.ingsw.view.Observer;
 import javafx.application.Platform;
 
@@ -40,7 +40,7 @@ public class GUIView  implements Observer {
     private ClientController clientController;
     private boolean isOccurredAnError = false;
 
-    private MainStageController stageController;
+    private MainSceneController stageController;
 
     public GUIView(String clientNickname) {
         this.screenMessage = null;
@@ -52,7 +52,7 @@ public class GUIView  implements Observer {
         this.board = board;
     }
 
-    public void setStageController(MainStageController stageController) {
+    public void setStageController(MainSceneController stageController) {
         this.stageController = stageController;
     }
 

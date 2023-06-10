@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1400.0" stylesheets="@../MainStageStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.MainStageController">
+<AnchorPane prefHeight="800.0" prefWidth="1400.0" stylesheets="@../MainStageStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.MainSceneController">
    <children>
       <ImageView fitHeight="414.0" fitWidth="1400.0" layoutY="405.0" pickOnBounds="true" preserveRatio="true">
          <image>
