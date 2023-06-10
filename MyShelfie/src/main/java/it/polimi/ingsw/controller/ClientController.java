@@ -276,8 +276,14 @@ public class ClientController {
             clientViewObservable.setPlayersShelf((Map<String, Shelf>) networkMessage.getContent().get(1));
             clientViewObservable.refreshCLI();
         }
-        else
-            CLIMenus.endMenu(networkMessage.getTextMessage());
+        else{
+            if(MyShelfieClient.getInterfaceChosen() == 1)
+                CLIMenus.endMenu(networkMessage.getTextMessage());
+            else{
+                //SceneController.changeScene(MyShelfieClient.getGuiView(), "", //here the parameters);
+            }
+        }
+
     }
 
     public void updatePlayersShelf(NetworkMessage networkMessage){

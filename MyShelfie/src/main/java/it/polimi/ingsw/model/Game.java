@@ -367,6 +367,7 @@ public class Game implements Serializable {
             player = playersCopy.get(maxPointIndex);
             gameResults += "\n" + (i+2) + ") " + player.getNickname() + ": " + playerPoints.get(maxPointIndex) + " points";
         }
+        gameResults += "\n";
         return gameResults;
     }
 
