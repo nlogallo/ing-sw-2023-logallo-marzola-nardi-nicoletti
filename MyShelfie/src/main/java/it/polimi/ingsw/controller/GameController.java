@@ -29,7 +29,6 @@ public class GameController {
         String nextPlayer = " ";
         try{
             nextPlayer = game.nextPhase().getNickname();
-            //game.saveGame();
         }catch (IllegalStateException ex){
             game.endGame();
         }
@@ -75,9 +74,7 @@ public class GameController {
         Token token;
         try {
             token = game.updateCommonGoal(commonGoal, playerShelf, player);
-        } catch (IllegalStateException ex){
-            return "";
-        } catch (Exception e) {
+        } catch (Exception ex){
             return "";
         }
         player.giveToken(token);
@@ -92,7 +89,7 @@ public class GameController {
      *
      * @return a Player
      */
-    public Player nicknameToPlayer  (String nickname) {
+    public Player nicknameToPlayer(String nickname) {
         ArrayList<Player> players = game.getPlayers();
         for (Player p : players){
             if (nickname.equals(p.getNickname()))

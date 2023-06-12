@@ -788,7 +788,8 @@ public class MyShelfieClient {
                         controller.updateBoard(board);
                         controller.updateGameTokens(token);
                         synchronized (inputLock) {
-                            controller.updateResults(res);
+                            if(!res.getRequestId().equals("END"))
+                                controller.updateResults(res);
                             inputLock.notifyAll();
                         }
                         RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);

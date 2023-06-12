@@ -36,13 +36,13 @@ public class CLIFormatter {
         System.out.print(ANSI_RESET + "\n" + String.format("%-68s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(2,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(2,6) + ANSI_RESET + "|" + String.format("%-10s", " ")+ "3" + String.format("%-17s", " ")+ ANSI_RESET + "|" +  getShelfTilesAtPosition(2,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(2,4) + ANSI_RESET + "|"  + String.format("%-12s", " ") + buildTokensPerLine(1));
 
         //seventh line
-        System.out.print(ANSI_RESET + "\n" + canMakeHisMove() + ANSI_RESET + String.format("%-" + calculateSpacing(69, 0, canMakeHisMove()) + "s", " ") + "+---".repeat(8) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+"  + String.format("%-12s", " ") + buildTokensPerLine(2));
+        System.out.print(ANSI_RESET + "\n" + String.format("%-64s", " ") + "+---".repeat(8) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+"  + String.format("%-12s", " ") + buildTokensPerLine(2));
 
         //eighth line
-        System.out.print(ANSI_RESET + "\n2.Open chats" + String.format("%-52s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(3,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,7) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,8) + ANSI_RESET + "|" + String.format("%-2s", " ")+ "4"  + String.format("%-17s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,4)+ ANSI_RESET + "|");
+        System.out.print(ANSI_RESET + "\n" + String.format("%-64s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(3,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,7) + ANSI_RESET + "|" + getBoardTilesAtPosition(3,8) + ANSI_RESET + "|" + String.format("%-2s", " ")+ "4"  + String.format("%-17s", " ") + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(3,4)+ ANSI_RESET + "|");
 
         //ninth line
-        System.out.print(ANSI_RESET + "\n3.See other players' shelves" + String.format("%-32s", " ") + ANSI_RESET + "+---".repeat(9) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+");
+        System.out.print(ANSI_RESET + "\n" + String.format("%-60s", " ") + ANSI_RESET + "+---".repeat(9) + "+" + String.format("%-20s", " ") + "+---".repeat(5) + "+");
 
         //tenth line
         System.out.print(ANSI_RESET + "\n" + String.format("%-60s", " ") + ANSI_RESET + "|" + getBoardTilesAtPosition(4,0) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,1) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,2) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,3) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,4) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,5) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,6) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,7) + ANSI_RESET + "|" + getBoardTilesAtPosition(4,8 ) + ANSI_RESET + "|" + String.format("%-2s", " ")+ "5" + String.format("%-17s", " ")+ ANSI_RESET + "|" +  getShelfTilesAtPosition(4,0) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,1) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,2) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,3) + ANSI_RESET + "|" +  getShelfTilesAtPosition(4,4) + ANSI_RESET + "|");
@@ -334,14 +334,6 @@ public class CLIFormatter {
             }
         }
         return lineToPrint;
-    }
-
-    private String canMakeHisMove(){
-        if(view.getCurrentPlayer() == null || !view.getCurrentPlayer().equals(view.getClientNickname())){
-            return ANSI_WHITE + "1.Make your move (disabled)";
-        }
-        else
-            return ANSI_RESET + "1.Make your move";
     }
 
     private String putPlayerName(int line) {

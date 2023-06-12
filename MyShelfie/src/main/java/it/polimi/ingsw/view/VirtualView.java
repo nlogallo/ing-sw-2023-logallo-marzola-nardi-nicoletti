@@ -65,15 +65,6 @@ public class VirtualView {
    }
 
     /**
-     * This method is done to update the chats of the clients
-     * @param networkMessage is the new message send by someone of the clients
-     * @return the NetworkMessage with the new message
-     */
-   public NetworkMessage updateChat(NetworkMessage networkMessage){
-       return serverController.getLastMessagesOfTheChat((String) networkMessage.getContent().get(0), (int) networkMessage.getContent().get(1), (String) networkMessage.getContent().get(2));
-   }
-
-    /**
      * This method is done to update the available tokens remained in the game
      * @return the NetworkMessage with the tokens
      */

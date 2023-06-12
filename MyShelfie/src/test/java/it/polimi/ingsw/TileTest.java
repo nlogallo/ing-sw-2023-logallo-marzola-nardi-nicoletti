@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.TileType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;

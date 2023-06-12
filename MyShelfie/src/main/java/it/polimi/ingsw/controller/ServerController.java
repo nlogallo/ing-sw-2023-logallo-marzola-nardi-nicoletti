@@ -133,8 +133,6 @@ public class ServerController {
                 //start a new duoChat and add message to it
                 gameController.startDuoChat(sender, receivers.get(0));
                 chats.get(chats.size() - 1).addMessage(message);
-            } else {
-                networkMessage.setTextMessage("Something went wrong, retry!");
             }
         } else {
 
@@ -142,44 +140,6 @@ public class ServerController {
             chats.get(0).addMessage(message);
             networkMessage.setTextMessage("Message sent correctly!");
 
-        }
-        networkMessage.setRequestId("UC");
-        return networkMessage;
-    }
-
-
-    /**
-     * Getter method
-     * @param senderNickName sender Nickname
-     * @param chatId         the ID of the chat
-     * @param lastMessage is the last message that arrived in the chat
-     * @return a list with inside, in order: senderNickname, chatId, the new last message (String).
-     */
-    public NetworkMessage getLastMessagesOfTheChat(String senderNickName, int chatId, String lastMessage) {
-
-        NetworkMessage networkMessage = new NetworkMessage();
-        ArrayList<Chat> chats = gameController.getGame().getChats();
-        Chat chat = null;
-
-        for (Chat c : chats) {
-            if (c.getId() == chatId) {
-                chat = c;
-            }
-        }
-
-        Player sender = gameController.nicknameToPlayer(senderNickName);
-
-        if (chat != null && sender != null) {
-            networkMessage.addContent(senderNickName);
-            networkMessage.addContent(chatId);
-            networkMessage.addContent(lastMessage);
-            } else {
-            if(chat == null) {
-                System.out.println("-Server- The chat with this Id: " + chatId + " doesn't exist");
-            }
-            if (sender == null) {
-                System.out.println("-Server- Sender nickName doesn't exist");
-            }
         }
         networkMessage.setRequestId("UC");
         return networkMessage;
@@ -224,25 +184,6 @@ public class ServerController {
         networkMessage.setRequestId("UGT");
         return networkMessage;
     }
-
-
-    /**
-     * Getter method
-     * @return true if the Tokens of the game are changed
-     */
-    public boolean getIsTokenChange() {
-        return this.isTokenChange;
-    }
-
-
-    /**
-     * Setter method
-     * It makes the reset of the private parameter isTokenChange
-     */
-    public void resetIsTokenChange() {
-        this.isTokenChange = false;
-    }
-
 
     /**
      * This method does the initial setup of everything the player needs to start playing properly
