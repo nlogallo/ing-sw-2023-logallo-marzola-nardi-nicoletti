@@ -650,6 +650,8 @@ public class MyShelfieClient {
                         controller.updateResults(res);
                     inputLock.notifyAll();
                     }
+                    if(res.getTextMessage().equals("END"))
+                        break;
                 }
             }
         } catch (IOException ex) {

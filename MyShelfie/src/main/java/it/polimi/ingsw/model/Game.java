@@ -88,8 +88,8 @@ public class Game implements Serializable {
      * This method ends the game
      */
     public void endGame() {
-        this.state = GameState.ENDED;
         this.currentPlayer = null;
+        this.state = GameState.ENDED;
         try {
             Files.delete(Path.of("data/savedGames/game" + this.id + ".bin"));
         } catch (IOException e) {
@@ -362,10 +362,13 @@ public class Game implements Serializable {
         gameResults = "Congratulations " + winner.getNickname() + " you won with " + playerPoints.get(maxPointIndex) + " points";
         playerPoints.remove(maxPointIndex);
         playersCopy.remove(maxPointIndex);
-        for(int i = 0; i < playersCopy.size(); i++){
+        int length = playersCopy.size();
+        for(int i = 0; i < length; i++){
             maxPointIndex = playerPoints.indexOf(Collections.max(playerPoints));
             player = playersCopy.get(maxPointIndex);
             gameResults += "\n" + (i+2) + ") " + player.getNickname() + ": " + playerPoints.get(maxPointIndex) + " points";
+            playerPoints.remove(maxPointIndex);
+            playersCopy.remove(maxPointIndex);
         }
         gameResults += "\n";
         return gameResults;

@@ -57,8 +57,8 @@ public class ServerController {
                 this.isTokenChange = true;
             }
         }
-        gameController.revertMutex();
         gameController.nextPhase();
+        gameController.revertMutex();
 
             /*if (commonGoal1.checkCommonGoal(player.getShelf().getShelfTypes())) {
                 if (!commonGoal2.checkCommonGoal(player.getShelf().getShelfTypes())) {

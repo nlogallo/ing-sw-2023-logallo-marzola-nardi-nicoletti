@@ -692,18 +692,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         }
                         updateSend = false;
                         ArrayList<NetworkMessage> result = new ArrayList<>();
-                        if (games.get(game.getId()).getMutexAtIndex(playerIndex) && game.getCurrentPlayer() != null) {
+                        if (games.get(game.getId()).getState() == GameState.STARTED && games.get(game.getId()).getMutexAtIndex(playerIndex) && game.getCurrentPlayer() != null) {
                             virtualView = new VirtualView(games.get(game.getId()), game.getCurrentPlayer().getNickname());
-                            result.add(virtualView.updateBoard());
-                            result.add(virtualView.updateGameTokens());
-                            result.add(virtualView.updateResult());
-                            outputStream.reset();
-                            outputStream.writeObject(result);
-                            game.setMutexFalseAtIndex(playerIndex);
-                            games.put(game.getId(), game);
-                            updateSend = true;
-                        }else if (games.get(game.getId()).getState() == GameState.ENDED){
-                            virtualView = new VirtualView(games.get(game.getId()), null);
                             result.add(virtualView.updateBoard());
                             result.add(virtualView.updateGameTokens());
                             result.add(virtualView.updateResult());
@@ -714,6 +704,17 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             updateSend = true;
                         }
                     } else {
+                        ArrayList<NetworkMessage> result = new ArrayList<>();
+                        if (games.get(game.getId()).getState() == GameState.ENDED) {
+                            virtualView = new VirtualView(games.get(game.getId()), null);
+                            result.add(virtualView.updateBoard());
+                            result.add(virtualView.updateGameTokens());
+                            result.add(virtualView.updateResult());
+                            outputStream.reset();
+                            outputStream.writeObject(result);
+                            game.setMutexFalseAtIndex(playerIndex);
+                            games.put(game.getId(), game);
+                        }
                         NetworkMessage endMessage = new NetworkMessage();
                         if(games.get(game.getId()).getCurrentPlayer() != null){
                             endMessage.setRequestId("ER");
