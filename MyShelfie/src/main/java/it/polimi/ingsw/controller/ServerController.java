@@ -235,7 +235,7 @@ public class ServerController {
     public NetworkMessage updateResult(){
         NetworkMessage networkMessage = new NetworkMessage();
         networkMessage.addContent(gameController.getCurrentPlayer());
-        networkMessage.addContent(gameController.getPlayerShelf());
+        networkMessage.addContent(gameController.getPlayersShelves());
         if(!gameController.getCurrentPlayer().equals("Game ended")) {
             networkMessage.setRequestId("UR");
             networkMessage.setTextMessage(gameController.getCurrentPlayer() + " is your turn!");

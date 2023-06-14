@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils;
 
-import it.polimi.ingsw.model.MyShelfieClient;
+import it.polimi.ingsw.MyShelfieClient;
 import it.polimi.ingsw.view.GUI.SceneController;
 import javafx.event.Event;
 import javafx.scene.control.Button;

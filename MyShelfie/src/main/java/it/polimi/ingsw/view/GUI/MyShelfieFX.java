@@ -9,7 +9,7 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 /**
- * This method is the runnable application
+ * This class is the runnable application of the GUI
  */
 public class MyShelfieFX extends Application {
 
@@ -17,6 +17,11 @@ public class MyShelfieFX extends Application {
         Application.launch(args);
     }
 
+    /**
+     * It starts the application
+     * @param primaryStage is the first stage
+     * @throws IOException when it cannot create the window
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         primaryStage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
@@ -27,6 +32,9 @@ public class MyShelfieFX extends Application {
         SceneController.changeScene("LoadingScreen.fxml");
     }
 
+    /**
+     * It stops the application
+     */
     @Override
     public void stop() {
         Platform.exit();

@@ -81,7 +81,7 @@ public class ThreeMap implements Serializable {
     }
 
     /**
-     * checks if the player already has a token for a specific Common Goal
+     * It checks if the player already has a token for a specific Common Goal
      *
      * @param commonGoalKey is the Common Goal Card
      * @param player        is the player
@@ -102,7 +102,7 @@ public class ThreeMap implements Serializable {
     }
 
     /**
-     * This method returns the CommonGoals stored in the structure
+     * It returns the CommonGoals stored in the structure
      *
      * @return the ArrayList of the CommonGoals
      */
@@ -120,7 +120,7 @@ public class ThreeMap implements Serializable {
 
 
     /**
-     * Getter method
+     * Getter method, returns all the tokens list in the game
      * @param commonGoals is a list of the two CommonGoals
      * @param numOfPlayers is the number of the player in the Game
      * @return a sorted list with inside the remaining Game Tokens
@@ -143,7 +143,7 @@ public class ThreeMap implements Serializable {
 
 
     /**
-     * Private getter method
+     * Private getter method, returns the remaining tokens associated with that common goal
      * @param commonGoal is the specific CommonGoal
      * @param numOfPlayers is the number of the player in the Game
      * @return a list with the remaining game Token for a specific CommonGoal

@@ -237,17 +237,13 @@ public class CLIView implements Observer {
         return this.playersNickname;
     }
 
-    public boolean getOccurredAnError () {
-        return this.isOccurredAnError;
-    }
-
     /**
      * This method allows to move the Tiles from the CLI
      * @param positions
      * @param column
      */
     public void moveTiles(ArrayList<String> positions, int column){
-        clientController.moveTiles(positions, column, this.board, this.shelf);
+        clientController.moveTiles(positions, column);
     }
 
     /**
@@ -288,10 +284,16 @@ public class CLIView implements Observer {
      */
     public ClientChat getGlobalChat () { return globalChat; }
 
+    /**
+     * It adds a message in the gloabal chat
+     * @param text is text of the message
+     * @param sender is the sender nickname
+     * @param receivers is the nickname list of receivers
+     * @param timestamp is timestamp of the message
+     */
     public void addMessageInGlobalChat(String text, String sender, ArrayList<String> receivers, Timestamp timestamp){
         globalChat.addMessage(text, sender, receivers, timestamp);
     }
-
 
     /**
      * Getter method

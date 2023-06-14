@@ -21,10 +21,19 @@ public abstract class CommonGoal implements Serializable {
         this.id = cardId;
         this.description = cardDescription;
     }
+
+    /**
+     * It returns the common goal id
+     * @return an int, that is the id
+     */
     public int getId(){
         return this.id;
     }
 
+    /**
+     * It returns the common goal description
+     * @return a String, that is the description
+     */
     public String getDescription(){
         return this.description;
     }

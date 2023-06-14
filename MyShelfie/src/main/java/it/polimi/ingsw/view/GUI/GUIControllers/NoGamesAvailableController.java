@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.GUI.GUIControllers;
 
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.MyShelfieClient;
+import it.polimi.ingsw.MyShelfieClient;
 import it.polimi.ingsw.view.GUI.GUIView;
 import it.polimi.ingsw.view.GUI.SceneController;
 import javafx.event.Event;

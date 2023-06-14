@@ -222,7 +222,7 @@ public class GUIView  implements Observer {
     }
 
     public void moveTiles(ArrayList<String> positions, int column){
-        clientController.moveTiles(positions, column, this.board, this.shelf);
+        clientController.moveTiles(positions, column);
     }
 
     public Map<String, Shelf> getPlayersShelf() {

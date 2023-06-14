@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.wrapperCustom;
+package it.polimi.ingsw.utils.wrapperCustom;
 
 /**
  * This class represents a Custom Wrapper class for the CommonGoal descriptions. It is necessary for reading correctly from commonGoalDescription.json file.
@@ -35,56 +35,104 @@ public class DescriptionWrapper {
         description11 = null;
     }
 
+    /**
+     * It returns the description of the first common goal
+     * @return a String, that is the description
+     */
     private String getDescription0() {
         return description0;
     }
 
+    /**
+     * It returns the description of the second common goal
+     * @return a String, that is the description
+     */
     private String getDescription1() {
         return description1;
     }
 
+    /**
+     * It returns the description of the third common goal
+     * @return a String, that is the description
+     */
     private String getDescription2() {
         return description2;
     }
 
+    /**
+     * It returns the description of the fourth common goal
+     * @return a String, that is the description
+     */
     private String getDescription3() {
         return description3;
     }
 
+    /**
+     * It returns the description of the fifth common goal
+     * @return a String, that is the description
+     */
     private String getDescription4() {
         return description4;
     }
 
+    /**
+     * It returns the description of the sixth common goal
+     * @return a String, that is the description
+     */
     private String getDescription5() {
         return description5;
     }
 
+    /**
+     * It returns the description of the seventh common goal
+     * @return a String, that is the description
+     */
     private String getDescription6() {
         return description6;
     }
 
+    /**
+     * It returns the description of the eighth common goal
+     * @return a String, that is the description
+     */
     private String getDescription7() {
         return description7;
     }
 
+    /**
+     * It returns the description of the ninth common goal
+     * @return a String, that is the description
+     */
     private String getDescription8() {
         return description8;
     }
 
+    /**
+     * It returns the description of the tenth common goal
+     * @return a String, that is the description
+     */
     private String getDescription9() {
         return description9;
     }
 
+    /**
+     * It returns the description of the eleventh common goal
+     * @return a String, that is the description
+     */
     private String getDescription10() {
         return description10;
     }
 
+    /**
+     * It returns the description of the twelfth common goal
+     * @return a String, that is the description
+     */
     private String getDescription11() {
         return description11;
     }
 
     /**
-     * It's the only important method of the class, it's important to get the correct description associated to the CommonGoal id.
+     * It gets the correct description associated to the CommonGoal id as a String.
      * @param id is the CommonGoal id
      * @return a String, that is a description of the card read from the json file
      * @throws IllegalStateException if the id is not in the correct range

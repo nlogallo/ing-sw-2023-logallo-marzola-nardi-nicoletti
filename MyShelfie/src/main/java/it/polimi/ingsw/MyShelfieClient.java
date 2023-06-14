@@ -1,6 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw;
 
 import it.polimi.ingsw.controller.ClientController;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.utils.NetworkMessage;
 import it.polimi.ingsw.view.CLI.CLIView;
 import it.polimi.ingsw.view.ClientViewObservable;

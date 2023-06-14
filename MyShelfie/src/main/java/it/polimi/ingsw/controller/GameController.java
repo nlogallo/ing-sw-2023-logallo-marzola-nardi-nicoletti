@@ -51,7 +51,7 @@ public class GameController {
         ArrayList<Tile> tiles;
         try{
             tiles = game.requestForTiles(positions);
-        }catch (IllegalArgumentException ex){
+        }catch (IllegalArgumentException | NullPointerException ex){
             return "Tiles cannot be pulled";
         }
         player.makeMove(column, tiles);
@@ -75,10 +75,10 @@ public class GameController {
         try {
             token = game.updateCommonGoal(commonGoal, playerShelf, player);
         } catch (Exception ex){
-            return "";
+            return "An error has occurred";
         }
         player.giveToken(token);
-        return "Congratulations, you've have earned a new Token: " + commonGoal.getId();
+        return "Congratulations, you've have earned a new Token: " + token.getId();
     }
 
 
@@ -165,7 +165,7 @@ public class GameController {
      * This method returns the shelves of the players, apart from who is playing
      * @return the ArrayList of shelves
      */
-    public Map<String, Shelf> getPlayerShelf(){
+    public Map<String, Shelf> getPlayersShelves(){
         Map<String, Shelf> shelvesMap = new HashMap<>();
         for(Player p : game.getPlayers())
             shelvesMap.put(p.getNickname(), p.getShelf());

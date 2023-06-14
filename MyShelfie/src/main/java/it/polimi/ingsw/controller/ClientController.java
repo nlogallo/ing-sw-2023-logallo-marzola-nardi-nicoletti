@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.MyShelfieClient;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.utils.NetworkMessage;
@@ -33,78 +34,8 @@ public class ClientController {
      * This method allows the user to move the tiles from the board to the shelf. It creates a request to send at the sever for the approval.
      * @param positions is the list of position of the tiles (taken as a string)
      * @param column is the column w
-     * @param board is the current board. It is necessary to check if this movement is possible
-     * @param shelf is the current shelf of the user. It is necessary to check if the movement is possible
      */
-    public void moveTiles(ArrayList<String> positions, int column, Board board, Shelf shelf){
-
-        /* ArrayList<Position> listPosition = new ArrayList<Position>();
-        Tile[][] tilesTable = board.getTilesTable();
-
-        for(int i = 0; i < position.size(); i++){
-            int x = position.get(i).charAt(0) - 49;
-            int y = position.get(i).charAt(1) - 49;
-
-            if (x < 0 || x > 8) {
-                clientViewObservable.setScreenMessage("Tile position out of board bounds.");
-                clientViewObservable.setIsOccurredAnError(true);
-                clientViewObservable.refreshCLI();
-                return;
-            }
-            if (y < 0 || y > 8) {
-                clientViewObservable.setScreenMessage("Tile position out of board bounds.");
-                clientViewObservable.setIsOccurredAnError(true);
-                clientViewObservable.refreshCLI();
-                return;
-            }
-
-            if (tilesTable[x][y] == null) {
-                clientViewObservable.setScreenMessage("You can't select a spot that doesn't contain a tile.");
-                clientViewObservable.setIsOccurredAnError(true);
-                clientViewObservable.refreshCLI();
-                return;
-            }
-
-            if (!board.canPull(x, y)) {
-                clientViewObservable.setScreenMessage("You can't pick tiles that don't have at least one free edge.");
-                clientViewObservable.setIsOccurredAnError(true);
-                clientViewObservable.refreshCLI();
-                return;
-            }
-
-            Position position1 = new Position(x, y);
-            listPosition.add(position1);
-        }
-
-        if (listPosition.size() < 1 || listPosition.size() > 3) {
-            clientViewObservable.setScreenMessage("You have to pick between 1 and 3 tiles");
-            clientViewObservable.setIsOccurredAnError(true);
-            clientViewObservable.refreshCLI();
-            return;
-        }
-
-        if (!board.areAligned(listPosition)) {
-            clientViewObservable.setScreenMessage("You have to pick aligned tiles");
-            clientViewObservable.setIsOccurredAnError(true);
-            clientViewObservable.refreshCLI();
-            return;
-        }
-
-        //check for column
-        if (column  - 1 < 0 || column - 1 > 4) {
-            clientViewObservable.setScreenMessage("You have to pick a column number between 1 and 5.");
-            clientViewObservable.setIsOccurredAnError(true);
-            clientViewObservable.refreshCLI();
-            return;
-        }
-
-        if (shelf.freeRows(column - 1) < listPosition.size()) {
-            clientViewObservable.setScreenMessage("You don't have enough free spots in this column.");
-            clientViewObservable.setIsOccurredAnError(true);
-            clientViewObservable.refreshCLI();
-            return;
-        } */
-
+    public void moveTiles(ArrayList<String> positions, int column){
         ArrayList<Position> listPosition = convertStringListToPositionList(positions);
         NetworkMessage networkMessage = new NetworkMessage();
         networkMessage.addContent(listPosition);
@@ -239,19 +170,6 @@ public class ClientController {
     }
 
     /**
-     * This method allows to update the interface while the player is playing
-     * @param networkMessage is the NetworkMessage received from the Server
-     */
-    public void updatePersonalSetup(NetworkMessage networkMessage){
-        clientViewObservable.setScreenMessage(networkMessage.getTextMessage());
-        clientViewObservable.setBoard((Board) networkMessage.getContent().get(0));
-        clientViewObservable.setShelf((Shelf) networkMessage.getContent().get(1));
-        Integer numberOfPersonalTokens = (Integer) networkMessage.getContent().get(2);
-        for(int i = 0; i < numberOfPersonalTokens; i++)
-            clientViewObservable.setPersonalTokens((Token) networkMessage.getContent().get(3 + i));
-    }
-
-    /**
      * This method allows to update the available game tokens
      * @param networkMessage is the NetworkMessage received from the Server
      */
@@ -283,11 +201,6 @@ public class ClientController {
                 //SceneController.changeScene(MyShelfieClient.getGuiView(), "", //here the parameters);
             }
         }
-
-    }
-
-    public void updatePlayersShelf(NetworkMessage networkMessage){
-
     }
 
     public void enableInput() {

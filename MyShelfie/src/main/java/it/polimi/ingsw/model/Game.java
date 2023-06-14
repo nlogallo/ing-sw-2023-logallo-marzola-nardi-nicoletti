@@ -2,8 +2,8 @@ package it.polimi.ingsw.model;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.model.commonGoal.*;
-import it.polimi.ingsw.model.wrapperCustom.DescriptionWrapper;
-import it.polimi.ingsw.model.wrapperCustom.PersonalGoalWrapper;
+import it.polimi.ingsw.utils.wrapperCustom.DescriptionWrapper;
+import it.polimi.ingsw.utils.wrapperCustom.PersonalGoalWrapper;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -236,7 +236,7 @@ public class Game implements Serializable {
         Gson gson = new Gson();
         PersonalGoalWrapper wrapper;
         try {
-            FileReader reader = new FileReader("data/personalGoals.json");
+            FileReader reader = new FileReader("src/main/java/it/polimi/ingsw/utils/configFiles/personalGoals.json");
             wrapper = gson.fromJson(reader, PersonalGoalWrapper.class);
             reader.close();
         } catch (IOException e) {
@@ -255,7 +255,7 @@ public class Game implements Serializable {
         Gson gson = new Gson();
         DescriptionWrapper wrapper;
         try {
-            FileReader reader = new FileReader("data/commonGoalDescriptions.json");
+            FileReader reader = new FileReader("src/main/java/it/polimi/ingsw/utils/configFiles/commonGoalDescriptions.json");
             wrapper = gson.fromJson(reader, DescriptionWrapper.class);
             reader.close();
         } catch (IOException e) {

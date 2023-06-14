@@ -137,14 +137,6 @@ public class ClientViewObservable {
      */
     public void setClientController(ClientController clientController){view.setClientController(clientController);}
 
-
-    /**
-     * This method sets the boolean parameter that is used to see if any errors have occurred
-     * @param var is the new value of the parameter
-     */
-    public void setIsOccurredAnError (boolean var) {view.setIsOccurredAnError(var); }
-
-
     /**
      * This method enables the user input
      */

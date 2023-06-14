@@ -15,11 +15,20 @@ public class CG_8Tiles extends CommonGoal{
     public CG_8Tiles(int id, String description){
         super(id, description);
     }
+
+    /**
+     * It returns the common goal id
+     * @return an int, that is the id
+     */
     @Override
     public int getId() {
         return super.getId();
     }
 
+    /**
+     * It returns the common goal description
+     * @return a String, that is the description
+     */
     @Override
     public String getDescription() {
         return super.getDescription();

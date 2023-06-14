@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.GUI;
 
-import it.polimi.ingsw.model.MyShelfieClient;
+import it.polimi.ingsw.MyShelfieClient;
 import it.polimi.ingsw.view.GUI.GUIControllers.GenericSceneController;
 import it.polimi.ingsw.view.GUI.GUIControllers.MainSceneController;
 import javafx.application.Platform;
@@ -23,8 +23,8 @@ public class SceneController {
 
     /**
      * This method allows the GUI to change the scene
-     * @param gui
-     * @param fxmlName
+     * @param gui is the view stored in the Client
+     * @param fxmlName is the name of the fxml file to load
      */
     public static void changeScene(GUIView gui, String fxmlName){
         FXMLLoader fmxlLoader = new FXMLLoader(SceneController.class.getResource("/fxmlFiles/" + fxmlName));
@@ -42,6 +42,10 @@ public class SceneController {
         stage.show();
     }
 
+    /**
+     * This method allows the GUI to change the scene
+     * @param fxmlName is the name of the fxml file to load
+     */
     public static void changeScene(String fxmlName){
         FXMLLoader fmxlLoader = new FXMLLoader(SceneController.class.getResource("/fxmlFiles/" + fxmlName));
         Parent root = null;
@@ -58,7 +62,9 @@ public class SceneController {
     }
 
     /**
-     *
+     * This method allows the GUI to change the scene
+     * @param fxmlName is the name of the fxml file to load
+     * @param parameters are a list of parameters to pass from the previous controller to the new one
      */
     public static void changeScene(String fxmlName, ArrayList<Object> parameters) {
         FXMLLoader fmxlLoader = new FXMLLoader(SceneController.class.getResource("/fxmlFiles/" + fxmlName));
@@ -76,6 +82,10 @@ public class SceneController {
         stage.show();
     }
 
+    /**
+     * It creates the first main stage
+     * @param fxmlName is the name of the fxml file to load
+     */
     public static void createMainStage(String fxmlName){
         FXMLLoader fmxlLoader = new FXMLLoader(SceneController.class.getResource("/fxmlFiles/" + fxmlName));
         Parent root = null;

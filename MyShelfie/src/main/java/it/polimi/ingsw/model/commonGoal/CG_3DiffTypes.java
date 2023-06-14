@@ -16,11 +16,20 @@ public class CG_3DiffTypes extends CommonGoal {
     public CG_3DiffTypes(int id, String description){
         super(id, description);
     }
+
+    /**
+     * It returns the common goal id
+     * @return an int, that is the id
+     */
     @Override
     public int getId() {
         return super.getId();
     }
 
+    /**
+     * It returns the common goal description
+     * @return a String, that is the description
+     */
     @Override
     public String getDescription() {
         return super.getDescription();

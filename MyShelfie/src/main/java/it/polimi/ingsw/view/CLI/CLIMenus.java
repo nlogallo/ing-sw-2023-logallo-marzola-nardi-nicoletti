@@ -2,6 +2,9 @@ package it.polimi.ingsw.view.CLI;
 
 import it.polimi.ingsw.model.Shelf;
 
+/**
+ * Static class that allow to show the submenus of the CLI
+ */
 public class CLIMenus {
     public static final String ANSI_RESET = "\u001B[00m";
     public static final String ANSI_WHITE = "\u001B[37m";
@@ -13,6 +16,10 @@ public class CLIMenus {
     public static final String ANSI_BLUE = "\u001B[38;5;33m";
     public static final String ANSI_CREAM = "\u001B[38;5;229m";
 
+    /**
+     * It prints the shelves of other players
+     * @param view is the view stored in the Client
+     */
     public static void shelvesMenu(CLIView view){
         if(view.getPlayersShelf() != null) {
             System.out.println("\n" + "-+-".repeat(59));
@@ -23,11 +30,20 @@ public class CLIMenus {
         }
     }
 
+    /**
+     * It prints the final results of the game
+     * @param results is the String preformatted by the Server
+     */
     public static void endMenu(String results){
         System.out.print("\n" + ANSI_RED + "Game Ended!" + ANSI_RESET);
         System.out.print("\n" + results);
     }
 
+    /**
+     * It prints all the shelves rows by rows
+     * @param row is the number of the row
+     * @param view is the view stored in the Client
+     */
     private static void printShelvesPerRow(int row, CLIView view){
         System.out.print("\n");
         switch (row){
@@ -56,6 +72,13 @@ public class CLIMenus {
 
     }
 
+    /**
+     * It prints the tile in the shelf at (x,y) position
+     * @param shelf is the Shelf where to extract the info
+     * @param x is the row
+     * @param y is the columns
+     * @return an ANSI String
+     */
     private static String getShelfTilesAtPosition(Shelf shelf, int x, int y){
         return switch (shelf.getShelfTypes()[x][y]) {
             case TROPHY ->  ANSI_CYAN + " \u001B[1mT ";
@@ -68,6 +91,12 @@ public class CLIMenus {
         };
     }
 
+    /**
+     * It calculates the number of spacing to insert on the screen to align all the content
+     * @param emptyLength is the number of chars without any string
+     * @param dynamicTextToAdd is the text to add on the screen
+     * @return an int that is the number of blank chars
+     */
     private static int calculateSpacing(int emptyLength, String dynamicTextToAdd){
         return emptyLength - dynamicTextToAdd.length();
     }

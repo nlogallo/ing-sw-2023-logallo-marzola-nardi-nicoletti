@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.GUI.GUIControllers;
 
+import it.polimi.ingsw.MyShelfieClient;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.view.GUI.GUIView;
 import javafx.application.Platform;
@@ -335,7 +336,7 @@ public class MainSceneController implements GenericSceneController, Initializabl
                             String txt2 = valueOf(positionsToOrder.get(i).getColumn() + 1);
                             positions.add(txt1 + txt2);
                         }
-                        gui.getClientController().moveTiles(positions, selectedColumn + 1, gui.getBoard(), gui.getShelf());
+                        gui.getClientController().moveTiles(positions, selectedColumn + 1);
 
                         bottomLabel.setOpacity(0);
                         middleLabel.setOpacity(0);

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.wrapperCustom;
+package it.polimi.ingsw.utils.wrapperCustom;
 
 import it.polimi.ingsw.model.TileType;
 
@@ -37,56 +37,104 @@ public class PersonalGoalWrapper {
         matrix11 = null;
     }
 
+    /**
+     * It returns the matrix of the first personal goal
+     * @return a TileType[][], that is the matrix
+     */
     private TileType[][] getMatrix0() {
         return matrix0;
     }
 
+    /**
+     * It returns the matrix of the second personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix1() {
         return matrix1;
     }
 
+    /**
+     * It returns the matrix of the third personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix2() {
         return matrix2;
     }
 
+    /**
+     * It returns the matrix of the fourth personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix3() {
         return matrix3;
     }
 
+    /**
+     * It returns the matrix of the fifth personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix4() {
         return matrix4;
     }
 
+    /**
+     * It returns the matrix of the sixth personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix5() {
         return matrix5;
     }
 
+    /**
+     * It returns the matrix of the seventh personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix6() {
         return matrix6;
     }
 
+    /**
+     * It returns the matrix of the eighth personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix7() {
         return matrix7;
     }
 
+    /**
+     * It returns the matrix of the ninth personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix8() {
         return matrix8;
     }
 
+    /**
+     * It returns the matrix of the tenth personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix9() {
         return matrix9;
     }
 
+    /**
+     * It returns the matrix of the eleventh personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix10() {
         return matrix10;
     }
 
+    /**
+     * It returns the matrix of the twelfth personal goal
+     * @return a TileType[][] that is the matrix
+     */
     private TileType[][] getMatrix11() {
         return matrix11;
     }
 
     /**
-     * It's the only important method of the class, it's important to get the correct TileType matrix associated with the card.
+     * It gets the correct TileType matrix associated with the card.
      * @param id is the CommonGoal id
      * @return a matrix of TileType
      * @throws IllegalStateException if the id is not in the correct range
