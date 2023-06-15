@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * This interface was created to implement the Observer Pattern. This interface will be used to implement the CLIView and GUIView
+ * This interface was created to implement the Observer Pattern. This interface is used to implement the CLIView and GUIView
  */
 public interface Observer {
     public void updateBoard(Board board);

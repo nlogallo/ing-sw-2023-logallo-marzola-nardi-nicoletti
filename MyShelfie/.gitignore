@@ -10,6 +10,9 @@
 # Ignore game assets
 src/main/resources/assets/*
 
+# Ignore fonts
+src/main/resources/fonts/*
+
 # Ignore game data
 data/savedGames/*
 

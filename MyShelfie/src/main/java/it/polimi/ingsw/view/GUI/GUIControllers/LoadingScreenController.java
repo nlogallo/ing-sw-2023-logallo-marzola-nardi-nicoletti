@@ -15,24 +15,44 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * This class represents the Controller of the LoadingScreen Scene. It is the first scene in the GUI.
+ * LoadingScreen is a static scene, made to start the game.
+ */
 public class LoadingScreenController implements GenericSceneController, Initializable {
     private GUIView gui;
     @FXML
     private Button button;
 
+    /**
+     * Override method of setGui in GenericSceneController
+     *
+     * @param gui is the gui to set
+     */
     @Override
     public void setGui(GUIView gui) {
         this.gui = gui;
     }
 
+    /**
+     * Override method of initialize from Initializable
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
        button.addEventHandler(MouseEvent.MOUSE_RELEASED, this::buttonClick);
     }
 
+    /**
+     * Override method of initData from GenericSceneController
+     * @param parameters is the list of parameters
+     */
     @Override
     public void initData(ArrayList<Object> parameters) {}
 
+    /**
+     * This method allows to load the next scene in the game
+     * @param event is the event triggered by clicking the start button
+     */
     private void buttonClick(Event event) {
         SceneController.getStage().close();
         Stage primaryStage = new Stage();

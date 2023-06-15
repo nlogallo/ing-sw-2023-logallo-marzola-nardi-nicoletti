@@ -21,6 +21,10 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * This class represents the Controller of the NoGamesAvailable Scene
+ * NoGamesAvailable allows the user to create a new game. The user must select the number of players to play with. It is loaded only if there weren't available games to join.
+ */
 public class NoGamesAvailableController implements GenericSceneController, Initializable {
 
     private GUIView gui;
@@ -35,11 +39,18 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
     @FXML
     private Text nickname;
 
+    /**
+     * Override method of setGui in GenericSceneController
+     * @param gui is the gui to set
+     */
     @Override
     public void setGui(GUIView gui) {
         this.gui = gui;
     }
 
+    /**
+     * Override method of initialize from Initializable
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 4));
@@ -47,6 +58,10 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
         createGame.addEventHandler(MouseEvent.MOUSE_RELEASED, this::createGame);
     }
 
+    /**
+     * Override method of initData from GenericSceneController
+     * @param parameters is the list of parameters
+     */
     @Override
     public void initData(ArrayList<Object> parameters) {
         serverSocket.setText((String) parameters.get(0));
@@ -58,6 +73,10 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
         nickname.setText((String) parameters.get(2));
     }
 
+    /**
+     * This method creates makes a call to the Server (via RMI or Socket) to create a new Game. This controller is called only if there aren't games not fulfilled in the Server
+     * @param event is the event triggered by clicking the Create Button
+     */
     private void createGame(Event event){
         ArrayList<Object> parameters = new ArrayList<>();
         if(protocol.getText().equals("TCP Socket")){

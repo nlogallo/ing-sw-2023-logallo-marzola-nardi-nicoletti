@@ -16,6 +16,10 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * This class represents the Controller of the Lobby Scene
+ * LobbyScene is "the waiting room" scene of the GUI. The user needs to wait there until the game starts.
+ */
 public class LobbyController implements GenericSceneController, Initializable {
 
     private GUIView gui;
@@ -28,17 +32,27 @@ public class LobbyController implements GenericSceneController, Initializable {
     @FXML
     private Text text;
 
+    /**
+     * Override method of setGui in GenericSceneController
+     * @param gui is the gui to set
+     */
     @Override
     public void setGui(GUIView gui) {
         this.gui = gui;
     }
 
+    /**
+     * Override method of initialize from Initializable
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-        //new Thread(this::gameStarting).start();
     }
 
+    /**
+     * Override method of initData from GenericSceneController
+     * @param parameters is the list of parameters
+     */
     @Override
     public void initData(ArrayList<Object> parameters) {
         protocol = (int) parameters.get(0);
@@ -49,8 +63,10 @@ public class LobbyController implements GenericSceneController, Initializable {
         new Thread(this::gameStarting).start();
     }
 
+    /**
+     * This method waits a message from the Server to start the game (if everything is ok) or to show an error. When it receives it load the main scene of the game.
+     */
     private void gameStarting(){
-        //while(!mutex){}
         if(protocol == 1){
             String command = "";
             try {

@@ -1,20 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap');
+@font-face {
+    font-family: 'ZCOOL XiaoWei', sans-serif;
+    src: url('fonts/ZCOOLXiaoWei-Regular.ttf');
+}
 
-Text{
+Text {
     -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
     -fx-font-weight: bold;
-    -fx-alignment:center;
+    -fx-alignment: center;
     -fx-font-size: 22;
 }
 
-.label{
+.label {
     -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
     -fx-font-weight: bold;
-    -fx-alignment:center;
+    -fx-alignment: center;
     -fx-font-size: 22;
 }
 
-.button{
+.button {
     -fx-pref-height: 40px;
     -fx-pref-width: 120px;
     -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
@@ -28,11 +31,11 @@ Text{
     -fx-padding: 0;
 }
 
-.button:hover{
+.button:hover {
     -fx-background-color: linear-gradient(to left top, #a83c16, #d65715);
 }
 
-TextField{
+TextField {
     -fx-pref-height: 40px;
     -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
     -fx-font-weight: bold;
@@ -45,11 +48,11 @@ TextField{
     -fx-padding: 0 10 0 10;
 }
 
-#infoMessage{
+#infoMessage {
     -fx-font-size: 18;
 }
 
-.spinner{
+.spinner {
     -fx-body-color: linear-gradient(to left top, #8f4614, #372112);
     -fx-background-color: linear-gradient(to left top, #8f4614, #372112);
     -fx-pref-height: 40px;
@@ -72,7 +75,7 @@ TextField{
     -fx-background-color: #ffffff;
 }
 
-.toggle-button{
+.toggle-button {
     -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
     -fx-font-weight: bold;
     -fx-text-fill: rgba(255, 255, 255, 0.68);
@@ -84,18 +87,18 @@ TextField{
     -fx-border-color: #383434;
 }
 
-.toggle-button:selected{
+.toggle-button:selected {
     -fx-background-color: linear-gradient(to left top, #8f4614, #372112);
     -fx-text-fill: #ffffff;
     -fx-border-color: #7f3e12;
 }
 
-.progress-indicator{
+.progress-indicator {
     -fx-accent: orange;
     -fx-pref-height: 100px;
 }
 
-.table-view{
+.table-view {
     -fx-background-color: linear-gradient(to left top, #8f4614, #372112);
     -fx-alignment: center;
     -fx-border-color: #7f3e12;

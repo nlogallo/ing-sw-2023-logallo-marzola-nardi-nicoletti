@@ -20,6 +20,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * This class represents the Controller of the EnterNickname Scene
+ * EnterNickname allows the user to choose its nickname and discover if it is already in use or not.
+ */
 public class EnterNicknameController implements GenericSceneController, Initializable {
     @FXML
     private Button sendNickname;
@@ -34,42 +38,57 @@ public class EnterNicknameController implements GenericSceneController, Initiali
 
     int protocolValue;
 
+    /**
+     * Override method of setGui in GenericSceneController
+     *
+     * @param gui is the gui to set, in this scene we don't have it
+     */
     @Override
     public void setGui(GUIView gui) {
-
     }
 
+    /**
+     * Override method of initData from GenericSceneController
+     * @param parameters is the list of parameters
+     */
     @Override
     public void initData(ArrayList<Object> parameters) {
-        serverSocket.setText((String)parameters.get(0) + " : " + (String) parameters.get(1));
+        serverSocket.setText((String) parameters.get(0) + " : " + (String) parameters.get(1));
         protocolValue = (int) parameters.get(2);
-        if((int) parameters.get(2) == 1)
+        if ((int) parameters.get(2) == 1)
             protocol.setText("TCP Socket");
         else
             protocol.setText("RMI");
     }
 
+    /**
+     * Override method of initialize from Initializable
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sendNickname.addEventHandler(MouseEvent.MOUSE_RELEASED, this::nicknameEntered);
-        nicknameText.addEventHandler(MouseEvent.MOUSE_CLICKED, (event)->{
+        nicknameText.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
             nicknameText.setStyle(null);
             infoMessage.setText("Valid length between 3-15 characters");
         });
     }
 
-    private void nicknameEntered(Event event){
-        if(nicknameText.getText().length() < 3 || nicknameText.getText().length() > 14) {
+    /**
+     * This method makes a call to the Server (via Socket or RMI) to send the nickname chosen by the user. It manages also the answer by the server.
+     * @param event is the event triggered by clicking to send button
+     */
+    private void nicknameEntered(Event event) {
+        if (nicknameText.getText().length() < 3 || nicknameText.getText().length() > 14) {
             infoMessage.setText("Valid length between 3-15 characters");
             nicknameText.setStyle("-fx-text-fill: #ff3131; -fx-border-color: #ff3131;");
         }
         try {
             String response = MyShelfieClient.checkNickname(nicknameText.getText(), protocolValue);
-            switch (response){
+            switch (response) {
                 case "nicknameOk":
                     ArrayList<Object> parameters = new ArrayList<>();
                     MyShelfieClient.setRemoteNickname(nicknameText.getText());
-                    if(protocolValue == 1) {
+                    if (protocolValue == 1) {
                         ArrayList<Object> recoverableGames = MyShelfieClient.TCPCheckForRecoverableGames();
                         if (!recoverableGames.isEmpty()) {
                             parameters.add(nicknameText.getText());
@@ -90,28 +109,25 @@ public class EnterNicknameController implements GenericSceneController, Initiali
                                 SceneController.changeScene("LobbyStage.fxml", parameters);
                             }
                         }
-                    }
-                    else{
+                    } else {
                         ArrayList<Object> recoverableGames = MyShelfieClient.RMICheckForAvailableGame();
                         Game game = null;
-                        if(!recoverableGames.isEmpty())
+                        if (!recoverableGames.isEmpty())
                             game = (Game) recoverableGames.get(0);
-                        if(game == null) {
+                        if (game == null) {
                             parameters.add(serverSocket.getText());
                             parameters.add(protocolValue);
                             parameters.add(nicknameText.getText());
                             MyShelfieClient.RMISetIsRecovered(false);
                             SceneController.changeScene("NoGamesAvailable.fxml", parameters);
-                        }
-                        else if(game.getPlayers().size() == game.getPlayersNumber()){
-                                parameters.add(nicknameText.getText());
-                                parameters.add(recoverableGames);
-                                parameters.add(protocolValue);
-                                parameters.add(serverSocket.getText());
-                                MyShelfieClient.RMISetIsRecovered(true);
-                                SceneController.changeScene("SavingsScene.fxml", parameters);
-                        }
-                        else {
+                        } else if (game.getPlayers().size() == game.getPlayersNumber()) {
+                            parameters.add(nicknameText.getText());
+                            parameters.add(recoverableGames);
+                            parameters.add(protocolValue);
+                            parameters.add(serverSocket.getText());
+                            MyShelfieClient.RMISetIsRecovered(true);
+                            SceneController.changeScene("SavingsScene.fxml", parameters);
+                        } else {
                             parameters.add(protocolValue);
                             game = MyShelfieClient.RMISetPlayer(game.getId());
                             parameters.add(game.getId());

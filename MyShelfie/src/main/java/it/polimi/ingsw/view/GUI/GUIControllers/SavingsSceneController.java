@@ -22,6 +22,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * This class represents the Controller of the Savings Scene
+ * SavingScene allows the user to select a recoverable game (recoverable means that is not ended due to Server crashes).The user can choose to join it or if it was the creator to delete it.
+ * If it doesn't want to join a recoverable game, it can select to join a new game according to the specifics.
+ */
 public class SavingsSceneController implements GenericSceneController, Initializable {
 
     @FXML
@@ -34,10 +39,19 @@ public class SavingsSceneController implements GenericSceneController, Initializ
     private String serverSocket;
     private GUIView gui;
 
+    /**
+     * Override method of setGui in GenericSceneController
+     * @param gui is the gui to set
+     */
     @Override
     public void setGui(GUIView gui) {
         this.gui = gui;
     }
+
+    /**
+     * Override method of initData from GenericSceneController
+     * @param parameters is the list of parameters
+     */
     @Override
     public void initData(ArrayList<Object> parameters) {
         nickname = (String) parameters.get(0);
@@ -78,11 +92,18 @@ public class SavingsSceneController implements GenericSceneController, Initializ
         }
     }
 
+    /**
+     * Override method of initialize from Initializable
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         newGame.addEventHandler(MouseEvent.MOUSE_CLICKED, this::joinGame);
     }
 
+    /**
+     * This method allows the user to join a new game even if there are recoverable games. It makes a call to the Server (via Socket or RMI) asking to join a new game.
+     * @param event is the event triggered by clicking the Join a new Game button
+     */
     private void joinGame(Event event){
         ArrayList<Object> parameters = new ArrayList<>();
         try {
