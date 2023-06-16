@@ -112,7 +112,7 @@ class ShelfTest {
     }
 
     @Test
-    void getShelfTTypes_FilledShelf_CorrectBehavior() {
+    void getShelfTypes_FilledShelf_CorrectBehavior() {
         TileType[][] matrixTypes;
         ArrayList<Tile> tilesOne = new ArrayList<>();
         ArrayList<Tile> tilesTwo = new ArrayList<>();
@@ -136,5 +136,10 @@ class ShelfTest {
         for (int i = 0; i < 5; i++) {
             assertSame(TileType.EMPTY, matrixTypes[0][i]);
         }
+    }
+
+    @Test
+    void getShelf_CorrectBehavior () {
+        assertSame(shelf, shelf.getShelf());
     }
 }

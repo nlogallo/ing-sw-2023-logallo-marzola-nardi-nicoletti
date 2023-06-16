@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.model.Board;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.Tile;
+import it.polimi.ingsw.model.TileType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -240,48 +241,99 @@ class BoardTest {
 
     @Test
     void areAligned_ThreeTilesCheck() {
-        ArrayList<Position> positions1 = new ArrayList<>();
+        ArrayList<Position> positions = new ArrayList<>();
 
         Position p1 = new Position(1,3);
-        positions1.add(p1);
+        positions.add(p1);
         Position p2 = new Position(1,2);
-        positions1.add(p2);
+        positions.add(p2);
         Position p3 = new Position(1,1);
-        positions1.add(p3);
-        assertSame(true, boardTwo.areAligned(positions1));
+        positions.add(p3);
+        assertSame(true, boardTwo.areAligned(positions));
 
         //---------------------------------------------------------
 
-        ArrayList<Position> positions2 = new ArrayList<>();
+        positions = new ArrayList<>();
 
-        Position p11 = new Position(1,3);
-        positions2.add(p11);
-        Position p12 = new Position(1,0);
-        positions2.add(p12);
-        Position p13 = new Position(1,1);
-        positions2.add(p13);
-        assertSame(false, boardTwo.areAligned(positions2));
+        p1 = new Position(1,3);
+        positions.add(p1);
+        p2 = new Position(1,0);
+        positions.add(p2);
+        p3 = new Position(1,1);
+        positions.add(p3);
+        assertSame(false, boardTwo.areAligned(positions));
+
+        //---------------------------------------------------------
+
+        positions = new ArrayList<>();
+
+        p1 = new Position(1,1);
+        positions.add(p1);
+        p2 = new Position(2,1);
+        positions.add(p2);
+        p3 = new Position(3,1);
+        positions.add(p3);
+        assertSame(true, boardTwo.areAligned(positions));
+
+        //---------------------------------------------------------
+
+        positions = new ArrayList<>();
+
+        p1 = new Position(2,1);
+        positions.add(p1);
+        p2 = new Position(5,1);
+        positions.add(p2);
+        p3 = new Position(3,1);
+        positions.add(p3);
+        assertSame(false, boardTwo.areAligned(positions));
     }
 
     @Test
     void areAligned_TwoTilesCheck() {
-        ArrayList<Position> positions1 = new ArrayList<>();
+        ArrayList<Position> positions = new ArrayList<>();
 
         Position p1 = new Position(1,3);
-        positions1.add(p1);
+        positions.add(p1);
         Position p2 = new Position(1,2);
-        positions1.add(p2);
-        assertSame(true, boardTwo.areAligned(positions1));
+        positions.add(p2);
+        assertSame(true, boardTwo.areAligned(positions));
 
         //---------------------------------------------------------
 
-        ArrayList<Position> positions2 = new ArrayList<>();
+        positions = new ArrayList<>();
 
-        Position p11 = new Position(1,3);
-        positions2.add(p11);
-        Position p13 = new Position(1,1);
-        positions2.add(p13);
-        assertSame(false, boardTwo.areAligned(positions2));
+        p1 = new Position(1,3);
+        positions.add(p1);
+        p2 = new Position(1,1);
+        positions.add(p2);
+        assertSame(false, boardTwo.areAligned(positions));
+
+        //---------------------------------------------------------
+
+        positions = new ArrayList<>();
+        p1 = new Position(2,3);
+        positions.add(p1);
+        p2 = new Position(1,3);
+        positions.add(p2);
+        assertSame(true, boardTwo.areAligned(positions));
+
+        //---------------------------------------------------------
+
+        positions = new ArrayList<>();
+        p1 = new Position(3,3);
+        positions.add(p1);
+        p2 = new Position(1,3);
+        positions.add(p2);
+        assertSame(false, boardTwo.areAligned(positions));
+
+        //---------------------------------------------------------
+
+        positions = new ArrayList<>();
+        p1 = new Position(3,3);
+        positions.add(p1);
+        p2 = new Position(1,5);
+        positions.add(p2);
+        assertSame(false, boardTwo.areAligned(positions));
     }
 
     @Test
@@ -300,4 +352,28 @@ class BoardTest {
         positions2.add(p13);
         assertSame(true, boardTwo.areAligned(positions2));
     }
+
+    @Test
+    void canPull_ExpectedTrue() {
+        assertSame(true, boardFour.canPull(0, 3));
+        assertSame(true, boardThree.canPull(0, 3));
+    }
+
+    @Test
+    void getTilesType_FourBoardPlayer_CorrectBehavior() {
+        for (int i = 0; i < 9 ; i++) {
+            for (int j = 0; j<9; j++)
+                if (boardFour.getTilesTable()[i][j] != null)
+                    assertSame(boardFour.getTilesTable()[i][j].getType(), boardFour.getTilesType()[i][j]);
+                else {
+                    assertSame(TileType.EMPTY, boardFour.getTilesType()[i][j]);
+                }
+        }
+    }
+
+    @Test
+    void getTilesTable_CorrectBehavior (){
+        assertEquals( boardTwo.getCurrentBoard(), boardTwo.getTilesTable());
+    }
+
 }
