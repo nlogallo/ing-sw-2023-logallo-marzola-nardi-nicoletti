@@ -165,6 +165,10 @@ public class CLIView implements Observer {
         this.playersShelf = new HashMap<String, Shelf>(playersShelf);
     }
 
+    /**
+     * This method sets the client controller
+     * @param clientController is the client controller to set
+     */
     @Override
     public void setClientController(ClientController clientController){
         this.clientController = clientController;
@@ -192,47 +196,90 @@ public class CLIView implements Observer {
      */
     public void addDuoChat (ClientChat duoChat) { this.duoChats.add(duoChat);}
 
-
+    /**
+     * Getter
+     * @return the Board
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     * Getter
+     * @return the Shelf
+     */
     public Shelf getShelf() {
         return shelf;
     }
 
+    /**
+     * Getter
+     * @return the Personal Goal
+     */
     public PersonalGoal getPersonalGoal() {
         return personalGoal;
     }
 
+    /**
+     * Getter
+     * @return the Common Goals
+     */
     public ArrayList<CommonGoal> getCommonGoals() {
         return commonGoals;
     }
 
+    /**
+     * This method check if the seat is present
+     * @return a boolean
+     */
     public boolean isSeat() {
         return seat;
     }
 
+    /**
+     * Getter
+     * @return the personal achieved Tokens
+     */
     public ArrayList<Token> getPersonalTokens() {
         return personalTokens;
     }
 
+    /**
+     * Getter
+     * @return the Tokens still available in the game
+     */
     public ArrayList<Token> getGameTokens() {
         return gameTokens;
     }
 
+    /**
+     * Getter
+     * @return the screen Message
+     */
     public String getScreenMessage() {
         return screenMessage;
     }
 
+    /**
+     * Getter
+     * @return the current Player
+     */
     public String getCurrentPlayer(){
         return this.currentPlayer;
     }
 
+    /**
+     * Getter
+     * @return the Client Nickname
+     */
     public String getClientNickname(){
         return this.clientNickname;
     }
 
+    /**
+     * Getter
+     * @return all players ninkname except for the client nickname
+     */
     public ArrayList<String> getPlayersNickname() {
         return this.playersNickname;
     }
@@ -300,11 +347,8 @@ public class CLIView implements Observer {
      * @return the arrayList of open duo chats
      */
     public ArrayList<ClientChat> getDuoChats () { return this.duoChats; }
-
     public boolean callCheckNullTiles (int row, int column, Board board) { return clientController.checkNullTiles(row, column, board); }
     public boolean callCheckCanPullTile(int row, int column, Board board) { return clientController.checkCanPullTile(row, column, board); }
-
     public boolean callCheckIsAlignedTiles(ArrayList<String> positions, Board board) { return clientController.checkIsAlignedTiles(positions, board); }
-
     public boolean callCheckFreeSpotsInColumnShelf (ArrayList<String> positions, Shelf shelf, int column) { return clientController.checkFreeSpotsInColumnShelf(positions, shelf, column); }
 }

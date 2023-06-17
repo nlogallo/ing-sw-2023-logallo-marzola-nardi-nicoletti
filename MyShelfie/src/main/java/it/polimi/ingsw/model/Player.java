@@ -190,6 +190,8 @@ public class Player implements Serializable {
 
     /**
      * Getter
+     *
+     * @return the player's personal goal
      */
     public PersonalGoal getPersonalGoal(){
         return this.personalGoal;
@@ -197,6 +199,8 @@ public class Player implements Serializable {
 
     /**
      * Getter
+     *
+     * @return the player's points
      */
     public int getPoints() {
         return this.points;
@@ -204,6 +208,8 @@ public class Player implements Serializable {
 
     /**
      * Setter
+     *
+     * @param state represents the player's state
      */
     public void setState (State state)
     {
@@ -216,18 +222,27 @@ public class Player implements Serializable {
 
     /**
      * Getter
+     *
+     * @return the player's state
      */
     public State getState ()
     {
         return this.state;
     }
 
+    /**
+     * Getter
+     *
+     * @return the player's nickname
+     */
     public String getNickname() {
         return nickname;
     }
 
     /**
      * Getter
+     *
+     * @return the player's Shelf
      */
     public Shelf getShelf() {
         return shelf;
@@ -235,6 +250,8 @@ public class Player implements Serializable {
 
     /**
      * Getter
+     *
+     * @return the tokens achieved by the player
      */
     public ArrayList<Token> getTokenCards() {
         return tokenCards;

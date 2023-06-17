@@ -61,6 +61,8 @@ public class PersonalGoal implements Serializable {
 
     /**
      * Getter
+     *
+     * @return the id of the personal goal
      */
     public int getId() {
         return id;
