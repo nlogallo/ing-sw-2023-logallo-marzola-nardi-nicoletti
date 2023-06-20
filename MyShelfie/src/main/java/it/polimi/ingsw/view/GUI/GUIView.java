@@ -39,6 +39,7 @@ public class GUIView  implements Observer {
     private String screenMessage;
     private ClientController clientController;
     private boolean isOccurredAnError = false;
+    private boolean isGameEnded = false;
 
     private MainSceneController stageController;
 
@@ -150,12 +151,24 @@ public class GUIView  implements Observer {
 
     @Override
     public void refreshCLI() {
+
         stageController.setOtherPlayersAssets();
         stageController.setGoalsPicture();
         stageController.setBoardImage();
         stageController.setShelfImage(this.shelf);
         stageController.setTokensPicture();
         stageController.setSeatPicture();
+
+    }
+
+    @Override
+    public void isGameEnded(boolean isGameEnded) {
+        this.isGameEnded = isGameEnded;
+        if (isGameEnded) {
+            ArrayList<Object> parameters = new ArrayList<>();
+            parameters.add(screenMessage);
+            SceneController.changeScene("EndGameScene.fxml", parameters);
+        }
     }
 
     @Override

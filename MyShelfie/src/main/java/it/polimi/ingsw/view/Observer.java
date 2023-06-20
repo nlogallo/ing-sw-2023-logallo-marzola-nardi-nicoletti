@@ -30,4 +30,5 @@ public interface Observer {
     public void setClientController(ClientController clientController);
     public void setIsOccurredAnError(boolean var);
     public void enableInput();
+    public void isGameEnded(boolean isGameEnded);
 }

@@ -6,6 +6,8 @@ import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.utils.NetworkMessage;
 import it.polimi.ingsw.view.CLI.CLIMenus;
 import it.polimi.ingsw.view.ClientViewObservable;
+import it.polimi.ingsw.view.GUI.SceneController;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -50,7 +52,15 @@ public class ClientController {
             clientViewObservable.setPersonalTokens(t);
         clientViewObservable.refreshCLI();
     }
-    
+
+
+    /**
+     * This method checks if the Tile is null or not
+     * @param row is the specific row
+     * @param column is the column
+     * @param board is the Board
+     * @return true if the Tile is not null
+     */
     public boolean checkNullTiles(int row, int column, Board board) {
 
         Tile[][] tilesTable = board.getTilesTable();
@@ -62,6 +72,14 @@ public class ClientController {
         return true;
     }
 
+
+    /**
+     * This method checks if the tile can be pulled or not
+     * @param row is the row of the Tile
+     * @param column is the column of the Tile
+     * @param board is the Board
+     * @return true if the Tile can be pulled, otherwise false
+     */
     public boolean checkCanPullTile(int row, int column, Board board) {
 
         if (!board.canPull(row - 1, column - 1)) {
@@ -72,6 +90,13 @@ public class ClientController {
         return true;
     }
 
+
+    /**
+     * This method checks whether the chosen tiles are aligned or not
+     * @param positions is the ArrayList of the Positions
+     * @param board is the Board
+     * @return true if the chosen tiles are aligned, otherwise false
+     */
     public boolean checkIsAlignedTiles(ArrayList<String> positions, Board board) {
 
         ArrayList<Position> listPosition = convertStringListToPositionList(positions);
@@ -83,6 +108,14 @@ public class ClientController {
         return true;
     }
 
+
+    /**
+     * This method is used to check that there are some free spots in a specific column
+     * @param positions is the ArrayList of Positions
+     * @param shelf is the Shelf
+     * @param column is the specific column
+     * @return true if there are some free spots in the specific column
+     */
     public boolean checkFreeSpotsInColumnShelf (ArrayList<String> positions, Shelf shelf, int column) {
 
         ArrayList<Position> listPosition = convertStringListToPositionList(positions);
@@ -94,6 +127,12 @@ public class ClientController {
         return true;
     }
 
+
+    /**
+     * This method convert an ArrayList of String in a ArrayList of positions
+     * @param positions is the ArrayList of String
+     * @return an ArrayList of Position
+     */
     private ArrayList<Position> convertStringListToPositionList(ArrayList<String> positions) {
 
         ArrayList<Position> listPosition = new ArrayList<>();
@@ -198,7 +237,8 @@ public class ClientController {
             if(MyShelfieClient.getInterfaceChosen() == 1)
                 CLIMenus.endMenu(networkMessage.getTextMessage());
             else{
-                //SceneController.changeScene(MyShelfieClient.getGuiView(), "", //here the parameters);
+                clientViewObservable.setScreenMessage(networkMessage.getTextMessage());
+                clientViewObservable.isGameEnded(true);
             }
         }
     }
@@ -206,5 +246,4 @@ public class ClientController {
     public void enableInput() {
         clientViewObservable.enableInput();
     }
-
 }

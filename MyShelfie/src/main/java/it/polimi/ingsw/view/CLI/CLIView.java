@@ -351,4 +351,9 @@ public class CLIView implements Observer {
     public boolean callCheckCanPullTile(int row, int column, Board board) { return clientController.checkCanPullTile(row, column, board); }
     public boolean callCheckIsAlignedTiles(ArrayList<String> positions, Board board) { return clientController.checkIsAlignedTiles(positions, board); }
     public boolean callCheckFreeSpotsInColumnShelf (ArrayList<String> positions, Shelf shelf, int column) { return clientController.checkFreeSpotsInColumnShelf(positions, shelf, column); }
+
+    @Override
+    public void isGameEnded(boolean isGameEnded) {
+
+    }
 }
