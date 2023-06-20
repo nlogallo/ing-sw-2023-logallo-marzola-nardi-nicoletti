@@ -392,28 +392,34 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      */
     public synchronized NetworkMessage RMICheckForChatUpdates(String nickname, int gameId, HashMap<Integer, Integer> numberMessages) throws RemoteException{
         Game game = games.get(gameId);
-        ArrayList<Chat> chats = game.getChats();
-        for(int i = 0; i < chats.size(); i++) {
-            Chat chat = chats.get(i);
-            if (!numberMessages.containsKey(chat.getId())) {
-                numberMessages.put(chat.getId(), 0);
-            }
-            if(chat.getNameChatMembers().contains(nickname) && chat.getMessages().size() > numberMessages.get(chat.getId())){
-                numberMessages.put(chat.getId(), chat.getMessages().size());
-                Message m = chat.getLastMessage();
-                NetworkMessage nm = new NetworkMessage();
-                nm.setRequestId("UC");
-                nm.addContent(m.getSender().getNickname());
-                ArrayList<String> receivers = new ArrayList<>();
-                for(String nick : chat.getNameChatMembers()){
-                    if(!nick.equals(m.getSender().getNickname()))
-                        receivers.add(nick);
+        if(game != null) {
+            ArrayList<Chat> chats = game.getChats();
+            for (int i = 0; i < chats.size(); i++) {
+                Chat chat = chats.get(i);
+                if (!numberMessages.containsKey(chat.getId())) {
+                    numberMessages.put(chat.getId(), 0);
                 }
-                nm.addContent(receivers);
-                nm.addContent(m.getMessage());
-                nm.addContent(numberMessages);
-                return nm;
+                if (chat.getNameChatMembers().contains(nickname) && chat.getMessages().size() > numberMessages.get(chat.getId())) {
+                    numberMessages.put(chat.getId(), chat.getMessages().size());
+                    Message m = chat.getLastMessage();
+                    NetworkMessage nm = new NetworkMessage();
+                    nm.setRequestId("UC");
+                    nm.addContent(m.getSender().getNickname());
+                    ArrayList<String> receivers = new ArrayList<>();
+                    for (String nick : chat.getNameChatMembers()) {
+                        if (!nick.equals(m.getSender().getNickname()))
+                            receivers.add(nick);
+                    }
+                    nm.addContent(receivers);
+                    nm.addContent(m.getMessage());
+                    nm.addContent(numberMessages);
+                    return nm;
+                }
             }
+        } else {
+            NetworkMessage nm = new NetworkMessage();
+            nm.setRequestId("ER");
+            return nm;
         }
         return null;
     }
@@ -428,11 +434,22 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         Game game = games.get(gameId);
         if(game.getState().equals(GameState.ENDED)){
             if(game.getCurrentPlayer() == null){
+                games.remove(gameId);
                 return 1;
             }
+            games.remove(gameId);
             return 2;
         }
         return 0;
+    }
+
+    public synchronized void RMITerminateGame(int gameId, String nickname) throws RemoteException {
+        Game game = games.get(gameId);
+        if (game != null) {
+            System.err.println("Game with id " + game.getId() + " has been terminated.");
+            games.get(game.getId()).setState(GameState.ENDED);
+            deleteGame(game.getId());
+        }
     }
 
     /**
@@ -521,211 +538,222 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 outputStream.writeObject("nicknameOk");
                 outputStream.flush();
                 nicknames.add(nickname);
-                boolean seat = false;
-                ArrayList<Game> gamesResult = findAvailableGame(nickname, false);
-                if(gamesResult.isEmpty())
-                    game = null;
-                else
-                    game = gamesResult.get(0);
-                NetworkMessage syn = new NetworkMessage();
-                syn.setRequestId("SYN");
-                if (!gamesResult.isEmpty()) {
-                    for(Game result : gamesResult){
-                        if(result.getPlayers().size() == result.getPlayersNumber()){
-                            syn.addContent(result);
+                NetworkMessage doWantToPlayAgain;
+                while (true) {
+                    boolean seat = false;
+                    ArrayList<Game> gamesResult = findAvailableGame(nickname, false);
+                    if (gamesResult.isEmpty())
+                        game = null;
+                    else
+                        game = gamesResult.get(0);
+                    NetworkMessage syn = new NetworkMessage();
+                    syn.setRequestId("SYN");
+                    if (!gamesResult.isEmpty()) {
+                        for (Game result : gamesResult) {
+                            if (result.getPlayers().size() == result.getPlayersNumber()) {
+                                syn.addContent(result);
+                            }
                         }
-                    }
-                    if(!syn.getContent().isEmpty()) {
-                        outputStream.writeObject(syn);
-                        outputStream.flush();
-                        NetworkMessage networkMessage;
-                        do {
-                            networkMessage = (NetworkMessage) inputStream.readObject();
-                            int toRecoverGameId = (int) networkMessage.getContent().get(0);
-                            if (networkMessage.getRequestId().equals("NEWGAME")) {
-                                gamesResult = findAvailableGame(nickname, true);
-                                if (gamesResult.isEmpty())
-                                    game = null;
-                                else
-                                    game = gamesResult.get(0);
-                            } else if (networkMessage.getRequestId().equals("DELGAME")) {
-                                deleteGame(toRecoverGameId);
-                                games.remove(toRecoverGameId);
+                        if (!syn.getContent().isEmpty()) {
+                            outputStream.writeObject(syn);
+                            outputStream.flush();
+                            NetworkMessage networkMessage;
+                            do {
+                                networkMessage = (NetworkMessage) inputStream.readObject();
+                                int toRecoverGameId = (int) networkMessage.getContent().get(0);
+                                if (networkMessage.getRequestId().equals("NEWGAME")) {
+                                    gamesResult = findAvailableGame(nickname, true);
+                                    if (gamesResult.isEmpty())
+                                        game = null;
+                                    else
+                                        game = gamesResult.get(0);
+                                } else if (networkMessage.getRequestId().equals("DELGAME")) {
+                                    deleteGame(toRecoverGameId);
+                                    games.remove(toRecoverGameId);
                                 /*gamesResult = findAvailableGame(nickname, true);
                                 if (gamesResult.isEmpty())
                                     game = null;
                                 else
                                     game = gamesResult.get(0);*/
-                            } else {
-                                game = games.get(toRecoverGameId);
-                                game.addRecoveredPlayer(nickname);
-                                games.put(game.getId(), game);
-                            }
-                        } while(networkMessage.getRequestId().equals("DELGAME"));
+                                } else {
+                                    game = games.get(toRecoverGameId);
+                                    game.addRecoveredPlayer(nickname);
+                                    games.put(game.getId(), game);
+                                }
+                            } while (networkMessage.getRequestId().equals("DELGAME"));
+                        } else {
+                            outputStream.writeObject(syn);
+                            outputStream.flush();
+                        }
                     } else {
                         outputStream.writeObject(syn);
                         outputStream.flush();
                     }
-                } else {
-                    outputStream.writeObject(syn);
-                    outputStream.flush();
-                }
 
-                boolean isRecovered;
-                boolean repeat;
+                    boolean isRecovered;
+                    boolean repeat;
 
-                do {
-                    repeat = false;
-                    if (game == null) {
-                        outputStream.writeObject("newGame");
-                        outputStream.flush();
-                        int playersNumber = (Integer) inputStream.readObject();
-                        game = createNewGame(playersNumber);
-                        games.put(game.getId(), game);
-                        System.out.println("New game created with id " + game.getId() + " for " + game.getPlayersNumber() + " players");
-                        seat = true;
-                    } else {
-                        outputStream.writeObject("addedToGame");
-                        outputStream.flush();
-                    }
-                    if (game.getRecoveredPlayers().size() == 0) {
-                        Player player = new Player(seat, new Shelf(), nickname, game);
-                        game.addPlayer(player);
-                        System.out.println("Added " + nickname + " to game with id " + game.getId());
-                    } else {
-                        if (game.getPlayers().get(0).getNickname().equals(nickname)) {
+                    do {
+                        repeat = false;
+                        if (game == null) {
+                            outputStream.writeObject("newGame");
+                            outputStream.flush();
+                            int playersNumber = (Integer) inputStream.readObject();
+                            game = createNewGame(playersNumber);
+                            games.put(game.getId(), game);
+                            System.out.println("New game created with id " + game.getId() + " for " + game.getPlayersNumber() + " players");
                             seat = true;
-                        }
-                        System.out.println("Recovered " + nickname + " to game with id " + game.getId());
-                    }
-                    outputStream.writeObject(game.getId());
-                    outputStream.flush();
-
-                    isRecovered = game.getRecoveredPlayers().size() > 0;
-                    while (true) {
-                        this.clientSocket.setKeepAlive(true);
-                        if (!isRecovered) {
-                            if (game.getPlayers().size() == game.getPlayersNumber()) {
-                                game.setState(GameState.STARTED);
-                                if (seat) {
-                                    System.out.println("Game with id " + game.getId() + " started!");
-                                }
-                                outputStream.writeObject("startGame");
-                                outputStream.flush();
-                                break;
-                            }
                         } else {
-                            game = games.get(game.getId());
-                            if (game != null) {
-                                if (game.getPlayers().size() == game.getRecoveredPlayers().size()) {
+                            outputStream.writeObject("addedToGame");
+                            outputStream.flush();
+                        }
+                        if (game.getRecoveredPlayers().size() == 0) {
+                            Player player = new Player(seat, new Shelf(), nickname, game);
+                            game.addPlayer(player);
+                            System.out.println("Added " + nickname + " to game with id " + game.getId());
+                        } else {
+                            if (game.getPlayers().get(0).getNickname().equals(nickname)) {
+                                seat = true;
+                            }
+                            System.out.println("Recovered " + nickname + " to game with id " + game.getId());
+                        }
+                        outputStream.writeObject(game.getId());
+                        outputStream.flush();
+
+                        isRecovered = game.getRecoveredPlayers().size() > 0;
+                        while (true) {
+                            this.clientSocket.setKeepAlive(true);
+                            if (!isRecovered) {
+                                if (game.getPlayers().size() == game.getPlayersNumber()) {
                                     game.setState(GameState.STARTED);
                                     if (seat) {
-                                        System.out.println("Game with id " + game.getId() + " recovered!");
+                                        System.out.println("Game with id " + game.getId() + " started!");
                                     }
                                     outputStream.writeObject("startGame");
                                     outputStream.flush();
                                     break;
                                 }
                             } else {
-                                gamesResult = findAvailableGame(nickname, false);
-                                if(gamesResult.isEmpty())
-                                    game = null;
-                                else
-                                    game = gamesResult.get(0);
-                                isRecovered = false;
-                                repeat = true;
-                                outputStream.writeObject("stopWaitingAndRepeat");
-                                break;
-                            }
-                        }
-                    }
-                } while (repeat);
-
-                int playerIndex = 0;
-                for (int i=0; i<game.getPlayers().size(); i++){
-                    if(game.getPlayers().get(i).getNickname().equals(nickname))
-                        playerIndex = i;
-                }
-
-                ChatClientTCPHandler chat = new ChatClientTCPHandler(chatClientSocket, nickname, game.getId());
-                new Thread(chat).start();
-
-                game = games.get(game.getId());
-
-                if (!isRecovered) {
-                    if (seat) {
-                        game.startGame();
-                        games.put(game.getId(), game);
-                    } else {
-                        while (true) {
-                            this.clientSocket.setKeepAlive(true);
-                            if (games.get(game.getId()).isSetupFinished()) {
                                 game = games.get(game.getId());
-                                game.clearRecoveredPlayers();
-                                games.put(game.getId(), game);
-                                break;
+                                if (game != null) {
+                                    if (game.getPlayers().size() == game.getRecoveredPlayers().size()) {
+                                        game.setState(GameState.STARTED);
+                                        if (seat) {
+                                            System.out.println("Game with id " + game.getId() + " recovered!");
+                                        }
+                                        outputStream.writeObject("startGame");
+                                        outputStream.flush();
+                                        break;
+                                    }
+                                } else {
+                                    gamesResult = findAvailableGame(nickname, false);
+                                    if (gamesResult.isEmpty())
+                                        game = null;
+                                    else
+                                        game = gamesResult.get(0);
+                                    isRecovered = false;
+                                    repeat = true;
+                                    outputStream.writeObject("stopWaitingAndRepeat");
+                                    break;
+                                }
+                            }
+                        }
+                    } while (repeat);
+
+                    int playerIndex = 0;
+                    for (int i = 0; i < game.getPlayers().size(); i++) {
+                        if (game.getPlayers().get(i).getNickname().equals(nickname))
+                            playerIndex = i;
+                    }
+
+                    ChatClientTCPHandler chat = new ChatClientTCPHandler(chatClientSocket, nickname, game.getId());
+                    new Thread(chat).start();
+
+                    game = games.get(game.getId());
+
+                    if (!isRecovered) {
+                        if (seat) {
+                            game.startGame();
+                            games.put(game.getId(), game);
+                        } else {
+                            while (true) {
+                                this.clientSocket.setKeepAlive(true);
+                                if (games.get(game.getId()).isSetupFinished()) {
+                                    game = games.get(game.getId());
+                                    game.clearRecoveredPlayers();
+                                    games.put(game.getId(), game);
+                                    break;
+                                }
                             }
                         }
                     }
-                }
-                outputStream.flush();
-                VirtualView virtualView = new VirtualView(game, game.getCurrentPlayer().getNickname());
-                NetworkMessage setup = virtualView.playerSetup(nickname);
-                outputStream.writeObject(setup);
-                outputStream.flush();
-                NetworkMessage firstPlayer = virtualView.updateResult();
-                outputStream.writeObject(firstPlayer);
-                outputStream.flush();
-                boolean updateSend = true;
-                while (true) {
-                    this.clientSocket.setKeepAlive(true);
-                    if(games.get(game.getId()).getState() == GameState.STARTED && games.get(game.getId()).getCurrentPlayer() != null) {
-                        if(games.get(game.getId()).getCurrentPlayer().getNickname().equals(nickname) && updateSend) {
-                            NetworkMessage netMessage = (NetworkMessage) inputStream.readObject();
-                            if (netMessage.getRequestId().equals("MT")) {
+                    outputStream.flush();
+                    VirtualView virtualView = new VirtualView(game, game.getCurrentPlayer().getNickname());
+                    NetworkMessage setup = virtualView.playerSetup(nickname);
+                    outputStream.writeObject(setup);
+                    outputStream.flush();
+                    NetworkMessage firstPlayer = virtualView.updateResult();
+                    outputStream.writeObject(firstPlayer);
+                    outputStream.flush();
+                    boolean updateSend = true;
+                    while (true) {
+                        this.clientSocket.setKeepAlive(true);
+                        if (games.get(game.getId()).getState() == GameState.STARTED && games.get(game.getId()).getCurrentPlayer() != null) {
+                            if (games.get(game.getId()).getCurrentPlayer().getNickname().equals(nickname) && updateSend) {
+                                NetworkMessage netMessage = (NetworkMessage) inputStream.readObject();
+                                if (netMessage.getRequestId().equals("MT")) {
+                                    virtualView = new VirtualView(games.get(game.getId()), game.getCurrentPlayer().getNickname());
+                                    NetworkMessage resp = virtualView.moveTiles(netMessage, game.getCurrentPlayer());
+                                    game = virtualView.getGame();
+                                    outputStream.reset();
+                                    outputStream.writeObject(resp);
+                                    games.put(game.getId(), game);
+                                }
+                            }
+                            updateSend = false;
+                            ArrayList<NetworkMessage> result = new ArrayList<>();
+                            if (games.get(game.getId()).getState() == GameState.STARTED && games.get(game.getId()).getMutexAtIndex(playerIndex) && game.getCurrentPlayer() != null) {
                                 virtualView = new VirtualView(games.get(game.getId()), game.getCurrentPlayer().getNickname());
-                                NetworkMessage resp = virtualView.moveTiles(netMessage, game.getCurrentPlayer());
-                                game = virtualView.getGame();
+                                result.add(virtualView.updateBoard());
+                                result.add(virtualView.updateGameTokens());
+                                result.add(virtualView.updateResult());
                                 outputStream.reset();
-                                outputStream.writeObject(resp);
+                                outputStream.writeObject(result);
+                                game.setMutexFalseAtIndex(playerIndex);
+                                games.put(game.getId(), game);
+                                updateSend = true;
+                            }
+                        } else {
+                            ArrayList<NetworkMessage> result = new ArrayList<>();
+                            if (games.get(game.getId()).getState() == GameState.ENDED) {
+                                virtualView = new VirtualView(games.get(game.getId()), null);
+                                result.add(virtualView.updateBoard());
+                                result.add(virtualView.updateGameTokens());
+                                result.add(virtualView.updateResult());
+                                outputStream.reset();
+                                outputStream.writeObject(result);
+                                game.setMutexFalseAtIndex(playerIndex);
                                 games.put(game.getId(), game);
                             }
+                            NetworkMessage endMessage = new NetworkMessage();
+                            if (games.get(game.getId()).getCurrentPlayer() != null) {
+                                endMessage.setRequestId("ER");
+                                endMessage.setTextMessage("A player left the game. Game end here.");
+                            } else {
+                                endMessage.setRequestId("ER");
+                                endMessage.setTextMessage("Game ended! Thank you for playing!");
+                            }
+                            deleteGame(game.getId());
+                            games.remove(game.getId());
+                            ArrayList<NetworkMessage> endArrayList = new ArrayList<>();
+                            endArrayList.add(endMessage);
+                            outputStream.writeObject(endArrayList);
+                            break;
                         }
-                        updateSend = false;
-                        ArrayList<NetworkMessage> result = new ArrayList<>();
-                        if (games.get(game.getId()).getState() == GameState.STARTED && games.get(game.getId()).getMutexAtIndex(playerIndex) && game.getCurrentPlayer() != null) {
-                            virtualView = new VirtualView(games.get(game.getId()), game.getCurrentPlayer().getNickname());
-                            result.add(virtualView.updateBoard());
-                            result.add(virtualView.updateGameTokens());
-                            result.add(virtualView.updateResult());
-                            outputStream.reset();
-                            outputStream.writeObject(result);
-                            game.setMutexFalseAtIndex(playerIndex);
-                            games.put(game.getId(), game);
-                            updateSend = true;
-                        }
-                    } else {
-                        ArrayList<NetworkMessage> result = new ArrayList<>();
-                        if (games.get(game.getId()).getState() == GameState.ENDED) {
-                            virtualView = new VirtualView(games.get(game.getId()), null);
-                            result.add(virtualView.updateBoard());
-                            result.add(virtualView.updateGameTokens());
-                            result.add(virtualView.updateResult());
-                            outputStream.reset();
-                            outputStream.writeObject(result);
-                            game.setMutexFalseAtIndex(playerIndex);
-                            games.put(game.getId(), game);
-                        }
-                        NetworkMessage endMessage = new NetworkMessage();
-                        if(games.get(game.getId()).getCurrentPlayer() != null){
-                            endMessage.setRequestId("ER");
-                            endMessage.setTextMessage("A player left the game. Game end here.");
-                        }else{
-                            endMessage.setRequestId("ER");
-                            endMessage.setTextMessage("Game ended! Thank you for playing!");
-                        }
-                        deleteGame(game.getId());
-                        outputStream.writeObject(endMessage);
+                    }
+                    doWantToPlayAgain = (NetworkMessage) inputStream.readObject();
+                    if(!((boolean) doWantToPlayAgain.getContent().get(0))){
+                        break;
                     }
                 }
             } catch (EOFException e) {
@@ -737,7 +765,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 if(game != null && game.getId() != -1){
                     System.err.println("Game with id " + game.getId() + " has been terminated.");
                     games.get(game.getId()).setState(GameState.ENDED);
-                    //deleteGame(game.getId());
+                    deleteGame(game.getId());
                 }
             } catch (IOException e) {
                 System.err.println("User " + nickname + " left the server.");
@@ -772,13 +800,17 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 inputStream = new ObjectInputStream(this.clientSocket.getInputStream());
                 ObjectInputStream finalInputStream = inputStream;
                 new Thread(() -> {
-                    while(true){
+                    while(true) {
                         try {
                             clientSocket.setKeepAlive(true);
                             NetworkMessage nm = (NetworkMessage) finalInputStream.readObject();
-                            VirtualView view = new VirtualView(games.get(gameId), nickname);
-                            view.sendMessage(nm);
-                            games.put(gameId, view.getGame());
+                            if (!nm.getRequestId().equals("ER")) {
+                                VirtualView view = new VirtualView(games.get(gameId), nickname);
+                                view.sendMessage(nm);
+                                games.put(gameId, view.getGame());
+                            }else{
+                                break;
+                            }
                         } catch (IOException | ClassNotFoundException e) {
                             System.err.println("User " + nickname + " left the chat!");
                             break;
@@ -795,35 +827,42 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             numberMessages.put(chat.getId(), chat.getMessages().size());
                         }
                     }
-                    while(true){
+                    while(true) {
                         try {
                             clientSocket.setKeepAlive(true);
                             game = games.get(gameId);
-                            chats = game.getChats();
-                            for(int i = 0; i < chats.size(); i++) {
-                                Chat chat = chats.get(i);
-                                if(!numberMessages.containsKey(chat.getId())){
-                                    numberMessages.put(chat.getId(), 0);
-                                }
-                                if(chat.getNameChatMembers().contains(nickname) && chat.getMessages().size() > numberMessages.get(chat.getId())){
-                                    numberMessages.put(chat.getId(), chat.getMessages().size());
-                                    Message m = chat.getLastMessage();
-                                    NetworkMessage nm = new NetworkMessage();
-                                    nm.setRequestId("UC");
-                                    nm.addContent(m.getSender().getNickname());
-                                    ArrayList<String> receivers = new ArrayList<>();
-                                    if(chat.getId() == 0)
-                                        receivers.addAll(chat.getNameChatMembers());
-                                    else {
-                                        for (String nick : chat.getNameChatMembers()) {
-                                            if (!nick.equals(m.getSender().getNickname()))
-                                                receivers.add(nick);
-                                        }
+                            if(game != null) {
+                                chats = game.getChats();
+                                for (int i = 0; i < chats.size(); i++) {
+                                    Chat chat = chats.get(i);
+                                    if (!numberMessages.containsKey(chat.getId())) {
+                                        numberMessages.put(chat.getId(), 0);
                                     }
-                                    nm.addContent(receivers);
-                                    nm.addContent(m.getMessage());
-                                    finalOutputStream.writeObject(nm);
+                                    if (chat.getNameChatMembers().contains(nickname) && chat.getMessages().size() > numberMessages.get(chat.getId())) {
+                                        numberMessages.put(chat.getId(), chat.getMessages().size());
+                                        Message m = chat.getLastMessage();
+                                        NetworkMessage nm = new NetworkMessage();
+                                        nm.setRequestId("UC");
+                                        nm.addContent(m.getSender().getNickname());
+                                        ArrayList<String> receivers = new ArrayList<>();
+                                        if (chat.getId() == 0)
+                                            receivers.addAll(chat.getNameChatMembers());
+                                        else {
+                                            for (String nick : chat.getNameChatMembers()) {
+                                                if (!nick.equals(m.getSender().getNickname()))
+                                                    receivers.add(nick);
+                                            }
+                                        }
+                                        nm.addContent(receivers);
+                                        nm.addContent(m.getMessage());
+                                        finalOutputStream.writeObject(nm);
+                                    }
                                 }
+                            } else {
+                                NetworkMessage nm = new NetworkMessage();
+                                nm.setRequestId("ER");
+                                finalOutputStream.writeObject(nm);
+                                break;
                             }
                         } catch (IOException e) {
                             System.err.println("User " + nickname + " left the chat!");
