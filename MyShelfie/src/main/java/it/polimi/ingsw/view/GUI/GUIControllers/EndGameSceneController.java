@@ -119,16 +119,23 @@ public class EndGameSceneController implements GenericSceneController, Initializ
 
 
         // associate labels to player and points
-        position0.setText("1");
         switch(gui.getPlayersNickname().size()) {
             case 1 -> {
+                position0.setOpacity(0);
+                label0.setOpacity(0);
+                points0.setOpacity(0);
+                position1.setText("1");
                 label1.setText(winner);
                 points1.setText(winnerPoints);
                 position2.setText("2");
                 label2.setText(otherPlayerAndPoints.get(0).split(" : ")[0]);
                 points2.setText(otherPlayerAndPoints.get(0).split(" : ")[1]);
+                position3.setOpacity(0);
+                label3.setOpacity(0);
+                points3.setOpacity(0);
             }
             case 2,3 -> {
+                position0.setText("1");
                 label0.setText(winner);
                 points0.setText(winnerPoints);
                 position1.setText("2");
@@ -141,6 +148,10 @@ public class EndGameSceneController implements GenericSceneController, Initializ
                     position3.setText("4");
                     label3.setText(otherPlayerAndPoints.get(2).split(" : ")[0]);
                     points3.setText(otherPlayerAndPoints.get(2).split(" : ")[1]);
+                } else {
+                    position3.setOpacity(0);
+                    label3.setOpacity(0);
+                    points3.setOpacity(0);
                 }
             }
         }
