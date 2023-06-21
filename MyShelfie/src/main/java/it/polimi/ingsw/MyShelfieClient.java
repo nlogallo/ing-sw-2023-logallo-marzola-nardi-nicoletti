@@ -749,6 +749,7 @@ public class MyShelfieClient {
                     }
                 }
             }
+            inputStream.readObject();
         } catch (IOException ex) {
             System.err.println("Connection lost!");
             System.exit(0);

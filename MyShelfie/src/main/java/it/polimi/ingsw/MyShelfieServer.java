@@ -236,8 +236,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @return
      */
     public synchronized NetworkMessage RMIHandlePlayerSetup(Game game, String nickname, boolean isRecovered) throws RemoteException {
+        boolean seat = nickname.equals(game.getPlayers().get(0).getNickname());
         if(!isRecovered){
-            boolean seat = nickname.equals(game.getPlayers().get(0).getNickname());
             if (seat) {
                 game.startGame();
                 games.put(game.getId(), game);
@@ -249,6 +249,11 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 }
                 else
                     return null;
+            }
+        }else{
+            if(seat){
+                game.clearRecoveredPlayers();
+                games.put(game.getId(), game);
             }
         }
         VirtualView virtualView = new VirtualView(game, nickname);
@@ -686,6 +691,11 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                     break;
                                 }
                             }
+                        }
+                    }else{
+                        if(seat){
+                            game.clearRecoveredPlayers();
+                            games.put(game.getId(), game);
                         }
                     }
                     outputStream.flush();
