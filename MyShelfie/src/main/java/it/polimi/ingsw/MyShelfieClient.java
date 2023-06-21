@@ -8,6 +8,7 @@ import it.polimi.ingsw.view.ClientViewObservable;
 import it.polimi.ingsw.view.GUI.GUIView;
 import it.polimi.ingsw.view.GUI.MyShelfieFX;
 import it.polimi.ingsw.view.GUI.SceneController;
+import javafx.application.Platform;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -48,6 +49,7 @@ public class MyShelfieClient {
     static GUIView guiView;
     private static int interfaceChosen;
     private static boolean isRecovered;
+    private static boolean isGameEnded = false;
 
     /**
      * Main method: Asks to the user to choose between TCP and RMI connection and establishes the connection with the chosen protocol.
@@ -233,6 +235,7 @@ public class MyShelfieClient {
                     if(endGameAnswer.equals("n") || endGameAnswer.equals("N")){
                         System.out.println("Goodbye!");
                         doWantToPlayAgain = false;
+                        chatSocket.close();
                         break;
                     } else {
                         System.out.println("Searching for an available game...");
@@ -404,6 +407,7 @@ public class MyShelfieClient {
                     }
                 } catch (Exception e) {
                     System.err.println("Connection lost! :(");
+                    System.exit(0);
                 }
             }
         } else {
@@ -663,28 +667,41 @@ public class MyShelfieClient {
             if(interfaceChosen == 1) {
                 new Thread(() -> {
                     String textFromUser;
-                    while(true){
-                        Scanner scanner = new Scanner(System.in);
-                        synchronized (inputLock){
+                    Scanner scanner = new Scanner(System.in);
+                    while(!isGameEnded) {
+                        synchronized (inputLock) {
                             try {
                                 inputLock.wait();
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
                         }
-                        System.out.println("To quit insert the command: \u001B[1m/quitGame");
-
-                        textFromUser = scanner.nextLine();
-                        if(textFromUser.equals("/quitGame")) {
-                            synchronized (inputLock) {
-                                inputLock.notifyAll();
-                            }
-                            break;
+                        if (!isGameEnded) {
+                            System.out.println("To quit insert the command: \u001B[1m/quitGame");
+                            textFromUser = scanner.nextLine();
+                            if(isGameEnded)
+                                break;
+                            if (textFromUser.equals("/quitGame")) {
+                                synchronized (inputLock) {
+                                    inputLock.notifyAll();
+                                }
+                                if (!isGameEnded) {
+                                    isGameEnded = true;
+                                    NetworkMessage quit = new NetworkMessage();
+                                    quit.setRequestId("ER");
+                                    try {
+                                        synchronized (lock) {
+                                            chatOutput.writeObject(quit);
+                                            lock.notifyAll();
+                                        }
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                                break;
+                            } else controller.enableInput();
                         }
-                        else
-                            controller.enableInput();
                     }
-                    //user left the game
                 }).start();
             }
             controller.playerSetup(nm);
@@ -697,11 +714,16 @@ public class MyShelfieClient {
                 controller.enableInput();
             }*/
             ArrayList<NetworkMessage> result = null;
-            while (true) {
+            while (!isGameEnded) {
                 if ((currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname))) {
                     synchronized (lock) {
                         lock.wait();
                         TimeUnit.MILLISECONDS.sleep(100);
+                    }
+                    if(isGameEnded) {
+                        NetworkMessage err = new NetworkMessage();
+                        err.setRequestId("ER");
+                        outputStream.writeObject(err);
                     }
                 }
                 result = (ArrayList<NetworkMessage>) inputStream.readObject();
@@ -719,16 +741,17 @@ public class MyShelfieClient {
                     NetworkMessage token = result.get(1);
                     controller.updateGameTokens(token);
                     NetworkMessage res = result.get(2);
+                    if(res.getRequestId().equals("END"))
+                        isGameEnded = true;
                     synchronized (inputLock) {
                         controller.updateResults(res);
-                    inputLock.notifyAll();
+                        inputLock.notifyAll();
                     }
-                    if(res.getTextMessage().equals("END"))
-                        break;
                 }
             }
         } catch (IOException ex) {
             System.err.println("Connection lost!");
+            System.exit(0);
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         } catch (InterruptedException ex) {
@@ -753,7 +776,14 @@ public class MyShelfieClient {
                 }
             }
         } catch (IOException e){
-            System.err.println("Chat connection lost!");
+            if(interfaceChosen == 1) {
+                System.err.println("MyShelfieServer is temporarily down");
+                System.exit(0);
+            }
+            else
+                Platform.runLater(()-> {
+                    SceneController.changeScene("ErrorStage.fxml");
+                });
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -778,8 +808,8 @@ public class MyShelfieClient {
                     }
                 }
             } catch (RemoteException e) {
-                System.err.println("Chat connection lost!");
-                break;
+                System.err.println("MyShelfieServer is temporarily down");
+                System.exit(0);
             }
         }
     }
@@ -940,10 +970,9 @@ public class MyShelfieClient {
                     chatOutput.flush();
                     chatOutput.writeObject(networkMessage);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+            } catch (IOException | ClassNotFoundException e) {
+                System.err.println("Connection lost");
+                System.exit(0);
             }
             return null;
         } else {

@@ -505,7 +505,8 @@ public class Game implements Serializable {
     }
 
     public void addRecoveredPlayer(String nickname){
-        this.recoveredPlayers.add(nickname);
+        if(!recoveredPlayers.contains(nickname))
+            this.recoveredPlayers.add(nickname);
     }
 
     public void clearRecoveredPlayers(){
@@ -515,6 +516,7 @@ public class Game implements Serializable {
     public ArrayList<String> getRecoveredPlayers() {
         return this.recoveredPlayers;
     }
+
 }
 
 

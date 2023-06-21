@@ -4,14 +4,15 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="368.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../ConnectionStyle.css">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../ConnectionStyle.css">
     <children>
-        <ImageView fitHeight="220.0" fitWidth="368.0" pickOnBounds="true">
+        <ImageView fitHeight="600.0" fitWidth="800.0" pickOnBounds="true">
             <image>
                 <Image url="@../assets/common goal cards/back.jpg" />
             </image>
         </ImageView>
-        <Text layoutX="22.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ops, connection failed!" />
+        <Text layoutX="180.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ops, connection failed!" />
     </children>
 </AnchorPane>

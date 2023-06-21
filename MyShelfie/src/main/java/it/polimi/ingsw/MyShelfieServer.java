@@ -440,6 +440,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             games.remove(gameId);
             return 2;
         }
+        else if(game.getState().equals(GameState.PLAYER_DISCONNECTED))
+            return 2;
         return 0;
     }
 
@@ -447,8 +449,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         Game game = games.get(gameId);
         if (game != null) {
             System.err.println("Game with id " + game.getId() + " has been terminated.");
-            games.get(game.getId()).setState(GameState.ENDED);
-            deleteGame(game.getId());
+            games.get(game.getId()).setState(GameState.PLAYER_DISCONNECTED);
         }
     }
 
@@ -725,11 +726,18 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             }
                         } else {
                             ArrayList<NetworkMessage> result = new ArrayList<>();
-                            if (games.get(game.getId()).getState() == GameState.ENDED) {
+                            if (games.get(game.getId()).getState() == GameState.ENDED || games.get(game.getId()).getState() == GameState.PLAYER_DISCONNECTED) {
                                 virtualView = new VirtualView(games.get(game.getId()), null);
                                 result.add(virtualView.updateBoard());
                                 result.add(virtualView.updateGameTokens());
-                                result.add(virtualView.updateResult());
+                                if(games.get(game.getId()).getState() == GameState.ENDED)
+                                    result.add(virtualView.updateResult());
+                                else{
+                                    NetworkMessage end = new NetworkMessage();
+                                    end.setRequestId("END");
+                                    end.setTextMessage("A player left the game. Game end here.");
+                                    result.add(end);
+                                }
                                 outputStream.reset();
                                 outputStream.writeObject(result);
                                 game.setMutexFalseAtIndex(playerIndex);
@@ -737,14 +745,14 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             }
                             NetworkMessage endMessage = new NetworkMessage();
                             if (games.get(game.getId()).getCurrentPlayer() != null) {
-                                endMessage.setRequestId("ER");
+                                endMessage.setRequestId("END");
                                 endMessage.setTextMessage("A player left the game. Game end here.");
                             } else {
-                                endMessage.setRequestId("ER");
+                                endMessage.setRequestId("END");
                                 endMessage.setTextMessage("Game ended! Thank you for playing!");
+                                deleteGame(game.getId());
+                                games.remove(game.getId());
                             }
-                            deleteGame(game.getId());
-                            games.remove(game.getId());
                             ArrayList<NetworkMessage> endArrayList = new ArrayList<>();
                             endArrayList.add(endMessage);
                             outputStream.writeObject(endArrayList);
@@ -756,23 +764,22 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         break;
                     }
                 }
-            } catch (EOFException e) {
+            } catch (IOException e) {
+                //System.err.println("User " + nickname + " left the server.");
                 if(!nickname.isEmpty()){
                     System.err.println("User " + nickname + " left the server.");
                 }else{
                     System.err.println("User from " + clientSocket.getInetAddress().getHostAddress() + " left the server.");
                 }
-                if(game != null && game.getId() != -1){
+                if(game != null && game.getId() != -1 && games.get(game.getId()).getState() != GameState.PLAYER_DISCONNECTED){
                     System.err.println("Game with id " + game.getId() + " has been terminated.");
-                    games.get(game.getId()).setState(GameState.ENDED);
-                    deleteGame(game.getId());
+                    games.get(game.getId()).setState(GameState.PLAYER_DISCONNECTED);
+                    //deleteGame(game.getId());
                 }
-            } catch (IOException e) {
-                System.err.println("User " + nickname + " left the server.");
             } catch (StringIndexOutOfBoundsException e) {
                 System.err.println("Communication error. User disconnected.");
             } catch (ClassNotFoundException e) {
-                System.err.println("Errore interno: " + e);
+                System.err.println("Internal error: " + e);
             }
             nicknames.remove(nickname);
         }
@@ -804,15 +811,24 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         try {
                             clientSocket.setKeepAlive(true);
                             NetworkMessage nm = (NetworkMessage) finalInputStream.readObject();
-                            if (!nm.getRequestId().equals("ER")) {
+                            if (nm.getRequestId().equals("SM")) {
                                 VirtualView view = new VirtualView(games.get(gameId), nickname);
                                 view.sendMessage(nm);
                                 games.put(gameId, view.getGame());
-                            }else{
-                                break;
+                            }else if (nm.getRequestId().equals("ER")){
+                                if(!nickname.isEmpty()){
+                                    System.err.println("User " + nickname + " left the server.");
+                                }else{
+                                    System.err.println("User from " + clientSocket.getInetAddress().getHostAddress() + " left the server.");
+                                }
+                                if(games.get(gameId) != null && games.get(gameId).getId() != -1){
+                                    System.err.println("Game with id " + games.get(gameId).getId() + " has been terminated.");
+                                    games.get(games.get(gameId).getId()).setState(GameState.PLAYER_DISCONNECTED);
+                                }
                             }
                         } catch (IOException | ClassNotFoundException e) {
                             System.err.println("User " + nickname + " left the chat!");
+                            games.get(gameId).setState(GameState.PLAYER_DISCONNECTED);
                             break;
                         }
                     }
