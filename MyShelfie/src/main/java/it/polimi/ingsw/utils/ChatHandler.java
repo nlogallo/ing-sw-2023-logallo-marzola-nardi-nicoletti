@@ -310,14 +310,8 @@ public class ChatHandler {
         ArrayList<ClientMessage> messageList = chat.getClientMessages();
         ArrayList<String> chatMembers = chat.getChatMembers();
 
-        if(chat.getClientMessages().size() <= 20) {
-            for (int i = 0; i < messageList.size(); i++) {
+        for (int i = 0; i < chat.getClientMessages().size(); i++) {
                 printMessage(messageList.get(i), chatMembers);
-            }
-        } else {
-            for (int i = chat.getClientMessages().size()-1; i > (chat.getClientMessages().size() - 21); i--) {
-                printMessage(messageList.get(i), chatMembers);
-            }
         }
         sendMessageOrOpenChatMenu(chat);
     }
@@ -392,7 +386,6 @@ public class ChatHandler {
                         receivers.add(chat.getChatMembers().get(0));
                     }
                 }
-                System.out.println(receivers);
                 sendMessage(view.getClientNickname(), receivers, message);
             }
         }
@@ -413,13 +406,9 @@ public class ChatHandler {
         }
 
         if (view.getGlobalChat().getClientMessages().size() >= 1) {
-            System.out.println(ANSI_CREAM + "This is the global chat: " + ANSI_RESET + "\n");
-            int minSize;
-            if(view.getGlobalChat().getClientMessages().size() - 16 < 0)
-                minSize = 0;
-            else
-                minSize = view.getGlobalChat().getClientMessages().size() - 16;
-            for (int i = minSize; i < view.getGlobalChat().getClientMessages().size(); i++) {
+
+            System.out.println(ANSI_CREAM + "Global chat: " + ANSI_RESET + "\n");
+            for (int i = 0; i < view.getGlobalChat().getClientMessages().size(); i++) {
                 ClientMessage message = view.getGlobalChat().getClientMessages().get(i);
                 printMessage(message, view.getGlobalChat().getChatMembers());
             }
