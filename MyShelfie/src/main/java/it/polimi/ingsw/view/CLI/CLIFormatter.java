@@ -1,5 +1,8 @@
 package it.polimi.ingsw.view.CLI;
 
+/**
+ * This class prints the client CLI interface (board, shelf, common goals, personal goal and tokens
+ */
 public class CLIFormatter {
     CLIView view;
     public static final String ANSI_RESET = "\u001B[00m";
@@ -12,10 +15,17 @@ public class CLIFormatter {
     public static final String ANSI_BLUE = "\u001B[38;5;33m";
     public static final String ANSI_CREAM = "\u001B[38;5;229m";
 
+    /**
+     * Class constructor
+     * @param view is the client view
+     */
     public CLIFormatter(CLIView view){
         this.view = view;
     }
 
+    /**
+     * Prints the user interface line by line
+     */
     public void createCLIInterface(){
         //first line
         System.out.print(ANSI_WHITE + "\nStatus: " + ANSI_GREEN + "\u001B[1mConnected" + ANSI_RESET + String.format("%-55s", " ") + "+---".repeat(2) + "+" + String.format("%-36s", " ") + "+---".repeat(5) + "+" + String.format("%-12s", " ")  + isSeatAvailable());
@@ -148,12 +158,23 @@ public class CLIFormatter {
         System.out.print("\n");
     }
 
+    /**
+     * Calculates the spacing related to not fixed length text
+     * @param emptyLength is the length with no char
+     * @param fixedTextLength is the length of the 'static' text
+     * @param dynamicTextToAdd is the dynamic text
+     * @return the correct spacing
+     */
     private int calculateSpacing(int emptyLength, int fixedTextLength, String dynamicTextToAdd){
         if(dynamicTextToAdd == null)
             return emptyLength - fixedTextLength - 4;
         else
             return emptyLength - fixedTextLength - dynamicTextToAdd.length();
     }
+    /**
+     * This method is used to highlight the seat in the interface
+     * @return a string with the text to print
+     */
     private String isSeatAvailable(){
         if(view.isSeat())
             return ANSI_GREEN + "\u001B[1mSEAT";
@@ -161,12 +182,20 @@ public class CLIFormatter {
             return ANSI_RED + "\u001B[1mNO SEAT";
     }
 
+    /**
+     * This method is used to see if the client is playing
+     * @return a string with the text to print
+     */
     private String isYouPlaying () {
         if (!(view.getCurrentPlayer() == null || !view.getCurrentPlayer().equals(view.getClientNickname())))
             return " (you)";
         else return " ";
     }
 
+    /**
+     * This method is used to see if the client has completed the first common goal
+     * @return a string with the text to print
+     */
     private String isFirstCommonGoalAchieved(){
         if (view.getPersonalTokens().size() == 0)
             return ANSI_RED + "\u001B[1m  NOT ACHIEVED";
@@ -178,6 +207,10 @@ public class CLIFormatter {
         return ANSI_RED + "\u001B[1m  NOT ACHIEVED";
     }
 
+    /**
+     * This method is used to see if the client has completed the second common goal
+     * @return a string with the text to print
+     */
     private String isSecondCommonGoalAchieved(){
         if (view.getPersonalTokens().size() == 0)
             return ANSI_RED + "\u001B[1m  NOT ACHIEVED";
@@ -189,6 +222,10 @@ public class CLIFormatter {
         return ANSI_RED + "\u001B[1m  NOT ACHIEVED";
     }
 
+    /**
+     * This method is used to see if the client has achieved the end game token
+     * @return a string with the text to print
+     */
     private String isEndGameTokenAchieved(){
         if (view.getPersonalTokens().size() == 0)
         return ANSI_RED + "\u001B[1m  NOT ACHIEVED";
@@ -200,7 +237,12 @@ public class CLIFormatter {
         return ANSI_RED + "\u001B[1m  NOT ACHIEVED";
     }
 
-
+    /**
+     * This method is used to get the tileType of a tile in the board
+     * @param x row of the tile
+     * @param y column of the tile
+     * @return a string with the text to print
+     */
     private String getBoardTilesAtPosition(int x, int y){
         return switch (view.getBoard().getTilesType()[x][y]) {
             case TROPHY ->  ANSI_CYAN + " \u001B[1mT ";
@@ -213,6 +255,12 @@ public class CLIFormatter {
         };
     }
 
+    /**
+     * This method is used to get the tileType of a tile in the shelf
+     * @param x row of the tile
+     * @param y column of the tile
+     * @return a string with the text to print
+     */
     private String getShelfTilesAtPosition(int x, int y){
         return switch (view.getShelf().getShelfTypes()[x][y]) {
             case TROPHY ->  ANSI_CYAN + " \u001B[1mT ";
@@ -225,6 +273,12 @@ public class CLIFormatter {
         };
     }
 
+    /**
+     * This method is used to get the tileType of a tile in the personal goal
+     * @param x row of the tile
+     * @param y column of the tile
+     * @return a string with the text to print
+     */
     private String getPersonalGoalAtPosition(int x, int y) {
         return switch (view.getPersonalGoal().getMatrix()[x][y]) {
             case TROPHY ->  ANSI_CYAN + " \u001B[1mT ";
@@ -237,9 +291,11 @@ public class CLIFormatter {
         };
     }
 
-    /* id = 0 -> end token check
-       id = 1 -> second common goal token check
-       id = 2 -> first common goal token check
+    /**
+     * This method checks the available tokens in the game
+     * @param id id of the token
+     * @param line line to return
+     * @return a string with the text to print
      */
     private String buildTokenAvailable (int id, int line) {
         switch (id) {
@@ -319,6 +375,11 @@ public class CLIFormatter {
         return "ERRORE" + String.format("%-8s", " " );
     }
 
+    /**
+     * This method identifies the line to print of the achieved token
+     * @param line line to print
+     * @return a string with the text to print
+     */
     private String buildTokensPerLine(int line){
         String lineToPrint = "";
         if(view.getPersonalTokens().size() != 0){
@@ -336,6 +397,11 @@ public class CLIFormatter {
         return lineToPrint;
     }
 
+    /**
+     * This method identifies the client name to print
+     * @param line line to print
+     * @return a string with the text to print
+     */
     private String putPlayerName(int line) {
         if (line == 1) {
             return " - " + ANSI_RESET + view.getClientNickname() + " (you)";
@@ -344,6 +410,12 @@ public class CLIFormatter {
         } else return " - ";
     }
 
+    /**
+     * This method identifies the line of the gommonGoal to print
+     * @param line line to print
+     * @param id id of the commonGoal to print
+     * @return a string with the text to print
+     */
     private String buildCommonGoalPerLine (int line, int id) {
         switch (id ){
             case 0 -> {

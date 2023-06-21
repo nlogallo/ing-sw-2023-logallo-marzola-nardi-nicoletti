@@ -25,6 +25,10 @@ import java.util.ResourceBundle;
 
 import static java.lang.String.valueOf;
 
+/**
+ * This class represents the Controller of the Main scene
+ * MainScene is the GUI scene which contains the board, the players' shelves, the goals and the chat.
+ */
 public class MainSceneController implements GenericSceneController, Initializable {
 
     private GUIView gui;
@@ -92,12 +96,26 @@ public class MainSceneController implements GenericSceneController, Initializabl
 
     private double textHeigth = 0.0;
 
+
+    /**
+     * Override method of setGui in GenericSceneController
+     * @param gui is the gui to set
+     */
     @Override
     public void setGui(GUIView gui) {
         this.gui = gui;
     }
+
+    /**
+     * Override method of initData from GenericSceneController
+     * @param parameters is the list of parameters
+     */
     @Override
     public void initData(ArrayList<Object> parameters) {}
+
+    /**
+     * Override method of initialize from Initializable
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Platform.runLater(this::initAll);
@@ -108,6 +126,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
         myShelf.setSelected(true);
     }
 
+    /**
+     * This method initializes buttons, and some attributes of the scene
+     */
     private void initAll(){
         setAttributes();
         gui = MyShelfieClient.getGuiView();
@@ -118,6 +139,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
         initButtons();
     }
 
+    /**
+     * This method initializes arrays for a simpler use of the imageView of the tiles
+     */
     public void setAttributes(){
         boardImage[0][0] = board00;
         boardImage[0][1] = board01;
@@ -247,7 +271,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
         shelfImage[5][4] = shelf54;
     }
 
-
+    /**
+     * This method sets the tiles picture in the board
+     */
     public void setBoardImage() {
     Board board = gui.getBoard();
 
@@ -262,6 +288,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
         }
     }
 
+    /**
+     * This method sets the tiles picture in the shelf
+     */
     public void setShelfImage(Shelf shelf) {
         TileType[][] types = shelf.getShelfTypes();
         for(int i = 0; i<6; i++) {
@@ -273,6 +302,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
         }
     }
 
+    /**
+     * This method sets the tiles picture in the shelf
+     */
     private void makeMoveButtonClick(Event event) {
         if (gui.getCurrentPlayer() != null  && gui.getCurrentPlayer().equals(gui.getClientNickname()) && turnPhase == 0) {
             turnPhase = 1;
@@ -282,6 +314,11 @@ public class MainSceneController implements GenericSceneController, Initializabl
         }
     }
 
+    /**
+     * This method manages the actions related to the vButton
+     *
+     * @param event is the event triggered by clicking the vButton
+     */
     private void vButtonClick(Event event) {
         switch (turnPhase) {
             case 1 -> {
@@ -356,6 +393,11 @@ public class MainSceneController implements GenericSceneController, Initializabl
         }
     }
 
+    /**
+     * This method manages the actions related to the back button
+     *
+     * @param event is the event triggered by clicking the back button
+     */
     private void backButtonClick (Event event){
         switch (turnPhase) {
             case 1 -> {
@@ -391,6 +433,11 @@ public class MainSceneController implements GenericSceneController, Initializabl
 
     }
 
+    /**
+     * This method manages the actions of sorting the tiles to put into the shelf (Top Tile)
+     *
+     * @param event is the event triggered by clicking the invisible button under the chosen tile
+     */
     private void pickedBottomButtonClick (Event event){
         if (turnPhase == 2) {
             if ((positionsToOrder.size() < positionsToPick.size()) && pickedTileBottom.getOpacity() == 1) {
@@ -402,6 +449,12 @@ public class MainSceneController implements GenericSceneController, Initializabl
             }
         }
     }
+
+    /**
+     * This method manages the actions of sorting the tiles to put into the shelf (Middle Tile)
+     *
+     * @param event is the event triggered by clicking the invisible button under the chosen tile
+     */
     private void pickedMiddleButtonClick (Event event){
         if (turnPhase == 2) {
             if ((positionsToOrder.size() < positionsToPick.size()) && pickedTileMiddle.getOpacity() == 1) {
@@ -413,6 +466,12 @@ public class MainSceneController implements GenericSceneController, Initializabl
             }
         }
     }
+
+    /**
+     * This method manages the actions of sorting the tiles to put into the shelf (Bottom Tile)
+     *
+     * @param event is the event triggered by clicking the invisible button under the chosen tile
+     */
     private void pickedTopButtonClick (Event event){
         if (turnPhase == 2) {
             if ((positionsToOrder.size() < positionsToPick.size()) && pickedTileTop.getOpacity() == 1) {
@@ -425,23 +484,51 @@ public class MainSceneController implements GenericSceneController, Initializabl
         }
     }
 
-
+    /**
+     * (First Column) This method manages the actions of choosing the column of the shelf to put the tile into
+     *
+     * @param event is the event triggered by clicking the invisible button under the chosen tile
+     */
     private void firstColumnButtonClick(Event event){
         if (turnPhase == 3)
             selectedColumn = 0;
     }
+
+    /**
+     * (Second Column) This method manages the actions of choosing the column of the shelf to put the tile into
+     *
+     * @param event is the event triggered by clicking the invisible button under the chosen tile
+     */
     private void secondColumnButtonClick(Event event){
         if (turnPhase == 3)
             selectedColumn = 1;
     }
+
+    /**
+     * (Third Column) This method manages the actions of choosing the column of the shelf to put the tile into
+     *
+     * @param event is the event triggered by clicking the invisible button under the chosen tile
+     */
     private void thirdColumnButtonClick(Event event){
         if (turnPhase == 3)
             selectedColumn = 2;
     }
+
+    /**
+     * (Fourth Column) This method manages the actions of choosing the column of the shelf to put the tile into
+     *
+     * @param event is the event triggered by clicking the invisible button under the chosen tile
+     */
     private void fourthColumnButtonClick(Event event){
         if (turnPhase == 3)
             selectedColumn = 3;
     }
+
+    /**
+     * (Fifth Column) This method manages the actions of choosing the column of the shelf to put the tile into
+     *
+     * @param event is the event triggered by clicking the invisible button under the chosen tile
+     */
     private void fifthColumnButtonClick(Event event){
         if (turnPhase == 3)
             selectedColumn = 4;
@@ -451,11 +538,17 @@ public class MainSceneController implements GenericSceneController, Initializabl
     private void otherPlayerButtonClick1(Event event) {}
     private void otherPlayerButtonClick2(Event event) {}
 
+    /**
+     * This method sets the picture of all the goals
+     */
     public void setGoalsPicture(){
         setCommonGoalPicture(commonGoal1, gui.getCommonGoals().get(0).getId());
         setCommonGoalPicture(commonGoal2, gui.getCommonGoals().get(1).getId());
         setPersonalGoalPicture(personalGoal, gui.getPersonalGoal().getId());
     }
+    /**
+     * This method sets the picture of all the tokens
+     */
     public void setTokensPicture(){
         setTokenPicture(commonGoal1Token, 1);
         setTokenPicture(commonGoal2Token, 2);
@@ -465,7 +558,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
         setAchievedTokenPicture(tokenAchieved2, 2);
         setAchievedLabel();
     }
-
+    /**
+     * This method sets the achieved label if a token is achieved
+     */
     private void setAchievedLabel() {
         for (int i = 0; i< gui.getPersonalTokens().size(); i++) {
             if ((gui.getPersonalTokens().get(i).getId() != 0) && ((gui.getPersonalTokens().get(i).getId() % 2) == 0))
@@ -475,6 +570,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
         }
     }
 
+    /**
+     * This method sets the currently playing label
+     */
     public void setCurrentlyPlayingLabel (String currentPlayer){
         if (currentPlayer != null && !currentPlayer.equals(gui.getClientNickname())) {
             Platform.runLater( () -> {currentlyPlayingLabel.setText("It's "+ currentPlayer+ " turn");});
@@ -483,6 +581,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
         } else {currentlyPlayingLabel.setText("IDK who is playing");}
     }
 
+    /**
+     * This method sets the seat picture
+     */
     public void setSeatPicture() {
         if (gui.isSeat() == true)
             seat.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/misc/firstplayertoken.png"))));;
@@ -1118,7 +1219,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
             }
         }
     }
-
+    /**
+     * This method sets the assets of the other players
+     */
     public void setOtherPlayersAssets() {
         if(choiceBox.getItems().size() == 0) {
 
@@ -1158,6 +1261,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
             }
     }
 
+    /**
+     * This method sets the shelves of the other players
+     */
     private void setOtherPlayersShelves(Event event){
         myShelf.setSelected(false);
         otherPlayerButton0.setSelected(false);
@@ -1206,7 +1312,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
 
 
 
-
+    /**
+     * This method initializes all the button
+     */
     private void initButtons() {
         myShelf.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
         otherPlayerButton0.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
@@ -1277,6 +1385,10 @@ public class MainSceneController implements GenericSceneController, Initializabl
         otherPlayerButton2.addEventHandler(MouseEvent.MOUSE_RELEASED, this::otherPlayerButtonClick2);
     }
 
+    /**
+     * This method sets the text of the label of the current turn phase
+     * @param phase is the turn phase
+     */
     private void setTurnPhaseLabel (int phase) {
         switch(phase) {
             case 0 -> turnPhaseLabel.setText("When it's your turn click on 'Make move' to pick tiles.");
@@ -1297,6 +1409,11 @@ public class MainSceneController implements GenericSceneController, Initializabl
         }
     }
 
+    /**
+     * This method sets the picture of the tile
+     * @param tile is the tile
+     * @param image is the image of the tile
+     */
     private void setTilePicture (ImageView image, Tile tile) {
         TileType type = tile.getType();
         int imageType = tile.getImageType();
@@ -1356,6 +1473,11 @@ public class MainSceneController implements GenericSceneController, Initializabl
         }
     }
 
+    /**
+     * This method sets the picture of the common goal
+     * @param id is the common goal id
+     * @param image is the image of the tile
+     */
     private void setCommonGoalPicture(ImageView image, int id) {
         switch (id) {
             case 0 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/common goal cards/4.jpg"))));});
@@ -1373,6 +1495,11 @@ public class MainSceneController implements GenericSceneController, Initializabl
         }
     }
 
+    /**
+     * This method sets the picture of the personal goal
+     * @param id is the personal goal id
+     * @param image is the image of the tile
+     */
     private void setPersonalGoalPicture(ImageView image, int id) {
         switch (id) {
             case 0 -> Platform.runLater( () -> {image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/personal goal cards/Personal_Goals.png"))));});
@@ -1391,7 +1518,11 @@ public class MainSceneController implements GenericSceneController, Initializabl
     }
 
 
-
+    /**
+     * This method sets the picture of the available token
+     * @param goalNo is the common goal
+     * @param image is the image of the token
+     */
     private void setTokenPicture(ImageView image, int goalNo) {
         switch(goalNo) {
 
@@ -1447,7 +1578,11 @@ public class MainSceneController implements GenericSceneController, Initializabl
             }
         }
     }
-
+    /**
+     * This method sets the picture of the achieved token
+     * @param tokenNo is the number of the token
+     * @param image is the image of the token
+     */
     private void setAchievedTokenPicture(ImageView image, int tokenNo) {
         int size = gui.getPersonalTokens().size();
         if (size == tokenNo + 1) {
