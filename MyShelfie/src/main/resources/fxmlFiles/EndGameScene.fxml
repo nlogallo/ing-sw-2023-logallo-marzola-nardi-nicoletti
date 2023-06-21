@@ -11,7 +11,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" scaleShape="false" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.EndGameSceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="600.0" prefWidth="800.0" scaleShape="false" xmlns="http://javafx.com/javafx/19"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.EndGameSceneController"
+            stylesheets="@../ConnectionStyle.css">
    <children>
       <ImageView fitHeight="612.0" fitWidth="810.0" layoutX="-9.0" layoutY="-8.0" pickOnBounds="true">
          <image>
@@ -28,16 +32,18 @@
             <Image url="@../assets/misc/base_pagina2.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="replayButton" layoutX="25.0" layoutY="488.0" mnemonicParsing="false" prefHeight="81.0" prefWidth="128.0" text="Play Again">
+      <Button fx:id="replayButton" layoutX="25.0" layoutY="488.0" mnemonicParsing="false" prefHeight="81.0"
+              prefWidth="128.0" text="Play Again">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button fx:id="exitButton" layoutX="657.0" layoutY="488.0" mnemonicParsing="false" prefHeight="81.0" prefWidth="128.0" text="Exit">
+      <Button fx:id="exitButton" layoutX="657.0" layoutY="488.0" mnemonicParsing="false" prefHeight="81.0"
+              prefWidth="128.0" text="Exit">
          <font>
             <Font size="20.0" />
          </font></Button>
-      <Label layoutX="17.0" layoutY="-36.0" prefHeight="221.0" prefWidth="309.0" text="Game  Ended" textFill="#ff8827">
+      <Label layoutX="17.0" layoutY="-36.0" prefHeight="221.0" prefWidth="309.0" styleClass="labelMain" text="Game  Ended" textFill="#ff8827">
          <font>
             <Font size="50.0" />
          </font>
@@ -54,7 +60,8 @@
       </ImageView>
       <AnchorPane layoutX="142.0" layoutY="155.0" prefHeight="291.0" prefWidth="592.0">
          <children>
-            <GridPane layoutX="22.0" layoutY="16.0" prefHeight="259.0" prefWidth="404.0" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="16.0">
+            <GridPane layoutX="22.0" layoutY="16.0" prefHeight="259.0" prefWidth="404.0" AnchorPane.bottomAnchor="16.0"
+                      AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="16.0">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.0" minWidth="10.0" prefWidth="104.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="326.0" minWidth="10.0" prefWidth="203.0" />
@@ -68,67 +75,69 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="label1" alignment="CENTER" text="Label" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Label fx:id="label1" alignment="CENTER" styleClass="labelMain" text="Label" textFill="WHITE" GridPane.columnIndex="1"
+                         GridPane.rowIndex="2">
                      <font>
                         <Font size="35.0" />
                      </font>
                   </Label>
-                  <Label fx:id="label3" text="Label" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <Label fx:id="label3" styleClass="labelMain" text="Label" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <font>
                         <Font size="35.0" />
                      </font>
                   </Label>
-                  <Label fx:id="label0" text="Label" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label fx:id="label0" styleClass="labelMain" text="Label" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font size="35.0" />
                      </font>
                   </Label>
-                  <Label fx:id="points0" text="Label" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Label fx:id="points0" styleClass="labelMain" text="Label" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <font>
                         <Font size="35.0" />
                      </font>
                   </Label>
-                  <Label fx:id="points1" text="Label" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Label fx:id="points1" styleClass="labelMain" text="Label" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <font>
                         <Font size="35.0" />
                      </font>
                   </Label>
-                  <Label fx:id="points2" text="Label" textFill="#f8f8f8" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                  <Label fx:id="points2" styleClass="labelMain" text="Label" textFill="#f8f8f8" GridPane.columnIndex="2" GridPane.rowIndex="3">
                      <font>
                         <Font size="35.0" />
                      </font>
                   </Label>
-                  <Label fx:id="points3" text="Label" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                  <Label fx:id="points3" styleClass="labelMain" text="Label" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="4">
                      <font>
                         <Font size="35.0" />
                      </font>
                   </Label>
-                  <Label fx:id="label2" prefHeight="30.0" prefWidth="100.0" text="Label" textFill="#fffbfb" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Label fx:id="label2" prefHeight="30.0" prefWidth="100.0" styleClass="labelMain" text="Label" textFill="#fffbfb"
+                         GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <font>
                         <Font size="35.0" />
                      </font>
                   </Label>
-                  <Label fx:id="position0" alignment="CENTER" text="Label" textFill="#ff9604" GridPane.rowIndex="1">
+                  <Label fx:id="position0" alignment="CENTER" styleClass="labelMain" text="Label" textFill="#ff9604" GridPane.rowIndex="1">
                      <font>
                         <Font size="30.0" />
                      </font>
                   </Label>
-                  <Label fx:id="position1" text="Label" textFill="#ff9604" GridPane.rowIndex="2">
+                  <Label fx:id="position1" styleClass="labelMain" text="Label" textFill="#ff9604" GridPane.rowIndex="2">
                      <font>
                         <Font size="30.0" />
                      </font>
                   </Label>
-                  <Label fx:id="position2" text="Label" textFill="#ff9604" GridPane.rowIndex="3">
+                  <Label fx:id="position2" styleClass="labelMain" text="Label" textFill="#ff9604" GridPane.rowIndex="3">
                      <font>
                         <Font size="30.0" />
                      </font>
                   </Label>
-                  <Label fx:id="position3" text="Label" textFill="#ff9604" GridPane.rowIndex="4">
+                  <Label fx:id="position3" styleClass="labelMain" text="Label" textFill="#ff9604" GridPane.rowIndex="4">
                      <font>
                         <Font size="30.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" text="PLAYER" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1">
+                  <Label alignment="CENTER" text="PLAYER" styleClass="labelMain" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1">
                      <font>
                         <Font size="30.0" />
                      </font>
@@ -136,7 +145,7 @@
                         <SepiaTone />
                      </effect>
                   </Label>
-                  <Label text="POINTS" textFill="WHITE" GridPane.columnIndex="2">
+                  <Label styleClass="labelMain" text="POINTS" textFill="WHITE" GridPane.columnIndex="2">
                      <font>
                         <Font size="30.0" />
                      </font>

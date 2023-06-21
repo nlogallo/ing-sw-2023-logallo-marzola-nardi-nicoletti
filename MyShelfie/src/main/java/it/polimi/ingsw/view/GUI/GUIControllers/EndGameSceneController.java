@@ -71,26 +71,18 @@ public class EndGameSceneController implements GenericSceneController, Initializ
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        synchronized (lock) {
-            try {
-                lock.wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            showFinalResult();
-            replayButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::startANewGame);
-            exitButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::endGame);
-        }
     }
 
 
     @Override
     public void initData(ArrayList<Object> parameters) {
-        synchronized (lock) {
-            finalMessage = (String) parameters.get(0);
-            lock.notifyAll();
-        }
+
+        finalMessage = (String) parameters.get(0);
+        this.gui = (GUIView) parameters.get(1);
+        showFinalResult();
+        replayButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::startANewGame);
+        exitButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::endGame);
+
     }
 
 
@@ -107,11 +99,11 @@ public class EndGameSceneController implements GenericSceneController, Initializ
     private void showFinalResult () {
 
         /* Final Message:
-        gameResults = "Congratulations " + winner.getNickname() + " you won with " + playerPoints.get(maxPointIndex) + " points";
-        gameResults += "\n" + (i+2) + ") " + player.getNickname() + ": " + playerPoints.get(maxPointIndex) + " points";
+        gameResults = "Congratulations " + winner.getNickname() + " you won with " + playerPoints.get(maxPointIndex) + " points"
+        gameResults += "\n" + (i+2) + ") " + player.getNickname() + ": " + playerPoints.get(maxPointIndex) + " points"
          */
 
-        String [] differentLine = finalMessage.split(";");
+        String [] differentLine = finalMessage.split("\n");
 
         //winner and winner Points
         String firstLine = differentLine[0];

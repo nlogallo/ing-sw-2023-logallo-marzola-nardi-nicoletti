@@ -167,6 +167,7 @@ public class GUIView  implements Observer {
         if (isGameEnded) {
             ArrayList<Object> parameters = new ArrayList<>();
             parameters.add(screenMessage);
+            parameters.add(this);
             SceneController.changeScene("EndGameScene.fxml", parameters);
         }
     }
