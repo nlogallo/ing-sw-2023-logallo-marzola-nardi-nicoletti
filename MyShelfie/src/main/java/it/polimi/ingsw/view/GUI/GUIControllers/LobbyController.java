@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.GUI.GUIControllers;
 import it.polimi.ingsw.MyShelfieClient;
 import it.polimi.ingsw.view.GUI.GUIView;
 import it.polimi.ingsw.view.GUI.SceneController;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressIndicator;
@@ -73,24 +74,28 @@ public class LobbyController implements GenericSceneController, Initializable {
                 gameId = MyShelfieClient.TCPGetGameId();
             } catch (IOException | ClassNotFoundException e) {
                 Stage primaryStage = SceneController.getStage();
+                primaryStage.close();
                 Stage stage = new Stage();
                 stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
                 stage.setTitle("My Shelfie Connection Error");
                 SceneController.setStage(stage);
-                SceneController.changeScene(gui, "ErrorStage.fxml");
-                SceneController.setStage(primaryStage);
+                SceneController.changeScene("ErrorStage.fxml");
             }
             while (true) {
                 try {
                     command = MyShelfieClient.TCPCheckForGameStart();
                 } catch (IOException | ClassNotFoundException e) {
-                    Stage primaryStage = SceneController.getStage();
-                    Stage stage = new Stage();
-                    stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
-                    stage.setTitle("My Shelfie Connection Error");
-                    SceneController.setStage(stage);
-                    SceneController.changeScene(gui, "ErrorStage.fxml");
-                    SceneController.setStage(primaryStage);
+                        Stage primaryStage = SceneController.getStage();
+                        Platform.runLater(()->{
+                            primaryStage.close();
+                            Stage stage = new Stage();
+                            stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
+                            stage.setTitle("My Shelfie Connection Error");
+                            SceneController.setStage(stage);
+                            SceneController.changeScene( "ErrorStage.fxml");
+                            }
+                        );
+                        return;
                 }
                 if (command.equals("startGame")) {
                     new MyShelfieClient().handleGameTCP(nickname);
@@ -106,12 +111,16 @@ public class LobbyController implements GenericSceneController, Initializable {
                     }
                 } catch (RemoteException e) {
                     Stage primaryStage = SceneController.getStage();
-                    Stage stage = new Stage();
-                    stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
-                    stage.setTitle("My Shelfie Connection Error");
-                    SceneController.setStage(stage);
-                    SceneController.changeScene(gui, "ErrorStage.fxml");
-                    SceneController.setStage(primaryStage);
+                    Platform.runLater(()->{
+                            primaryStage.close();
+                            Stage stage = new Stage();
+                            stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
+                            stage.setTitle("My Shelfie Connection Error");
+                            SceneController.setStage(stage);
+                            SceneController.changeScene( "ErrorStage.fxml");
+                            }
+                    );
+                    return;
                 }
             }
         }

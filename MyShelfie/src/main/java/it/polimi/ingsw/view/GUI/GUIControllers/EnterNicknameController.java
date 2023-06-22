@@ -149,12 +149,12 @@ public class EnterNicknameController implements GenericSceneController, Initiali
             }
         } catch (IOException | ClassNotFoundException ex) {
             Stage primaryStage = SceneController.getStage();
+            primaryStage.close();
             Stage stage = new Stage();
             stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
             stage.setTitle("My Shelfie Connection Error");
             SceneController.setStage(stage);
             SceneController.changeScene("ErrorStage.fxml");
-            SceneController.setStage(primaryStage);
         }
     }
 }

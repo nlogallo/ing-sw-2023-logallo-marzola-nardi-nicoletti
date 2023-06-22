@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.GUI.GUIControllers;
 import it.polimi.ingsw.MyShelfieClient;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.view.GUI.GUIView;
+import it.polimi.ingsw.view.GUI.SceneController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,10 +35,11 @@ public class MainSceneController implements GenericSceneController, Initializabl
     private GUIView gui;
     private ArrayList<Position> positionsToPick = new ArrayList<>();
     private ArrayList<Position> positionsToOrder = new ArrayList<>();
-
     private int selectedColumn;
-
     private int turnPhase;
+    private int gameId;
+    private String nickname;
+    private int protocol;
     /*
     0-> not your turn or not clicked make move;
     1-> select tiles to pick
@@ -45,8 +47,11 @@ public class MainSceneController implements GenericSceneController, Initializabl
     3->select column;
     */
 
-    public MainSceneController(GUIView gui){
+    public MainSceneController(GUIView gui, ArrayList<Object> parameters){
         this.gui = gui;
+        this.gameId = (int) parameters.get(0);
+        this.nickname = (String) parameters.get(1);
+        this.protocol = (int) parameters.get(2);
     }
 
     @FXML
@@ -60,6 +65,8 @@ public class MainSceneController implements GenericSceneController, Initializabl
     private Button firstColumnButton, secondColumnButton, thirdColumnButton, fourthColumnButton, fifthColumnButton;
     @FXML
     private Button vButton, backButton, makeMoveButton;
+    @FXML
+    private Button quit;
     @FXML
     private Button pickedBottomButton, pickedMiddleButton, pickedTopButton;
     @FXML
@@ -122,6 +129,7 @@ public class MainSceneController implements GenericSceneController, Initializabl
         Platform.runLater(() ->
         {
             sendMessageButton.addEventHandler(MouseEvent.MOUSE_CLICKED, this::sendMessage);
+            quit.addEventHandler(MouseEvent.MOUSE_CLICKED, this::quitGame);
         });
         myShelf.setSelected(true);
     }
@@ -1627,6 +1635,14 @@ public class MainSceneController implements GenericSceneController, Initializabl
         pane.getChildren().add(labelHeader);
         pane.getChildren().add(labelMessage);
         scrollPane.setContent(pane);
+    }
+
+    public void quitGame(Event event){
+        MyShelfieClient.voluntaryQuitting(gameId, nickname);
+        ArrayList<Object> parameters = new ArrayList<>();
+        parameters.add(protocol);
+        parameters.add(nickname);
+        SceneController.changeScene("QuittingScene.fxml", parameters);
     }
 
 }

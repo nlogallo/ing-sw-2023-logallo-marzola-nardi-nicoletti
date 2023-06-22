@@ -86,11 +86,11 @@ public class SceneController {
      * It creates the first main stage
      * @param fxmlName is the name of the fxml file to load
      */
-    public static void createMainStage(String fxmlName){
+    public static void createMainStage(String fxmlName, ArrayList<Object> parameters){
         FXMLLoader fmxlLoader = new FXMLLoader(SceneController.class.getResource("/fxmlFiles/" + fxmlName));
         Parent root = null;
         try {
-            fmxlLoader.setControllerFactory(controllerClass -> new MainSceneController(MyShelfieClient.getGuiView()));
+            fmxlLoader.setControllerFactory(controllerClass -> new MainSceneController(MyShelfieClient.getGuiView(), parameters));
             root = fmxlLoader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);

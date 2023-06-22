@@ -60,6 +60,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             int port = 30034;
             try {
                 MyShelfieServer server = new MyShelfieServer();
+                System.setProperty("java.rmi.server.hostname", args[0]);
                 Registry registry = LocateRegistry.createRegistry(port);
                 registry.rebind("Server", server);
                 Registry chatRegistry = LocateRegistry.createRegistry(port + 1);

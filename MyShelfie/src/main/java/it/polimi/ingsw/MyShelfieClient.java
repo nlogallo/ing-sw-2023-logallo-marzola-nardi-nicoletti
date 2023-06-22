@@ -9,6 +9,8 @@ import it.polimi.ingsw.view.GUI.GUIView;
 import it.polimi.ingsw.view.GUI.MyShelfieFX;
 import it.polimi.ingsw.view.GUI.SceneController;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -16,9 +18,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -57,7 +59,7 @@ public class MyShelfieClient {
      * @param args
      * @throws IOException
      */
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]){
         System.out.println("Welcome to MyShelfie!");
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -203,7 +205,7 @@ public class MyShelfieClient {
                                     System.out.println("Players number must be 2, 3 or 4");
                                 }
                             } while (playersNumber > 4 || playersNumber < 2);
-                            TCPSetPlayersNumber(playersNumber);
+                                TCPSetPlayersNumber(playersNumber);
                         }
                         gameId = TCPGetGameId();
                         System.out.println("Hi " + nickname + "!\nYou have been added to game with id " + gameId + "\nYour game will start when the players number is fulfilled");
@@ -247,10 +249,14 @@ public class MyShelfieClient {
                     System.err.println("Socket timed out");
                 } catch (StringIndexOutOfBoundsException | EOFException e) {
                     System.err.println("Server went offline!");
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException | IOException e) {
+                    System.err.println("MyShelfieServer is temporarily down");
                 } finally {
-                    socket.close();
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+
+                    }
                 }
             } else if (protocol == 2) {
                 try {
@@ -453,11 +459,14 @@ public class MyShelfieClient {
             protocol = 2;
             try {
                 System.out.println("Connecting to RMI server...");
-                RMIServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + port + "/Server");
-                RMIChatServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + (port + 1) + "/chatServer");
+                //RMIServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + port + "/Server");
+                //RMIChatServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + (port + 1) + "/chatServer");
+                RMIServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry("localhost", port).lookup("Server");
+                RMIChatServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry("localhost", port + 1).lookup("chatServer");
                 System.out.println("Connected! :)");
                 return true;
             } catch (Exception e) {
+                e.printStackTrace();
                 return false;
             }
         }
@@ -530,7 +539,7 @@ public class MyShelfieClient {
      * Method which tells to the server if the client wants to play again or not
      * @param answer
      */
-    private static void TCPDoWantToPlayAgain(boolean answer) {
+    public static void TCPDoWantToPlayAgain(boolean answer) {
         try {
             NetworkMessage doWantToPlayAgain = new NetworkMessage();
             doWantToPlayAgain.addContent(answer);
@@ -661,8 +670,13 @@ public class MyShelfieClient {
         try {
             chatInput = new ObjectInputStream(chatSocket.getInputStream());
             new Thread(() -> handleChatTCP(nickname, chatSocket)).start();
-            if (interfaceChosen == 2)
-                SceneController.createMainStage("MainStage.fxml");
+            if (interfaceChosen == 2) {
+                ArrayList<Object> parameters = new ArrayList<>();
+                parameters.add(gameId);
+                parameters.add(nickname);
+                parameters.add(1);
+                SceneController.createMainStage("MainStage.fxml", parameters);
+            }
             NetworkMessage nm = (NetworkMessage) inputStream.readObject();
             if(interfaceChosen == 1) {
                 new Thread(() -> {
@@ -695,7 +709,8 @@ public class MyShelfieClient {
                                             lock.notifyAll();
                                         }
                                     } catch (IOException e) {
-                                        throw new RuntimeException(e);
+                                        System.err.println("Something went wrong!");
+                                        System.exit(0);
                                     }
                                 }
                                 break;
@@ -743,16 +758,35 @@ public class MyShelfieClient {
                     NetworkMessage res = result.get(2);
                     if(res.getRequestId().equals("END"))
                         isGameEnded = true;
-                    synchronized (inputLock) {
-                        controller.updateResults(res);
-                        inputLock.notifyAll();
+                    if(res.getTextMessage().equals("Game ended! Thank you for playing!")){
+                        synchronized (inputLock) {
+                            controller.updateResults(res);
+                            inputLock.notifyAll();
+                        }
+                    }
+                    else if(interfaceChosen == 2){
+                        Platform.runLater(()->{
+                            SceneController.getStage().close();
+                            ArrayList<Object> parameters = new ArrayList<>();
+                            parameters.add(protocol);
+                            parameters.add(nickname);
+                            SceneController.changeScene("QuittingScene.fxml", parameters);
+                        }
+                        );
                     }
                 }
             }
             inputStream.readObject();
         } catch (IOException ex) {
-            System.err.println("Connection lost!");
-            System.exit(0);
+            if(interfaceChosen == 1) {
+                System.err.println("Connection lost!");
+                System.exit(0);
+            }
+            else{
+                Platform.runLater(()->{
+                    SceneController.changeScene("ErrorStage.fxml");
+                });
+            }
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         } catch (InterruptedException ex) {
@@ -831,8 +865,13 @@ public class MyShelfieClient {
         view.setClientController(controller);
         try {
             new Thread(() -> handleChatRMI(nickname, RMIChatServer)).start();
-            if (interfaceChosen == 2)
-                SceneController.createMainStage("MainStage.fxml");
+            if (interfaceChosen == 2) {
+                ArrayList<Object> parameters = new ArrayList<>();
+                parameters.add(game.getId());
+                parameters.add(nickname);
+                parameters.add(2);
+                SceneController.createMainStage("MainStage.fxml", parameters);
+            }
             NetworkMessage nm;
             do {
                 nm = RMIServer.RMIHandlePlayerSetup(game, nickname, isRecovered);
@@ -1005,6 +1044,50 @@ public class MyShelfieClient {
 
     public static int getInterfaceChosen(){
         return interfaceChosen;
+    }
+
+    /**
+     * This method allows the user to quit from the game
+     * @param gameId is the id of the game
+     * @param nickname is the user's nickname
+     */
+    public static void voluntaryQuitting(int gameId, String nickname){
+        if(protocol == 1){
+            if (!isGameEnded) {
+                isGameEnded = true;
+                NetworkMessage quit = new NetworkMessage();
+                quit.setRequestId("ER");
+                try {
+                    chatOutput.writeObject(quit);
+                } catch (IOException e) {
+                        Platform.runLater(()->{
+                            Stage primaryStage = SceneController.getStage();
+                            primaryStage.close();
+                            Stage stage = new Stage();
+                            stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
+                            stage.setTitle("My Shelfie Connection Error");
+                            SceneController.setStage(stage);
+                            SceneController.changeScene("ErrorStage.fxml");
+                        });
+                }
+            }
+        }
+        else{
+            try {
+                RMIServer.RMITerminateGame(gameId, nickname);
+            } catch (RemoteException e) {
+                Platform.runLater(()->{
+                    Stage primaryStage = SceneController.getStage();
+                    primaryStage.close();
+                    Stage stage = new Stage();
+                    stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
+                    stage.setTitle("My Shelfie Connection Error");
+                    SceneController.setStage(stage);
+                    SceneController.changeScene("ErrorStage.fxml");
+                }
+                );
+            }
+        }
     }
 
 }

@@ -139,12 +139,12 @@ public class SavingsSceneController implements GenericSceneController, Initializ
             }
         } catch (IOException | ClassNotFoundException e) {
             Stage primaryStage = SceneController.getStage();
+            primaryStage.close();
             Stage stage = new Stage();
             stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
             stage.setTitle("My Shelfie Connection Error");
             SceneController.setStage(stage);
-            SceneController.changeScene(gui, "ErrorStage.fxml");
-            SceneController.setStage(primaryStage);
+            SceneController.changeScene("ErrorStage.fxml");
         }
     }
 }

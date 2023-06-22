@@ -135,12 +135,12 @@ public class ConnectToServerController implements GenericSceneController, Initia
                         SceneController.changeScene("EnterNicknameStage.fxml", parameters);
                     } else {
                         Stage primaryStage = SceneController.getStage();
+                        primaryStage.close();
                         Stage stage = new Stage();
                         stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
                         stage.setTitle("My Shelfie Connection Error");
                         SceneController.setStage(stage);
                         SceneController.changeScene("ErrorStage.fxml");
-                        SceneController.setStage(primaryStage);
                     }
                 } catch (NumberFormatException ex) {
                     labelPort.setText("Invalid Port");

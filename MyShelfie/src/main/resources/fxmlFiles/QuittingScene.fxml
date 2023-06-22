@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.GUI.GUIControllers.QuittingSceneController" stylesheets="@../ConnectionStyle.css">
+    <children>
+        <ImageView fitHeight="600.0" fitWidth="800.0" pickOnBounds="true">
+            <image>
+                <Image url="@../assets/common goal cards/back.jpg" />
+            </image>
+        </ImageView>
+        <Text layoutX="120.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="A user quit from the game! Don't worry the game is saved" />
+        <Button fx:id="play" layoutX="200.0" layoutY="80.0" mnemonicParsing="false" text="Play again" />
+        <Button fx:id="quit" layoutX="340.0" layoutY="80.0" mnemonicParsing="false" text="Quit" />
+    </children>
+</AnchorPane>

@@ -86,12 +86,13 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
                 parameters.add(-1);
             } catch (IOException e) {
                 Stage primaryStage = SceneController.getStage();
+                primaryStage.close();
                 Stage stage = new Stage();
                 stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
                 stage.setTitle("My Shelfie Connection Error");
                 SceneController.setStage(stage);
-                SceneController.changeScene(gui, "ErrorStage.fxml");
-                SceneController.setStage(primaryStage);
+                SceneController.changeScene("ErrorStage.fxml");
+                return;
             }
         }
         else {
@@ -101,12 +102,13 @@ public class NoGamesAvailableController implements GenericSceneController, Initi
                 parameters.add(game.getId());
             } catch (RemoteException e) {
                 Stage primaryStage = SceneController.getStage();
+                primaryStage.close();
                 Stage stage = new Stage();
                 stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
                 stage.setTitle("My Shelfie Connection Error");
                 SceneController.setStage(stage);
-                SceneController.changeScene(gui, "ErrorStage.fxml");
-                SceneController.setStage(primaryStage);
+                SceneController.changeScene("ErrorStage.fxml");
+                return;
             }
         }
         parameters.add(nickname.getText());
