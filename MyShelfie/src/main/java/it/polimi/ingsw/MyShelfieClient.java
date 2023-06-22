@@ -756,23 +756,29 @@ public class MyShelfieClient {
                     NetworkMessage token = result.get(1);
                     controller.updateGameTokens(token);
                     NetworkMessage res = result.get(2);
-                    if(res.getRequestId().equals("END"))
+                    if(res.getRequestId().equals("END")) {
                         isGameEnded = true;
-                    if(res.getTextMessage().equals("Game ended! Thank you for playing!")){
+                        if(interfaceChosen == 2 && res.getTextMessage().equals("A player left the game. Game end here.")){
+                            Platform.runLater(()->{
+                                        SceneController.getStage().close();
+                                        ArrayList<Object> parameters = new ArrayList<>();
+                                        parameters.add(protocol);
+                                        parameters.add(nickname);
+                                        SceneController.changeScene("QuittingScene.fxml", parameters);
+                                    }
+                            );
+                        }
+                        else {
+                            synchronized (inputLock) {
+                                controller.updateResults(res);
+                                inputLock.notifyAll();
+                            }
+                        }
+                    } else {
                         synchronized (inputLock) {
                             controller.updateResults(res);
                             inputLock.notifyAll();
                         }
-                    }
-                    else if(interfaceChosen == 2){
-                        Platform.runLater(()->{
-                            SceneController.getStage().close();
-                            ArrayList<Object> parameters = new ArrayList<>();
-                            parameters.add(protocol);
-                            parameters.add(nickname);
-                            SceneController.changeScene("QuittingScene.fxml", parameters);
-                        }
-                        );
                     }
                 }
             }
@@ -987,7 +993,7 @@ public class MyShelfieClient {
     }
 
     /**
-     * This methods handles the communication between controller and server by client
+     * This method handles the communication between controller and server by client
      *
      * @param networkMessage
      * @return
@@ -1045,6 +1051,8 @@ public class MyShelfieClient {
     public static int getInterfaceChosen(){
         return interfaceChosen;
     }
+
+    public int getProtocol() { return protocol; }
 
     /**
      * This method allows the user to quit from the game

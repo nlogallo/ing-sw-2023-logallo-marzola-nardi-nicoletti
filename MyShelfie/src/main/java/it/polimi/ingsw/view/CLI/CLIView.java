@@ -353,7 +353,7 @@ public class CLIView implements Observer {
     public boolean callCheckFreeSpotsInColumnShelf (ArrayList<String> positions, Shelf shelf, int column) { return clientController.checkFreeSpotsInColumnShelf(positions, shelf, column); }
 
     @Override
-    public void isGameEnded(boolean isGameEnded) {
+    public void isGameEnded(boolean isGameEnded, int protocol) {
 
     }
 }

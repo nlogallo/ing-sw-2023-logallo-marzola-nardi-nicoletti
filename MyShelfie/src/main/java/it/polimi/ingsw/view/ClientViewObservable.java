@@ -144,5 +144,5 @@ public class ClientViewObservable {
         view.enableInput();
     }
 
-    public void isGameEnded(boolean isGameEnded) { view.isGameEnded(isGameEnded); }
+    public void isGameEnded(boolean isGameEnded, int protocol) { view.isGameEnded(isGameEnded, protocol); }
 }

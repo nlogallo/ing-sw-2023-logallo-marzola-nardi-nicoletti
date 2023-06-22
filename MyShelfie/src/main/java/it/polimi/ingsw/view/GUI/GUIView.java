@@ -162,13 +162,15 @@ public class GUIView  implements Observer {
     }
 
     @Override
-    public void isGameEnded(boolean isGameEnded) {
+    public void isGameEnded(boolean isGameEnded, int protocol) {
         this.isGameEnded = isGameEnded;
         if (isGameEnded) {
             ArrayList<Object> parameters = new ArrayList<>();
             parameters.add(screenMessage);
             parameters.add(this);
-            SceneController.changeScene("EndGameScene.fxml", parameters);
+            parameters.add(clientNickname);
+            parameters.add(protocol);
+            Platform.runLater(() -> SceneController.changeScene("EndGameScene.fxml", parameters));
         }
     }
 

@@ -238,7 +238,7 @@ public class ClientController {
                 CLIMenus.endMenu(networkMessage.getTextMessage());
             else{
                 clientViewObservable.setScreenMessage(networkMessage.getTextMessage());
-                clientViewObservable.isGameEnded(true);
+                clientViewObservable.isGameEnded(true, client.getProtocol());
             }
         }
     }
