@@ -461,8 +461,9 @@ public class MyShelfieClient {
                 System.out.println("Connecting to RMI server...");
                 //RMIServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + port + "/Server");
                 //RMIChatServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + (port + 1) + "/chatServer");
-                RMIServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry("localhost", port).lookup("Server");
-                RMIChatServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry("localhost", port + 1).lookup("chatServer");
+                RMIServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry(hostname, port).lookup("Server");
+                RMIChatServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry(hostname, port + 1).lookup("chatServer");
+
                 System.out.println("Connected! :)");
                 return true;
             } catch (Exception e) {

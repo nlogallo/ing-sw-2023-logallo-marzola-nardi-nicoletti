@@ -22,13 +22,17 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     private static ArrayList<String> nicknames = new ArrayList<>();
     private static HashMap<String, VirtualView> RMIVirtualViews = new HashMap<>();
     private static HashMap<String, String> chatParser = new HashMap<>();
+    static MyShelfieServer server;
+    static MyShelfieServer chatServer;
+    static Registry registry;
+    static Registry chatRegistry;
 
     /**
      * Constructor method
      * @throws RemoteException
      */
-    public MyShelfieServer() throws RemoteException{
-        super();
+    public MyShelfieServer(int port) throws RemoteException{
+        super(port);
     }
 
     /**
@@ -59,12 +63,13 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         new Thread(() -> {
             int port = 30034;
             try {
-                MyShelfieServer server = new MyShelfieServer();
-                System.setProperty("java.rmi.server.hostname", args[0]);
-                Registry registry = LocateRegistry.createRegistry(port);
+                System.setProperty("java.rmi.server.hostname", "109.115.4.137");
+                server = new MyShelfieServer(port);
+                chatServer = new MyShelfieServer(port + 1);
+                registry = LocateRegistry.createRegistry(port);
                 registry.rebind("Server", server);
-                Registry chatRegistry = LocateRegistry.createRegistry(port + 1);
-                chatRegistry.rebind("chatServer", server);
+                chatRegistry = LocateRegistry.createRegistry(port + 1);
+                chatRegistry.rebind("chatServer", chatServer);
                 System.out.println("RMI Server started on port " + port);
             } catch (Exception e) {
                 System.err.println("Exception in main: " + e);
@@ -153,7 +158,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @return
      * @throws RemoteException
      */
-    public synchronized String RMICheckNickname(String nickname) throws RemoteException {
+    public String RMICheckNickname(String nickname) throws RemoteException {
         if(nicknames.contains(nickname))
             return "nicknameExists";
         else if(nickname.contains(" ") || nickname.length() > 15 || nickname.length() < 3){
