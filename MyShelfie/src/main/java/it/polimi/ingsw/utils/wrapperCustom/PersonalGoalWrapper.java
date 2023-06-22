@@ -156,8 +156,4 @@ public class PersonalGoalWrapper {
             default -> throw new IllegalStateException("Unexpected id value: " + id);
         }
     }
-
-
-
-
 }

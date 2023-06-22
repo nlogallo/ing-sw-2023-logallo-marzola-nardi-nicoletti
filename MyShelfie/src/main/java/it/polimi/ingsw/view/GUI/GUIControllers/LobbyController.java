@@ -125,8 +125,4 @@ public class LobbyController implements GenericSceneController, Initializable {
             }
         }
     }
-
-
-
-
 }

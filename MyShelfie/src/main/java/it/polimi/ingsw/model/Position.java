@@ -21,25 +21,23 @@ public class Position implements Serializable {
     }
 
     /**
-     * Getter
-     *
-     * @return      the row of the tile
+     * Getter method
+     * @return the row of the tile
      */
     public int getRow() {
         return row;
     }
 
     /**
-     * Getter
-     *
-     * @return      the column of the tile
+     * Getter method
+     * @return the column of the tile
      */
     public int getColumn() {
         return column;
     }
 
     /**
-     * Setter
+     * Setter method
      * @param row identifies the row of the tile
      */
     public void setRow(int row) {
@@ -47,7 +45,7 @@ public class Position implements Serializable {
     }
 
     /**
-     * Setter
+     * Setter method
      * @param column identifies the column of the tile
      */
     public void setColumn(int column) {

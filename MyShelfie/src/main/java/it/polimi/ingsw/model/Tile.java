@@ -54,6 +54,7 @@ public class Tile implements Serializable {
 
 
     /**
+     * Getter method
      * @return a vector containing respectively the current row and column of the Tile
      */
     public int [] getPosition () {
@@ -62,7 +63,7 @@ public class Tile implements Serializable {
 
 
     /**
-     *
+     * Getter method
      * @return current Tile ID
      */
     public int getID() { return this.ID; }
@@ -70,7 +71,7 @@ public class Tile implements Serializable {
 
 
     /**
-     *
+     * Getter method
      * @return current Tile type
      */
     public TileType getType () { return this.type; }
@@ -137,19 +138,18 @@ public class Tile implements Serializable {
      */
     private boolean checkParametersPosition(int row, int column) throws IllegalArgumentException {
 
-        boolean areContained = false;
         if (row >= 0 && column >= 0) {
             if (row <= 8) {
                 if (column <= 8) {
-                    areContained = true;
+                    return true;
                 } else throw new IllegalArgumentException("Column must be lower than 9");
             } else throw new IllegalArgumentException("Row must be lower than 9");
         } else throw new IllegalArgumentException("Row and Column must be positive or zero");
-        return areContained;
     }
 
     /**
      * Getter method
+     * @return the correspondent int of the ImageType
      */
     public int getImageType() {
         return imageType;

@@ -29,6 +29,8 @@ public class QuittingSceneController implements GenericSceneController, Initiali
     Button play;
     private int protocol;
     private String nickname;
+
+
     /**
      * Override method of setGui in GenericSceneController
      *

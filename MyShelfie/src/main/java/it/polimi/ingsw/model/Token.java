@@ -117,11 +117,11 @@ public class Token implements Serializable {
         return ID >= leftExtreme && ID <= rightExtreme;
     }
 
+
     /**
      * getter of attribute id
      * @return int (the token id)
      */
-
     public int getId(){
         return this.id;
     }
