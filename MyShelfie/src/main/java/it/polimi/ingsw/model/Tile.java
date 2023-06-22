@@ -61,30 +61,6 @@ public class Tile implements Serializable {
     }
 
 
-
-    /**
-     *
-     * @return the current value of container between the different types in the TileContainer enum
-     */
-    public TileContainer getContainer () { return this.container; }
-
-
-
-    /**
-     * This method checks the parameter with the possible types in the enum and then if the parameter
-     * is in the enum set the new value in container, otherwise throws the exception.
-     * @param container is the new TileContainer value
-     * @exception IllegalArgumentException throws an IllegalArgumentException
-     */
-    public void setContainer (TileContainer container) throws IllegalArgumentException {
-
-        if (container.equals(TileContainer.IN_SHELF) || container.equals(TileContainer.IN_BOARD)) {
-            this.container = container;
-        } else throw new IllegalArgumentException("This TileContainer doesn't exist");
-    }
-
-
-
     /**
      *
      * @return current Tile ID
@@ -173,7 +149,7 @@ public class Tile implements Serializable {
     }
 
     /**
-     * Getter
+     * Getter method
      */
     public int getImageType() {
         return imageType;

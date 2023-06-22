@@ -6,8 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 
 public class TileTest {
 
@@ -63,6 +62,58 @@ public class TileTest {
     @Test
     public void newTile_OverMaxRowAndColumn_ThrowsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> new Tile(120).setPosition(48, 14));
+    }
+
+    @Test
+    public void setPosition_correctBehaviour() {
+        Tile tile = new Tile(9);
+        tile.setPosition(4, 7);
+    }
+
+    @Test
+    public void getPosition_correctBehaviour() {
+
+        Tile tile = new Tile(4);
+        tile.setPosition(3,7);
+        int [] positions = tile.getPosition();
+        int [] positionsArray = new int[] {3,7};
+        boolean isCorrect = true;
+
+        for (int i=0; i<positions.length; i++) {
+            if (positions[i] != positionsArray[i]) {
+                isCorrect = false;
+            }
+        }
+
+        assertTrue(isCorrect);
+        assertEquals(tile.getID(), 4);
+    }
+
+    @Test
+    public void setContainer_CorrectBehaviour() {
+
+        Tile tile1 = new Tile(20);
+        Tile tile2 = new Tile(35);
+        Tile tile3 = new Tile(47);
+        Tile tile4 = new Tile(75);
+        Tile tile5 = new Tile(97);
+        Tile tile6 = new Tile(120);
+
+        assertEquals(tile1.getType(), TileType.CAT);
+        assertEquals(tile2.getType(), TileType.BOOK);
+        assertEquals(tile3.getType(), TileType.GAME);
+        assertEquals(tile4.getType(), TileType.FRAME);
+        assertEquals(tile5.getType(), TileType.TROPHY);
+        assertEquals(tile6.getType(), TileType.PLANT);
+
+    }
+
+    @Test
+    public void getImageType_correctBehaviour() {
+
+        Tile tile = new Tile(87);
+        boolean isCorrect = 0 <= tile.getImageType() && tile.getImageType() <= 2;
+        assert (isCorrect);
     }
 
 }

@@ -152,4 +152,64 @@ public class ChatTest {
         assertEquals(chat1.getLastMessage().getMessage(), "Bye");
 
     }
+
+    @Test
+    public void getChatMembers2Players_CorrectBehaviour() {
+
+        ArrayList<Player> chatMembers = new ArrayList<>();
+        chatMembers.add(player1);
+        chatMembers.add(player2);
+
+        ArrayList<String> stringChatMembers = new ArrayList<>();
+        for (Player chatMember : chatMembers) {
+            stringChatMembers.add(chatMember.getNickname());
+        }
+
+        Chat chat = new Chat(72, chatMembers);
+        ArrayList<String> nameChatMembers = chat.getNameChatMembers();
+
+        assertEquals(nameChatMembers, stringChatMembers);
+
+    }
+
+    @Test
+    public void getChatMembers3Players_CorrectBehaviour() {
+
+        ArrayList<Player> chatMembers = new ArrayList<>();
+        chatMembers.add(player1);
+        chatMembers.add(player2);
+        chatMembers.add(player3);
+
+        ArrayList<String> stringChatMembers = new ArrayList<>();
+        for(Player player : chatMembers) {
+            stringChatMembers.add(player.getNickname());
+        }
+
+        Chat chat = new Chat(72, chatMembers);
+        ArrayList<String> nameChatMembers = chat.getNameChatMembers();
+
+        assertEquals(nameChatMembers, stringChatMembers);
+
+    }
+
+    @Test
+    public void getChatMembers4Players_CorrectBehaviour() {
+
+        ArrayList<Player> chatMembers = new ArrayList<>();
+        chatMembers.add(player1);
+        chatMembers.add(player2);
+        chatMembers.add(player3);
+        chatMembers.add(player4);
+
+        ArrayList<String> stringChatMembers = new ArrayList<>();
+        for (Player chatMember : chatMembers) {
+            stringChatMembers.add(chatMember.getNickname());
+        }
+
+        Chat chat = new Chat(72, chatMembers);
+        ArrayList<String> nameChatMembers = chat.getNameChatMembers();
+
+        assertEquals(nameChatMembers, stringChatMembers);
+
+    }
 }
