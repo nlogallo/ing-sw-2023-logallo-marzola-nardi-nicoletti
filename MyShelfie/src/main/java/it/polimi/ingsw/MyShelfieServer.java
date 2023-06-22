@@ -26,6 +26,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     static MyShelfieServer chatServer;
     static Registry registry;
     static Registry chatRegistry;
+    private static HashMap<String, Long> lastClientActivity = new HashMap();
 
     /**
      * Constructor method
@@ -42,7 +43,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     public static void main(String args[]) {
         new Thread(() -> {
             try {
-                int port = 25566;
+                int port = Integer.parseInt(args[1]);
                 ServerSocket serverSocket = new ServerSocket(port);
                 System.out.println("TCP Server started on port " + port);
                 ServerSocket chatSocket = new ServerSocket(port + 1);
@@ -61,9 +62,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             }
         }).start();
         new Thread(() -> {
-            int port = 30034;
+            int port = Integer.parseInt(args[2]);
             try {
-                System.setProperty("java.rmi.server.hostname", "109.115.4.137");
+                System.setProperty("java.rmi.server.hostname", args[0]);
                 server = new MyShelfieServer(port);
                 chatServer = new MyShelfieServer(port + 1);
                 registry = LocateRegistry.createRegistry(port);
@@ -120,19 +121,23 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     private static void restoreGames() {
         Object object;
         File[] gameFiles = new File("data/savedGames").listFiles();
-        for(int i = 0; i < gameFiles.length; i++) {
-            File gameFile = gameFiles[i];
-            byte[] data = new byte[(int) gameFile.length()];
-            try {
-                FileInputStream fileInputStream = new FileInputStream(gameFile);
-                fileInputStream.read(data, 0, data.length);
-                fileInputStream.close();
-                object = deserializeObject(data);
-            } catch (ClassNotFoundException | IOException e) {
-                throw new RuntimeException(e);
+        if (gameFiles != null) {
+            for (int i = 0; i < gameFiles.length; i++) {
+                File gameFile = gameFiles[i];
+                byte[] data = new byte[(int) gameFile.length()];
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(gameFile);
+                    fileInputStream.read(data, 0, data.length);
+                    fileInputStream.close();
+                    object = deserializeObject(data);
+                } catch (ClassNotFoundException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+                int gameId = Integer.parseInt(gameFile.getName().substring(4, gameFile.getName().indexOf('.')));
+                games.put(gameId, (Game) object);
             }
-            int gameId = Integer.parseInt(gameFile.getName().substring(4, gameFile.getName().indexOf('.')));
-            games.put(gameId, (Game) object);
+        } else {
+            new File("data/savedGames").mkdirs();
         }
     }
 
@@ -166,6 +171,54 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         }
         nicknames.add(nickname);
         return "nicknameOk";
+    }
+
+    public void RMIHeartbeat(String nickname) throws RemoteException {
+        lastClientActivity.put(nickname, System.currentTimeMillis());
+    }
+
+    private static final long CLIENT_TIMEOUT = 5000;
+
+    public void RMIStartClientTimeoutChecker(String nickname) {
+        Thread timeoutCheckerThread = new Thread(() -> {
+            lastClientActivity.put(nickname, System.currentTimeMillis());
+            while (true) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastClientActivity.get(nickname) > CLIENT_TIMEOUT) {
+                    RMIHandleClientDisconnection(nickname);
+                    break;
+                }
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        timeoutCheckerThread.start();
+    }
+
+    public void RMIHandleClientDisconnection(String nickname){
+        Game game = null;
+        gamesFor: for (int i = 0; i < games.size(); i++){
+            game = games.get(i);
+            if(game.getState().equals(GameState.STARTED)){
+                for (Player p : game.getPlayers()) {
+                    if (p.getNickname().equals(nickname)) {
+                        break gamesFor;
+                    }
+                }
+            }
+        }
+        if(!nickname.isEmpty()){
+            System.err.println("User " + nickname + " left the server.");
+        }
+        if(game != null && game.getId() != -1 && games.get(game.getId()).getState() != GameState.PLAYER_DISCONNECTED){
+            System.err.println("Game with id " + game.getId() + " has been terminated.");
+            game.setState(GameState.ENDED);
+            games.put(game.getId(), game);
+        }
     }
 
     /**
@@ -286,15 +339,17 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @param gameId
      * @return
      */
-    public synchronized String RMICheckForStart(int gameId, boolean isRecovered) throws RemoteException {
+    public synchronized String RMICheckForStart(int gameId, boolean isRecovered, String nickname) throws RemoteException {
         Game game = games.get(gameId);
         if(game != null) {
             if(!isRecovered){
                 if (game.getPlayers().size() == game.getPlayersNumber()) {
+                    RMIStartClientTimeoutChecker(nickname);
                     return "startGame";
                 }
             }else{
                 if (game.getRecoveredPlayers().size() == game.getPlayersNumber()) {
+                    RMIStartClientTimeoutChecker(nickname);
                     return "startGame";
                 }
             }

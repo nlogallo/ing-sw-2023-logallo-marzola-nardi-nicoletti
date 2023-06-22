@@ -75,6 +75,13 @@
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.3.0</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>it.polimi.ingsw.MyShelfieServer</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -92,6 +99,42 @@
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.4.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.2.4</version>
+          <executions>
+            <execution>
+              <id>server</id>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+              <configuration>
+                <transformers>
+                  <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                    <mainClass>it.polimi.ingsw.MyShelfieServer</mainClass>
+                  </transformer>
+                </transformers>
+                <shadedArtifactAttached>true</shadedArtifactAttached>
+                <artifactSet>
+                  <includes>
+                    <include>com.google.code.gson:*</include>
+                  </includes>
+                  <!-- Alternative: exclusion of useless artifacts for Server JAR
+                  <excludes>
+                      <exclude>org.controlsfx:*</exclude>
+                      <exclude>org.jline:*</exclude>
+                      <esclude>com.diogonunes:JColor:*</esclude>
+                      <exclude>net.java.dev.jna:*</exclude>
+                      <exclude>org.openjfx:*</exclude>
+                  </excludes>
+                  -->
+                </artifactSet>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>

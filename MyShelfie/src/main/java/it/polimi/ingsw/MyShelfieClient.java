@@ -273,6 +273,7 @@ public class MyShelfieClient {
                         }
                     } while (!serverAnswer.equals("nicknameOk"));
                     remoteNickname = nickname;
+
                     while(true){
                         ArrayList<Object> recoverableGames = RMICheckForAvailableGame();
                         String input;
@@ -419,6 +420,10 @@ public class MyShelfieClient {
         } else {
             System.err.println("Connection failed! :(");
         }
+    }
+
+    private static void RMIHeartbeat(String nickname) throws RemoteException {
+        RMIServer.RMIHeartbeat(nickname);
     }
 
     /**
@@ -642,7 +647,7 @@ public class MyShelfieClient {
      * @throws RemoteException
      */
     static public String RMICheckForGameStart(int gameId) throws RemoteException {
-        return RMIServer.RMICheckForStart(gameId, isRecovered);
+        return RMIServer.RMICheckForStart(gameId, isRecovered, remoteNickname);
     }
 
     /**
@@ -662,6 +667,7 @@ public class MyShelfieClient {
      * @param nickname
      */
     public void handleGameTCP(String nickname) {
+        isGameEnded = false;
         if (interfaceChosen == 2)
             view = new ClientViewObservable(guiView);
         else
@@ -838,7 +844,7 @@ public class MyShelfieClient {
      */
     public void handleChatRMI(String nickname, MyShelfieRMIInterface server){
         HashMap<Integer, Integer> numberMessages = new HashMap<>();
-        while(true){
+        while(!isGameEnded){
             try {
                 NetworkMessage answer = server.RMICheckForChatUpdates(nickname, gameId, numberMessages);
                 if(answer != null) {
@@ -863,7 +869,18 @@ public class MyShelfieClient {
      * @param nickname
      */
     public void handleGameRMI(Game game, String nickname) {
+        new Thread(() -> {
+            while (!isGameEnded) {
+                try {
+                    RMIHeartbeat(nickname);
+                    Thread.sleep(1000);
+                } catch (RemoteException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
         gameId = game.getId();
+        isGameEnded = false;
         if (interfaceChosen == 2)
             view = new ClientViewObservable(guiView);
         else
@@ -904,10 +921,16 @@ public class MyShelfieClient {
                             synchronized (inputLock){
                                 inputLock.notifyAll();
                             }
-                            try {
-                                RMIServer.RMITerminateGame(finalGame.getId(), nickname);
-                            } catch (RemoteException e) {
-                                throw new RuntimeException(e);
+                            synchronized (lock){
+                                lock.notifyAll();
+                            }
+                            if(!isGameEnded) {
+                                isGameEnded = true;
+                                try {
+                                    RMIServer.RMITerminateGame(finalGame.getId(), nickname);
+                                } catch (RemoteException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
                             break;
                         }
@@ -930,7 +953,7 @@ public class MyShelfieClient {
                     playerIndex = i;
             }
 
-            while (true) {
+            while (!isGameEnded) {
                 game = RMIServer.RMIGetGame(game.getId());
                 int isFinished = RMIServer.RMIIsGameFinished(gameId);
                 if(isFinished == 0) {
@@ -1109,9 +1132,11 @@ interface MyShelfieRMIInterface extends Remote {
 
     String RMICheckNickname(String nickname) throws RemoteException;
 
+    void RMIHeartbeat(String nickname) throws RemoteException;
+
     Game RMIHandleGameCreation(int playersNumber, String nickname) throws RemoteException;
 
-    String RMICheckForStart(int gameId, boolean isRecovered) throws RemoteException;
+    String RMICheckForStart(int gameId, boolean isRecovered, String nickname) throws RemoteException;
 
     Game RMIGetGame(int gameId) throws RemoteException;
 
