@@ -1,0 +1,116 @@
+@font-face {
+    font-family: 'ZCOOL XiaoWei', sans-serif;
+    src: url('fonts/ZCOOLXiaoWei-Regular.ttf');
+}
+
+Text {
+    -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-font-size: 60;
+}
+
+.label {
+    -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-font-size: 22;
+}
+
+.button {
+    -fx-pref-height: 50px;
+    -fx-pref-width: 140px;
+    -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to left top, #8f4614, #372112);
+    -fx-border-radius: none;
+    -fx-border-color: #7f3e12;
+    -fx-border-width: 3px;
+    -fx-text-fill: white;
+    -fx-font-size: 22;
+    -fx-padding: 0;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to left top, #a83c16, #d65715);
+}
+
+TextField {
+    -fx-pref-height: 40px;
+    -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to left top, #8f4614, #372112);
+    -fx-border-radius: none;
+    -fx-border-color: #7f3e12;
+    -fx-border-width: 3px;
+    -fx-text-fill: linear-gradient(to left top, #ffffff, #dcdbd6);
+    -fx-font-size: 22;
+    -fx-padding: 0 10 0 10;
+}
+
+#infoMessage {
+    -fx-font-size: 18;
+}
+
+.spinner {
+    -fx-body-color: linear-gradient(to left top, #8f4614, #372112);
+    -fx-background-color: linear-gradient(to left top, #8f4614, #372112);
+    -fx-pref-height: 40px;
+    -fx-alignment: center;
+    -fx-pref-width: 116px;
+    -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
+    -fx-font-weight: bold;
+    -fx-border-color: #7f3e12;
+    -fx-text-fill: linear-gradient(to left top, #ffffff, #dcdbd6);
+    -fx-font-size: 22;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: linear-gradient(to left top, #8f4614, #372112);
+}
+
+.spinner .increment-arrow-button .increment-arrow,
+.spinner .decrement-arrow-button .decrement-arrow {
+    -fx-background-color: #ffffff;
+}
+
+.toggle-button {
+    -fx-font-family: 'ZCOOL XiaoWei', sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: rgba(255, 255, 255, 0.68);
+    -fx-font-size: 22;
+    -fx-background-color: linear-gradient(to left top, rgba(143, 70, 20, 0.47), rgba(55, 33, 18, 0.57));
+    -fx-background-radius: 20;
+    -fx-border-radius: 15;
+    -fx-border-width: 2px;
+    -fx-border-color: #383434;
+}
+
+.toggle-button:selected {
+    -fx-background-color: linear-gradient(to left top, #8f4614, #372112);
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #7f3e12;
+}
+
+.progress-indicator {
+    -fx-accent: orange;
+    -fx-pref-height: 100px;
+}
+
+.table-view {
+    -fx-background-color: linear-gradient(to left top, #8f4614, #372112);
+    -fx-alignment: center;
+    -fx-border-color: #7f3e12;
+    -fx-font-size: 15;
+    -fx-text-fill: linear-gradient(to left top, #ffffff, #dcdbd6);
+}
+
+.table-view .column-header,
+.table-view .column-header .filler,
+.table-view .column-header-background .filler {
+    -fx-background-color: #dcdbd6;
+}
+
+
+
