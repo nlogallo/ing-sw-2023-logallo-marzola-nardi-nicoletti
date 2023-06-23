@@ -125,53 +125,87 @@ class BoardTest {
     }
 
     @Test
+    void checkRefill_CornerCases_ExpectedFalse() {
+        ArrayList<Position> positions = new ArrayList<>();
+        positions.add(new Position(0,3));
+        positions.add(new Position(0,4));
+        positions.add(new Position(1,3));
+        positions.add(new Position(1,5));
+        positions.add(new Position(2,2));
+        positions.add(new Position(2,6));
+        positions.add(new Position(3,1));
+        positions.add(new Position(3,8));
+        positions.add(new Position(3,7));
+        ArrayList<Tile> pulledTiles = boardFour.pullTiles(positions);
+        assertSame(false, boardFour.checkRefill());
+
+        positions = new ArrayList<>();
+        positions.add(new Position(1,4));
+        positions.add(new Position(2,3));
+        positions.add(new Position(2,5));
+        positions.add(new Position(3,2));
+        positions.add(new Position(3,6));
+        ArrayList<Tile> pulledTiles1 = boardFour.pullTiles(positions);
+        assertSame(false, boardFour.checkRefill());
+
+        positions = new ArrayList<>();
+        positions.add(new Position(2,4));
+        positions.add(new Position(3,3));
+        positions.add(new Position(3,5));
+        ArrayList<Tile> pulledTiles2 = boardFour.pullTiles(positions);
+        assertSame(false, boardFour.checkRefill());
+
+        positions = new ArrayList<>();
+        positions.add(new Position(3,4));
+        ArrayList<Tile> pulledTiles3 = boardFour.pullTiles(positions);
+        assertSame(false, boardFour.checkRefill());
+
+        positions = new ArrayList<>();
+        positions.add(new Position(4,0));
+        positions.add(new Position(4,1));
+        positions.add(new Position(4,3));
+        positions.add(new Position(4,5));
+        positions.add(new Position(4,7));
+        ArrayList<Tile> pulledTiles4 = boardFour.pullTiles(positions);
+        assertSame(false, boardFour.checkRefill());
+
+        positions = new ArrayList<>();
+        positions.add(new Position(4,2));
+        positions.add(new Position(4,4));
+        positions.add(new Position(4,6));
+
+        ArrayList<Tile> pulledTiles5 = boardFour.pullTiles(positions);
+        assertSame(false, boardFour.checkRefill());
+    }
+
+    @Test
     void checkRefill_ExpectedTrue() {
         ArrayList<Position> positions1 = new ArrayList<>();
 
         positions1.add(new Position(1,4));
-
         positions1.add(new Position(7,4));
-
         positions1.add(new Position(2,3));
-
         positions1.add(new Position(2,5));
-
         positions1.add(new Position(3,2));
-
         positions1.add(new Position(3,6));
-
         positions1.add(new Position(3,7));
-
         positions1.add(new Position(4,1));
-
         positions1.add(new Position(4,7));
-
         positions1.add(new Position(5,1));
-
         positions1.add(new Position(5,2));
-
         positions1.add(new Position(5,6));
-
         positions1.add(new Position(6,3));
-
         positions1.add(new Position(6,5));
-
         ArrayList<Tile> pulledTiles1 = boardTwo.pullTiles(positions1);
 
         //----------------------------------------------------------------------
 
         ArrayList<Position> positions2 = new ArrayList<>();
-
         positions2.add(new Position(3,5));
-
         positions2.add(new Position(3,5));
-
         positions2.add(new Position(4,2));
-
         positions2.add(new Position(4,6));
-
         positions2.add(new Position(5,3));
-
         positions2.add(new Position(5,5));
         ArrayList<Tile> pulledTiles2 = boardTwo.pullTiles(positions2);
 
@@ -181,11 +215,8 @@ class BoardTest {
         ArrayList<Position> positions3 = new ArrayList<>();
 
         positions3.add(new Position(3,4));
-
         positions3.add(new Position(4,3));
-
         positions3.add(new Position(5,4));
-
         positions3.add(new Position(4,5));
         ArrayList<Tile> pulledTiles3 = boardTwo.pullTiles(positions3);
 
