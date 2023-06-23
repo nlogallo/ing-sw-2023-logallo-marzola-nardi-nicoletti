@@ -55,7 +55,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     System.out.println("Chat Client enabled for " + chatClientSocket.getInetAddress().getHostAddress());
                     ClientTCPHandler client = new ClientTCPHandler(clientSocket, chatClientSocket);
                     new Thread(client).start();
-                    //Chat client handler
                 }
             } catch (IOException e) {
                 System.err.println("Exception in main: " + e);
@@ -177,7 +176,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         lastClientActivity.put(nickname, System.currentTimeMillis());
     }
 
-    private static final long CLIENT_TIMEOUT = 5000;
+    private static final long CLIENT_TIMEOUT = 600000;
 
     public void RMIStartClientTimeoutChecker(String nickname) {
         Thread timeoutCheckerThread = new Thread(() -> {
@@ -218,6 +217,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             System.err.println("Game with id " + game.getId() + " has been terminated.");
             game.setState(GameState.ENDED);
             games.put(game.getId(), game);
+            nicknames.remove(nickname);
         }
     }
 
@@ -379,7 +379,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     public synchronized ArrayList<NetworkMessage> RMIGetResult(int gameId, String nickname) throws RemoteException {
         ArrayList<NetworkMessage> result = new ArrayList<>();
         Game game = games.get(gameId);
-        VirtualView virtualView = RMIVirtualViews.get(nickname);
+        VirtualView virtualView = new VirtualView(games.get(gameId), nickname);
+        RMIVirtualViews.put(nickname, virtualView);
         result.add(virtualView.updateBoard());
         result.add(virtualView.updateGameTokens());
         result.add(virtualView.updateResult());
@@ -498,12 +499,11 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      */
     public synchronized int RMIIsGameFinished(int gameId) throws RemoteException {
         Game game = games.get(gameId);
+        game.clearRecoveredPlayers();
         if(game.getState().equals(GameState.ENDED)){
             if(game.getCurrentPlayer() == null){
-                games.remove(gameId);
                 return 1;
             }
-            games.remove(gameId);
             return 2;
         }
         else if(game.getState().equals(GameState.PLAYER_DISCONNECTED))
@@ -511,11 +511,19 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return 0;
     }
 
+    public synchronized void RMIDeleteGame(int gameId, String nickname) throws RemoteException {
+        Game game = games.get(gameId);
+        game.addRecoveredPlayer(nickname);
+        if(game.getState().equals(GameState.ENDED) && game.getRecoveredPlayers().size() == game.getPlayersNumber())
+            games.remove(gameId);
+    }
+
     public synchronized void RMITerminateGame(int gameId, String nickname) throws RemoteException {
         Game game = games.get(gameId);
         if (game != null) {
             System.err.println("Game with id " + game.getId() + " has been terminated.");
             games.get(game.getId()).setState(GameState.PLAYER_DISCONNECTED);
+            nicknames.remove(nickname);
         }
     }
 
@@ -821,8 +829,11 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             } else {
                                 endMessage.setRequestId("END");
                                 endMessage.setTextMessage("Game ended! Thank you for playing!");
-                                deleteGame(game.getId());
-                                games.remove(game.getId());
+                                game.addRecoveredPlayer(nickname);
+                                if(game.getRecoveredPlayers().size() == game.getPlayers().size()) {
+                                    deleteGame(game.getId());
+                                    games.remove(game.getId());
+                                }
                             }
                             ArrayList<NetworkMessage> endArrayList = new ArrayList<>();
                             endArrayList.add(endMessage);
@@ -863,6 +874,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         private final Socket clientSocket;
         private final String nickname;
         private final int gameId;
+        private ObjectOutputStream outputStream = null;
+        private ObjectInputStream inputStream = null;
 
         public ChatClientTCPHandler(Socket socket, String nickname, int gameId) {
             this.clientSocket = socket;
@@ -871,8 +884,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         }
 
         public void run() {
-            ObjectOutputStream outputStream = null;
-            ObjectInputStream inputStream = null;
             try {
                 outputStream = new ObjectOutputStream(this.clientSocket.getOutputStream());
                 inputStream = new ObjectInputStream(this.clientSocket.getInputStream());
@@ -960,6 +971,5 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             } catch (IOException e) {
             }
         }
-
     }
 }

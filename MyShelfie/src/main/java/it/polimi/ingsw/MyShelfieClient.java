@@ -9,8 +9,6 @@ import it.polimi.ingsw.view.GUI.GUIView;
 import it.polimi.ingsw.view.GUI.MyShelfieFX;
 import it.polimi.ingsw.view.GUI.SceneController;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -46,7 +44,7 @@ public class MyShelfieClient {
     static int gameId;
     static ClientViewObservable view;
     static ClientController controller;
-    private final Object lock = new Object();
+    private static final Object lock = new Object();
     private final Object inputLock = new Object();
     static GUIView guiView;
     private static int interfaceChosen;
@@ -57,7 +55,6 @@ public class MyShelfieClient {
      * Main method: Asks to the user to choose between TCP and RMI connection and establishes the connection with the chosen protocol.
      *
      * @param args
-     * @throws IOException
      */
     public static void main(String args[]){
         System.out.println("Welcome to MyShelfie!");
@@ -225,7 +222,7 @@ public class MyShelfieClient {
                     } while (repeat);
                     String endGameAnswer = "";
                     while (true) {
-                        System.out.println("Do you want to search for a new game or quit? (y/N)");
+                        System.out.println("If you have not already done so, type /quitGame after this message to quit from the match.\nThen if you want to search for a new game (type y). To quit (type n)");
                         endGameAnswer = sc.nextLine();
                         if(endGameAnswer.equals("n") || endGameAnswer.equals("N") || endGameAnswer.equals("y") || endGameAnswer.equals("Y")){
                             break;
@@ -397,7 +394,7 @@ public class MyShelfieClient {
                         } while (repeat);
                         String doWantToPlayAgain = "";
                         while (true) {
-                            System.out.println("Do you want to search for a new game or quit? (y/N)");
+                            System.out.println("If you have not already done so, type /quitGame after this message to quit from the match.\nThen if you want to search for a new game (type y). To quit (type n)");
                             doWantToPlayAgain = sc.nextLine();
                             if (doWantToPlayAgain.equals("n") || doWantToPlayAgain.equals("N") || doWantToPlayAgain.equals("y") || doWantToPlayAgain.equals("Y")) {
                                 break;
@@ -464,15 +461,11 @@ public class MyShelfieClient {
             protocol = 2;
             try {
                 System.out.println("Connecting to RMI server...");
-                //RMIServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + port + "/Server");
-                //RMIChatServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + (port + 1) + "/chatServer");
                 RMIServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry(hostname, port).lookup("Server");
                 RMIChatServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry(hostname, port + 1).lookup("chatServer");
-
                 System.out.println("Connected! :)");
                 return true;
             } catch (Exception e) {
-                e.printStackTrace();
                 return false;
             }
         }
@@ -551,7 +544,12 @@ public class MyShelfieClient {
             doWantToPlayAgain.addContent(answer);
             outputStream.writeObject(doWantToPlayAgain);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            if(interfaceChosen == 2)
+                Platform.runLater(()-> {
+                    SceneController.changeScene("ErrorStage.fxml");
+                });
+            else
+                System.err.println("\nConnection lost!");
         }
     }
 
@@ -662,7 +660,7 @@ public class MyShelfieClient {
     }
 
     /**
-     * This methods handles the Game with TCP connection
+     * This method handles the Game with TCP connection
      *
      * @param nickname
      */
@@ -694,7 +692,12 @@ public class MyShelfieClient {
                             try {
                                 inputLock.wait();
                             } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
+                                if(interfaceChosen == 2)
+                                    Platform.runLater(()-> {
+                                        SceneController.changeScene("ErrorStage.fxml");
+                                    });
+                                else
+                                    System.err.println("\nConnection lost!");
                             }
                         }
                         if (!isGameEnded) {
@@ -732,9 +735,6 @@ public class MyShelfieClient {
                 controller.updateResults(currentPlayer);
                 inputLock.notifyAll();
             }
-            /*if (interfaceChosen == 1 && currentPlayer.getContent().get(0).equals(nickname)) {
-                controller.enableInput();
-            }*/
             ArrayList<NetworkMessage> result = null;
             while (!isGameEnded) {
                 if ((currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname))) {
@@ -800,10 +800,13 @@ public class MyShelfieClient {
                     SceneController.changeScene("ErrorStage.fxml");
                 });
             }
-        } catch (ClassNotFoundException ex) {
-            throw new RuntimeException(ex);
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
+        } catch (ClassNotFoundException | InterruptedException ex) {
+            if(interfaceChosen == 2)
+                Platform.runLater(()-> {
+                    SceneController.changeScene("ErrorStage.fxml");
+                });
+            else
+                System.err.println("\nConnection lost!");
         }
     }
 
@@ -833,7 +836,12 @@ public class MyShelfieClient {
                     SceneController.changeScene("ErrorStage.fxml");
                 });
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            if(interfaceChosen == 2)
+                Platform.runLater(()-> {
+                    SceneController.changeScene("ErrorStage.fxml");
+                });
+            else
+                System.err.println("\nConnection lost!");
         }
     }
 
@@ -856,8 +864,16 @@ public class MyShelfieClient {
                     }
                 }
             } catch (RemoteException e) {
-                System.err.println("MyShelfieServer is temporarily down");
-                System.exit(0);
+                if(interfaceChosen == 1) {
+                    System.err.println("MyShelfieServer is temporarily down");
+                    System.exit(0);
+                }
+                else {
+                    Platform.runLater(()-> {
+                        SceneController.changeScene("ErrorStage.fxml");
+                    });
+                }
+                isGameEnded = true;
             }
         }
     }
@@ -875,7 +891,12 @@ public class MyShelfieClient {
                     RMIHeartbeat(nickname);
                     Thread.sleep(1000);
                 } catch (RemoteException | InterruptedException e) {
-                    throw new RuntimeException(e);
+                    if(interfaceChosen == 2)
+                        Platform.runLater(()-> {
+                            SceneController.changeScene("ErrorStage.fxml");
+                        });
+                    else
+                        System.err.println("\nConnection lost!");
                 }
             }
         }).start();
@@ -905,39 +926,50 @@ public class MyShelfieClient {
                 Game finalGame = game;
                 new Thread(() -> {
                     String textFromUser;
-                    while(true){
+                    while(!isGameEnded){
                         Scanner scanner = new Scanner(System.in);
                         synchronized (inputLock){
                             try {
                                 inputLock.wait();
                             } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
+                                if(interfaceChosen == 2)
+                                    Platform.runLater(()-> {
+                                        SceneController.changeScene("ErrorStage.fxml");
+                                    });
+                                else
+                                    System.err.println("\nConnection lost!");
                             }
                         }
-                        System.out.println("To quit insert the command: \u001B[1m/quitGame");
-
-                        textFromUser = scanner.nextLine();
-                        if(textFromUser.equals("/quitGame")) {
-                            synchronized (inputLock){
-                                inputLock.notifyAll();
-                            }
-                            synchronized (lock){
-                                lock.notifyAll();
-                            }
-                            if(!isGameEnded) {
-                                isGameEnded = true;
-                                try {
-                                    RMIServer.RMITerminateGame(finalGame.getId(), nickname);
-                                } catch (RemoteException e) {
-                                    throw new RuntimeException(e);
+                        if (!isGameEnded) {
+                            System.out.println("To quit insert the command: \u001B[1m/quitGame");
+                            textFromUser = scanner.nextLine();
+                            if(isGameEnded)
+                                break;
+                            if (textFromUser.equals("/quitGame")) {
+                                synchronized (inputLock) {
+                                    inputLock.notifyAll();
                                 }
-                            }
-                            break;
+                                synchronized (lock) {
+                                    lock.notifyAll();
+                                }
+                                if (!isGameEnded) {
+                                    isGameEnded = true;
+                                    try {
+                                        RMIServer.RMITerminateGame(finalGame.getId(), nickname);
+                                    } catch (RemoteException e) {
+                                        if(interfaceChosen == 2)
+                                            Platform.runLater(()-> {
+                                                SceneController.changeScene("ErrorStage.fxml");
+                                            });
+                                        else
+                                            System.err.println("\nConnection lost!");
+                                    }
+                                }
+                                break;
+                            } else
+                                controller.enableInput();
                         }
-                        else
-                            controller.enableInput();
                     }
-                    //user left the game
                 }).start();
             }
             controller.playerSetup(nm);
@@ -952,10 +984,9 @@ public class MyShelfieClient {
                 if (game.getPlayers().get(i).getNickname().equals(nickname))
                     playerIndex = i;
             }
-
             while (!isGameEnded) {
                 game = RMIServer.RMIGetGame(game.getId());
-                int isFinished = RMIServer.RMIIsGameFinished(gameId);
+                int isFinished = RMIServer.RMIIsGameFinished(game.getId());
                 if(isFinished == 0) {
                     if ((currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname))) {
                         synchronized (lock) {
@@ -980,10 +1011,9 @@ public class MyShelfieClient {
                                 controller.updateResults(res);
                             inputLock.notifyAll();
                         }
-                        RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);
+                        RMIServer.RMISetMutexFalseAtIndex(game.getId(), playerIndex);
                     }
                 }else if (isFinished == 1) {
-                    //if (RMIServer.RMIGetMutexAtIndex(game.getId(), playerIndex)) {
                     result = RMIServer.RMIGetResult(game.getId(), nickname);
                     game = RMIServer.RMIGetGame(game.getId());
                     NetworkMessage board = result.get(0);
@@ -997,22 +1027,33 @@ public class MyShelfieClient {
                     controller.updateGameTokens(token);
                     controller.updateResults(res);
                     RMIServer.RMISetMutexFalseAtIndex(gameId, playerIndex);
-                    //}
                     System.out.println("Game ended! Thank you for playing!");
+                    RMIServer.RMIDeleteGame(game.getId(), nickname);
+                    isGameEnded = true;
                     break;
                 } else if (isFinished == 2) {
-                    System.err.println("A player left the game. Game end here.");
-                    synchronized (inputLock){
-                        inputLock.wait();
+                    if(interfaceChosen == 2){
+                        Platform.runLater(()->{
+                                    SceneController.getStage().close();
+                                    ArrayList<Object> parameters = new ArrayList<>();
+                                    parameters.add(protocol);
+                                    parameters.add(nickname);
+                                    SceneController.changeScene("QuittingScene.fxml", parameters);
+                                }
+                        );
                     }
+                    else
+                        System.err.println("A player left the game. Game end here.");
+                    isGameEnded = true;
                     break;
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-            //System.err.println("\nConnection lost!");
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            if(interfaceChosen == 2)
+                Platform.runLater(()-> SceneController.changeScene("ErrorStage.fxml"));
+            else
+                System.err.println("\nConnection lost!");
         }
     }
 
@@ -1048,7 +1089,7 @@ public class MyShelfieClient {
         } else {
             if (networkMessage.getRequestId().equals("MT")) {
                 try {
-                    NetworkMessage tilesMoved = new NetworkMessage();
+                    NetworkMessage tilesMoved;
                     synchronized (lock) {
                         tilesMoved = RMIServer.RMIMoveTiles(networkMessage, remoteNickname, gameId);
                         lock.notifyAll();
@@ -1078,47 +1119,30 @@ public class MyShelfieClient {
 
     public int getProtocol() { return protocol; }
 
+
     /**
      * This method allows the user to quit from the game
      * @param gameId is the id of the game
      * @param nickname is the user's nickname
      */
     public static void voluntaryQuitting(int gameId, String nickname){
-        if(protocol == 1){
-            if (!isGameEnded) {
-                isGameEnded = true;
-                NetworkMessage quit = new NetworkMessage();
-                quit.setRequestId("ER");
-                try {
+        try {
+            if (protocol == 1) {
+                if (!isGameEnded) {
+                    isGameEnded = true;
+                    NetworkMessage quit = new NetworkMessage();
+                    quit.setRequestId("ER");
                     chatOutput.writeObject(quit);
-                } catch (IOException e) {
-                        Platform.runLater(()->{
-                            Stage primaryStage = SceneController.getStage();
-                            primaryStage.close();
-                            Stage stage = new Stage();
-                            stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
-                            stage.setTitle("My Shelfie Connection Error");
-                            SceneController.setStage(stage);
-                            SceneController.changeScene("ErrorStage.fxml");
-                        });
+                    synchronized (lock){
+                        lock.notifyAll();
+                    }
                 }
-            }
-        }
-        else{
-            try {
+            } else
                 RMIServer.RMITerminateGame(gameId, nickname);
-            } catch (RemoteException e) {
-                Platform.runLater(()->{
-                    Stage primaryStage = SceneController.getStage();
-                    primaryStage.close();
-                    Stage stage = new Stage();
-                    stage.getIcons().add(new Image("assets/Publisher material/Icon 50x50px.png"));
-                    stage.setTitle("My Shelfie Connection Error");
-                    SceneController.setStage(stage);
-                    SceneController.changeScene("ErrorStage.fxml");
-                }
-                );
-            }
+        }catch (IOException e){
+            Platform.runLater(() -> {
+                SceneController.changeScene("ErrorStage.fxml");
+            });
         }
     }
 
@@ -1161,4 +1185,5 @@ interface MyShelfieRMIInterface extends Remote {
     Game RMIDoWantToRecover(NetworkMessage networkMessage) throws RemoteException;
     Game RMISetPlayer(int gameId, String nickname) throws RemoteException;
     void RMITerminateGame(int gameId, String nickname) throws RemoteException;
+    void RMIDeleteGame(int gameId, String nickname) throws RemoteException;
 }

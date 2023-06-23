@@ -75,7 +75,6 @@ public class CG_StdEqualTiles extends CommonGoal{
                     return true;
             }
         }
-        System.out.println(countTimes);
         return false;
     }
 

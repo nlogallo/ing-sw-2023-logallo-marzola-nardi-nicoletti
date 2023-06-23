@@ -1264,7 +1264,9 @@ public class MainSceneController implements GenericSceneController, Initializabl
                     nicknameList.addAll(gui.getPlayersNickname());
                 ObservableList<String> list = FXCollections.observableArrayList(nicknameList);
                 choiceBox.getItems().addAll(list);
-                choiceBox.getSelectionModel().selectFirst();
+                Platform.runLater(()-> {
+                    choiceBox.getSelectionModel().selectFirst();
+                });
                 }
             }
     }
