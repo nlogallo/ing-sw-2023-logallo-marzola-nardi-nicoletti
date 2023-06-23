@@ -16,6 +16,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.rmi.ConnectException;
+import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -50,6 +52,7 @@ public class MyShelfieClient {
     private static int interfaceChosen;
     private static boolean isRecovered;
     private static boolean isGameEnded = false;
+    private boolean isChatAlive = false;
 
     /**
      * Main method: Asks to the user to choose between TCP and RMI connection and establishes the connection with the chosen protocol.
@@ -181,7 +184,7 @@ public class MyShelfieClient {
                                 } else if (integerInput == 2) {
                                     TCPDoWantToRecover("DELGAME", handledGameId);
                                     recoverableGames.remove(recoverableIds.indexOf(handledGameId));
-                                    recoverableIds.remove(handledGameId);
+                                    recoverableIds.remove(recoverableIds.indexOf(handledGameId));
                                     System.out.println("Game with id " + handledGameId + " deleted!");
                                     //break;
                                 }
@@ -341,7 +344,7 @@ public class MyShelfieClient {
                                     } else if (integerInput == 2) {
                                         game = RMIDoWantToRecover("DELGAME", handledGameId);
                                         recoverableGames.remove(recoverableIds.indexOf(handledGameId));
-                                        recoverableIds.remove(handledGameId);
+                                        recoverableIds.remove(recoverableIds.indexOf(handledGameId));
                                         System.out.println("Game with id " + handledGameId + " deleted!");
                                     }
                                 }
@@ -440,10 +443,6 @@ public class MyShelfieClient {
                 chatSocket = new Socket(hostname, port + 1);
                 if (chatSocket.isConnected()) {
                     chatSocket.setKeepAlive(true);
-                    chatOutput = new ObjectOutputStream(chatSocket.getOutputStream());
-                    chatOutput.flush();
-                    //chatOutput.writeObject("chatOk");
-                    //chatOutput.close();
                 }
                 if (socket.isConnected()) {
                     System.out.println("Connected! :)");
@@ -461,6 +460,8 @@ public class MyShelfieClient {
             protocol = 2;
             try {
                 System.out.println("Connecting to RMI server...");
+                //RMIServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + port + "/Server");
+                //RMIChatServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + (port + 1) + "/chatServer");
                 RMIServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry(hostname, port).lookup("Server");
                 RMIChatServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry(hostname, port + 1).lookup("chatServer");
                 System.out.println("Connected! :)");
@@ -673,6 +674,7 @@ public class MyShelfieClient {
         controller = new ClientController(view, this, nickname);
         view.setClientController(controller);
         try {
+            chatOutput = new ObjectOutputStream(chatSocket.getOutputStream());
             chatInput = new ObjectInputStream(chatSocket.getInputStream());
             new Thread(() -> handleChatTCP(nickname, chatSocket)).start();
             if (interfaceChosen == 2) {
@@ -765,6 +767,9 @@ public class MyShelfieClient {
                     NetworkMessage res = result.get(2);
                     if(res.getRequestId().equals("END")) {
                         isGameEnded = true;
+                        NetworkMessage endMessage = new NetworkMessage();
+                        endMessage.setRequestId("END");
+                        chatOutput.writeObject(endMessage);
                         if(interfaceChosen == 2 && res.getTextMessage().equals("A player left the game. Game end here.")){
                             Platform.runLater(()->{
                                         SceneController.getStage().close();
@@ -817,18 +822,25 @@ public class MyShelfieClient {
      */
     public void handleChatTCP(String nickname, Socket chatSocket) {
         try {
+            isChatAlive = true;
             while (true) {
                 NetworkMessage nm = (NetworkMessage) chatInput.readObject();
                 if (nm.getRequestId().equals("UC")) {
                     controller.updateChat(nm);
                 } else if (nm.getRequestId().equals("ER")) {
                     chatOutput.writeObject(nm);
+                    isChatAlive = false;
+                    break;
+                } else if (nm.getRequestId().equals("END")) {
+                    isChatAlive = false;
                     break;
                 }
             }
         } catch (IOException e){
+            isChatAlive = false;
             if(interfaceChosen == 1) {
                 System.err.println("MyShelfieServer is temporarily down");
+                //e.printStackTrace();
                 System.exit(0);
             }
             else
@@ -836,6 +848,7 @@ public class MyShelfieClient {
                     SceneController.changeScene("ErrorStage.fxml");
                 });
         } catch (ClassNotFoundException e) {
+            isChatAlive = false;
             if(interfaceChosen == 2)
                 Platform.runLater(()-> {
                     SceneController.changeScene("ErrorStage.fxml");
@@ -1079,6 +1092,7 @@ public class MyShelfieClient {
                     return result;
                 } else if (networkMessage.getRequestId().equals("SM")) {
                     chatOutput.flush();
+                    System.out.println("Invio il messaggio");
                     chatOutput.writeObject(networkMessage);
                 }
             } catch (IOException | ClassNotFoundException e) {

@@ -176,7 +176,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         lastClientActivity.put(nickname, System.currentTimeMillis());
     }
 
-    private static final long CLIENT_TIMEOUT = 600000;
+    private static final long CLIENT_TIMEOUT = 5000;
 
     public void RMIStartClientTimeoutChecker(String nickname) {
         Thread timeoutCheckerThread = new Thread(() -> {
@@ -217,8 +217,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             System.err.println("Game with id " + game.getId() + " has been terminated.");
             game.setState(GameState.ENDED);
             games.put(game.getId(), game);
-            nicknames.remove(nickname);
         }
+        nicknames.remove(nickname);
     }
 
     /**
@@ -853,17 +853,19 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 }else{
                     System.err.println("User from " + clientSocket.getInetAddress().getHostAddress() + " left the server.");
                 }
-                if(game != null && game.getId() != -1 && games.get(game.getId()).getState() != GameState.PLAYER_DISCONNECTED){
+                if(game != null && game.getId() != -1){
                     System.err.println("Game with id " + game.getId() + " has been terminated.");
                     games.get(game.getId()).setState(GameState.PLAYER_DISCONNECTED);
                     //deleteGame(game.getId());
                 }
+                nicknames.remove(nickname);
             } catch (StringIndexOutOfBoundsException e) {
                 System.err.println("Communication error. User disconnected.");
+                nicknames.remove(nickname);
             } catch (ClassNotFoundException e) {
                 System.err.println("Internal error: " + e);
+                nicknames.remove(nickname);
             }
-            nicknames.remove(nickname);
         }
     }
 
@@ -907,10 +909,18 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                     System.err.println("Game with id " + games.get(gameId).getId() + " has been terminated.");
                                     games.get(games.get(gameId).getId()).setState(GameState.PLAYER_DISCONNECTED);
                                 }
+                                nicknames.remove(nickname);
+                                break;
+                            } else if (nm.getRequestId().equals("END")){
+                                NetworkMessage endMessage = new NetworkMessage();
+                                endMessage.setRequestId("END");
+                                outputStream.writeObject(endMessage);
+                                break;
                             }
                         } catch (IOException | ClassNotFoundException e) {
                             System.err.println("User " + nickname + " left the chat!");
                             games.get(gameId).setState(GameState.PLAYER_DISCONNECTED);
+                            nicknames.remove(nickname);
                             break;
                         }
                     }
@@ -929,7 +939,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         try {
                             clientSocket.setKeepAlive(true);
                             game = games.get(gameId);
-                            if(game != null) {
+                            if(game != null && game.getState().equals(GameState.STARTED)) {
                                 chats = game.getChats();
                                 for (int i = 0; i < chats.size(); i++) {
                                     Chat chat = chats.get(i);
@@ -957,9 +967,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                     }
                                 }
                             } else {
-                                NetworkMessage nm = new NetworkMessage();
+                                /*NetworkMessage nm = new NetworkMessage();
                                 nm.setRequestId("ER");
-                                finalOutputStream.writeObject(nm);
+                                finalOutputStream.writeObject(nm);*/
                                 break;
                             }
                         } catch (IOException e) {
