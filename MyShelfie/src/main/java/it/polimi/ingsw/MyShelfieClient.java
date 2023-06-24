@@ -424,6 +424,11 @@ public class MyShelfieClient {
         }
     }
 
+    /**
+     * RMI method which sends to the server a heartbeat. Used to handle disconnections
+     * @param nickname
+     * @throws RemoteException
+     */
     private static void RMIHeartbeat(String nickname) throws RemoteException {
         RMIServer.RMIHeartbeat(nickname);
     }
@@ -534,6 +539,7 @@ public class MyShelfieClient {
 
     /**
      * This method handle the game saves options
+     *
      * @param operation can be NEWGAME to search for a new game, DELGAME to delete the game with id specified in handledGameId, RECGAME to recover the game with id specified in handledGameId
      * @param handledGameId
      * @throws IOException
@@ -596,6 +602,14 @@ public class MyShelfieClient {
         return RMIServer.RMICheckforAvailableGame(remoteNickname).getContent();
     }
 
+    /**
+     * RMI method which answer to the recover question of the specified game
+     *
+     * @param operation can be NEWGAME to search for a new game, DELGAME to delete the game with id specified in handledGameId, RECGAME to recover the game with id specified in handledGameId
+     * @param handledGameId
+     * @return Game
+     * @throws RemoteException
+     */
     static public Game RMIDoWantToRecover(String operation, int handledGameId) throws RemoteException {
         NetworkMessage networkMessage = new NetworkMessage();
         networkMessage.setRequestId(operation);
@@ -604,12 +618,20 @@ public class MyShelfieClient {
         return RMIServer.RMIDoWantToRecover(networkMessage);
     }
 
+    /**
+     * RMI method which sets the player inside the game specified by gameId
+     *
+     * @param gameId
+     * @return
+     * @throws RemoteException
+     */
     static public Game RMISetPlayer(int gameId) throws RemoteException {
         return RMIServer.RMISetPlayer(gameId, remoteNickname);
     }
 
     /**
      * Method which sets the isRecovered variable
+     *
      * @param value
      * @throws RemoteException
      */
@@ -642,7 +664,7 @@ public class MyShelfieClient {
     /**
      * Method which gets the game id (TCP)
      *
-     * @return
+     * @return the id of the game
      * @throws IOException
      * @throws ClassNotFoundException
      */
@@ -1133,16 +1155,27 @@ public class MyShelfieClient {
         return null;
     }
 
+    /**
+     * GUI view getter
+     * @return the GUI view
+     */
     public static GUIView getGuiView(){
         return guiView;
     }
 
+    /**
+     * Chosen interface getter
+     * @return the chosen interface
+     */
     public static int getInterfaceChosen(){
         return interfaceChosen;
     }
 
+    /**
+     * Chosen protocol getter
+     * @return the chosen protocol
+     */
     public int getProtocol() { return protocol; }
-
 
     /**
      * This method allows the user to quit from the game

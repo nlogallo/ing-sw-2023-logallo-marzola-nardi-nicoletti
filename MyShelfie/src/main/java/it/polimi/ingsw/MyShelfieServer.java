@@ -42,6 +42,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @param args
      */
     public static void main(String args[]) {
+        CLIENT_TIMEOUT = Long.parseLong(args[3]);
         new Thread(() -> {
             try {
                 int port = Integer.parseInt(args[1]);
@@ -161,8 +162,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
 
     /**
      * RMI method which checks game nickname
-     * @param nickname
-     * @return
+     * @param nickname of the subject player
+     * @return nicknameExists if the nickname already exists in the server, nicknameWrong if the nickname doesn't match
+     * the required bounds, nicknameOk if the nickname can be used inside the server
      * @throws RemoteException
      */
     public String RMICheckNickname(String nickname) throws RemoteException {
@@ -176,12 +178,21 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return "nicknameOk";
     }
 
+    /**
+     * RMI method which update the specified player time
+     * @param nickname of the subject player
+     * @throws RemoteException
+     */
     public void RMIHeartbeat(String nickname) throws RemoteException {
         lastClientActivity.put(nickname, System.currentTimeMillis());
     }
 
-    private static final long CLIENT_TIMEOUT = 5000;
+    private static long CLIENT_TIMEOUT = 5000;
 
+    /**
+     * RMI method which continuously checks if the specified player connection is alive
+     * @param nickname of the subject player
+     */
     public void RMIStartClientTimeoutChecker(String nickname) {
         Thread timeoutCheckerThread = new Thread(() -> {
             lastClientActivity.put(nickname, System.currentTimeMillis());
@@ -201,6 +212,10 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         timeoutCheckerThread.start();
     }
 
+    /**
+     * RMI method which handles the specified player disconnection
+     * @param nickname
+     */
     public void RMIHandleClientDisconnection(String nickname){
         Game game = null;
         boolean gameFound = false;
@@ -232,9 +247,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     }
 
     /**
-     * RMI method which checks for available games
-     * @param message
-     * @return
+     * RMI method which checks for available games handling the player connection
+     * @param message which contains the player nickname
+     * @return the available games
      * @throws RemoteException
      */
     public synchronized NetworkMessage RMICheckforAvailableGame(String message) throws RemoteException {
@@ -249,6 +264,13 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return networkMessage;
     }
 
+    /**
+     * RMI method which add the player inside the specified game
+     * @param gameId
+     * @param nickname of the caller of the method
+     * @return the subject game
+     * @throws RemoteException
+     */
     public synchronized Game RMISetPlayer(int gameId, String nickname) throws RemoteException {
         Game game = games.get(gameId);
         game.addPlayer(new Player(false, new Shelf(), nickname, game));
@@ -257,6 +279,12 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return game;
     }
 
+    /**
+     * RMI method which handles the answer of a player to the recover game question
+     * @param networkMessage contains: DELGAME if the specified game has to be deleted, RECGAME if the specified game has to be recovered,
+     *                       NEWGAME if the player wants to create a new game
+     * @return the subject game
+     */
     public synchronized Game RMIDoWantToRecover(NetworkMessage networkMessage) {
         Game game = null;
         int gameId = (int) networkMessage.getContent().get(0);
@@ -284,10 +312,10 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     }
 
     /**
-     * RMI method to create game
-     * @param playersNumber
-     * @param nickname
-     * @return
+     * RMI method to create a game
+     * @param playersNumber the number of players of the specified game
+     * @param nickname of the caller of the method
+     * @return the game just created
      * @throws RemoteException
      */
     public synchronized Game RMIHandleGameCreation(int playersNumber, String nickname) throws RemoteException {
@@ -301,7 +329,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     /**
      * RMI method which handles the player setup
      * @param game
-     * @param nickname
+     * @param nickname of the caller of the method
      * @return
      */
     public synchronized NetworkMessage RMIHandlePlayerSetup(Game game, String nickname, boolean isRecovered) throws RemoteException {
@@ -330,8 +358,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
 
     /**
      * RMI method which gets the first player to play
-     * @param nickname
-     * @return
+     * @param nickname of the caller of the method
+     * @return a network message with the first player to play the game
      */
     public synchronized NetworkMessage RMIGetFirstPlayer(String nickname) throws RemoteException {
         VirtualView virtualView = RMIVirtualViews.get(nickname);
@@ -343,7 +371,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     /**
      * RMI method which checks for game start
      * @param gameId
-     * @return
+     * @return startGame if the game has to be started, wait if the game is not full yet
      */
     public synchronized String RMICheckForStart(int gameId, boolean isRecovered, String nickname) throws RemoteException {
         Game game = games.get(gameId);
@@ -369,7 +397,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     /**
      * RMI method which gets a specific game
      * @param gameId
-     * @return
+     * @return the game specified by the id
      * @throws RemoteException
      */
     public synchronized Game RMIGetGame(int gameId) throws RemoteException{
@@ -379,8 +407,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     /**
      * RMI method which gets results of a game turn
      * @param gameId
-     * @param nickname
-     * @return
+     * @param nickname of the caller of the method
+     * @return an arraylist with the updated board, game tokens and turn result
      * @throws RemoteException
      */
     public synchronized ArrayList<NetworkMessage> RMIGetResult(int gameId, String nickname) throws RemoteException {
@@ -398,7 +426,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     /**
      * RMI method which gets game mutex status
      * @param gameId
-     * @param playerIndex
+     * @param playerIndex the index of the player inside the player array of the specified game
      * @return
      */
     public synchronized boolean RMIGetMutexAtIndex(int gameId, int playerIndex) throws RemoteException{
@@ -408,7 +436,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     /**
      * This RMI method sets the specified player mutex to false
      * @param gameId
-     * @param playerIndex
+     * @param playerIndex the index of the player inside the player array of the specified game
      * @throws RemoteException
      */
     public synchronized void RMISetMutexFalseAtIndex(int gameId, int playerIndex) throws RemoteException{
@@ -419,8 +447,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
 
     /**
      * This RMI method makes the tiles move
-     * @param networkMessage
-     * @param nickname
+     * @param networkMessage which contains the tiles to move
+     * @param nickname of the caller of the method
      * @param gameId
      * @return
      * @throws RemoteException
@@ -446,8 +474,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
 
     /**
      * This RMI method checks for new messages to send from client
-     * @param networkMessage
-     * @param nickname
+     * @param networkMessage which contains the message itself
+     * @param nickname of the caller of the method
      * @param gameId
      * @throws RemoteException
      */
@@ -459,9 +487,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
 
     /**
      * This RMI method continuously checks for new messages from the chat
-     * @param nickname
+     * @param nickname of the caller of this method
      * @param gameId
-     * @param numberMessages
+     * @param numberMessages contains the number of messages for each alive chat
      * @return
      * @throws RemoteException
      */
@@ -502,7 +530,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     /**
      * This RMI method check if the game ended or not for client internal checks
      * @param gameId
-     * @return
+     * @return 1 the game ended normally, 2 if the game ended because a player left, 0 if the game is still "STARTED"
      * @throws RemoteException
      */
     public synchronized int RMIIsGameFinished(int gameId) throws RemoteException {
@@ -519,6 +547,12 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         return 0;
     }
 
+    /**
+     * RMI method which handles the game cancellation
+     * @param gameId
+     * @param nickname of the caller of this method
+     * @throws RemoteException
+     */
     public synchronized void RMIDeleteGame(int gameId, String nickname) throws RemoteException {
         Game game = games.get(gameId);
         game.addRecoveredPlayer(nickname);
@@ -528,6 +562,12 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         }
     }
 
+    /**
+     * RMI method which terminates the specified game
+     * @param gameId
+     * @param nickname of the player which called this method
+     * @throws RemoteException
+     */
     public synchronized void RMITerminateGame(int gameId, String nickname) throws RemoteException {
         Game game = games.get(gameId);
         if (game != null) {
