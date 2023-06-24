@@ -247,7 +247,7 @@
                         <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0"
                                     GridPane.rowIndex="5">
                             <children>
-                                <ImageView fx:id="shelf50" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="1.0"
+                                <ImageView fx:id="shelf50" fitHeight="44.0" fitWidth="44.0" layoutX="8.0" layoutY="2.0"
                                            pickOnBounds="true" preserveRatio="true"/>
                             </children>
                         </AnchorPane>
