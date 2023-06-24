@@ -246,6 +246,10 @@ public class ServerController {
         return networkMessage;
     }
 
+    /**
+     * This method return the game from the controller
+     * @return the Game
+     */
     public Game getGame(){
         return gameController.getGame();
     }

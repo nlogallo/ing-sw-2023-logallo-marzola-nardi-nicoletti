@@ -144,5 +144,10 @@ public class ClientViewObservable {
         view.enableInput();
     }
 
+    /**
+     * This method communicates the views that the game has ended
+     * @param isGameEnded is a boolean that says if the game is ended (true) or not (false)
+     * @param protocol is the protocol chosen at the beginning by the user
+     */
     public void isGameEnded(boolean isGameEnded, int protocol) { view.isGameEnded(isGameEnded, protocol); }
 }
