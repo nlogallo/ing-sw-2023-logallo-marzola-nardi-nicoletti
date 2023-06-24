@@ -409,7 +409,7 @@ public class MyShelfieClient {
                         }
                         if (doWantToPlayAgain.equals("n") || doWantToPlayAgain.equals("N")) {
                             System.out.println("Goodbye!");
-                            break;
+                            System.exit(0);
                         } else {
                             System.out.println("Searching for an available game...");
                         }

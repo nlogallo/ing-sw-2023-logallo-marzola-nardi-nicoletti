@@ -426,7 +426,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
      * @throws RemoteException
      */
     public synchronized NetworkMessage RMIMoveTiles(NetworkMessage networkMessage, String nickname, int gameId) throws RemoteException{
-        VirtualView virtualView = RMIVirtualViews.get(nickname);
         if (networkMessage.getRequestId().equals("MT")) {
             Game game = games.get(gameId);
             Player player = null;
@@ -434,6 +433,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 if(game.getPlayers().get(i).getNickname().equals(nickname))
                     player = game.getPlayers().get(i);
             }
+            VirtualView virtualView = new VirtualView(games.get(gameId), nickname);
             NetworkMessage resp = virtualView.moveTiles(networkMessage, player);
             game = virtualView.getGame();
             game.clearRecoveredPlayers();
@@ -808,7 +808,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                 result.add(virtualView.updateResult());
                                 outputStream.reset();
                                 outputStream.writeObject(result);
-                                //game = games.get(game.getId());
                                 game.setMutexFalseAtIndex(playerIndex);
                                 games.put(game.getId(), game);
                                 updateSend = true;

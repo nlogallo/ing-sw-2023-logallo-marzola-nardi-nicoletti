@@ -204,7 +204,6 @@ public class ServerController {
                 otherNickNamesList.add(s.getNickname());
             }
         }
-        Integer numOfGameToken = (gameController.getPlayers().size() * 2) + 1;
         ArrayList<CommonGoal> commonGoals = gameController.getCommonGoal();
         ArrayList<Token> remainingTokenList = gameController.getGame().getThreeMap().getRemainingTokenList(commonGoals, numOfPlayer);
         remainingTokenList.add(new Token(0));
@@ -220,7 +219,7 @@ public class ServerController {
         for (String s : otherNickNamesList) {
             networkMessage.addContent(s);
         }
-        networkMessage.addContent(numOfGameToken);
+        networkMessage.addContent(remainingTokenList.size());
         for (Token token : remainingTokenList) {
             networkMessage.addContent(token);
         }

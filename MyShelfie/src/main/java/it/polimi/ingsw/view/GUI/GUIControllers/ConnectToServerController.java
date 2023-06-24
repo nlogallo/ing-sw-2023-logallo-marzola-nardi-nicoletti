@@ -111,11 +111,10 @@ public class ConnectToServerController implements GenericSceneController, Initia
             toggleSocket.setStyle("-fx-border-color: RED;");
             toggleRMI.setStyle("-fx-border-color: RED;");
         } else {
-            final String ipPattern = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
-            Pattern pattern = Pattern.compile(ipPattern);
-            Matcher matcher = pattern.matcher(IPText.getText());
+            final Pattern pattern = Pattern.compile("^((\\d{1,3}\\.){3}\\d{1,3}|[a-zA-Z0-9\\-\\.]+):([0-9]{1,5})$", Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(IPText.getText() + ":" + portText.getText());
             if (!matcher.matches()) {
-                labelIP.setText("Invalid IP");
+                labelIP.setText("Invalid Socket");
                 IPText.setStyle("-fx-text-fill: #ff3131; -fx-border-color: #ff3131;");
             } else {
                 int portNumber;
