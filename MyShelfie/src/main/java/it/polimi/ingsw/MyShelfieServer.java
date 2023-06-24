@@ -13,12 +13,13 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Server class
  */
 public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMIInterface {
-    private static HashMap<Integer, Game> games = new HashMap();
+    private static ConcurrentHashMap<Integer, Game> games = new ConcurrentHashMap<>();
     private static ArrayList<String> nicknames = new ArrayList<>();
     private static HashMap<String, VirtualView> RMIVirtualViews = new HashMap<>();
     private static HashMap<String, String> chatParser = new HashMap<>();
@@ -189,7 +190,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     RMIHandleClientDisconnection(nickname);
                     break;
                 }
-
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -201,6 +201,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     }
 
     public void RMIHandleClientDisconnection(String nickname){
+        System.out.println("Ciao per sempre " + nickname);
         Game game = null;
         gamesFor: for (int i = 0; i < games.size(); i++){
             game = games.get(i);
@@ -304,6 +305,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         if(!isRecovered){
             if (seat) {
                 game.startGame();
+                game.clearRecoveredPlayers();
                 games.put(game.getId(), game);
             } else {
                 if (games.get(game.getId()).isSetupFinished()) {
@@ -515,8 +517,10 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     public synchronized void RMIDeleteGame(int gameId, String nickname) throws RemoteException {
         Game game = games.get(gameId);
         game.addRecoveredPlayer(nickname);
-        if(game.getState().equals(GameState.ENDED) && game.getRecoveredPlayers().size() == game.getPlayersNumber())
+        if(game.getState().equals(GameState.ENDED) && game.getRecoveredPlayers().size() == game.getPlayersNumber()) {
+            deleteGame(game.getId());
             games.remove(gameId);
+        }
     }
 
     public synchronized void RMITerminateGame(int gameId, String nickname) throws RemoteException {
@@ -799,6 +803,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                 result.add(virtualView.updateResult());
                                 outputStream.reset();
                                 outputStream.writeObject(result);
+                                game = games.get(game.getId());
                                 game.setMutexFalseAtIndex(playerIndex);
                                 games.put(game.getId(), game);
                                 updateSend = true;

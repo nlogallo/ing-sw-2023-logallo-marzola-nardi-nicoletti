@@ -89,8 +89,11 @@ public class GUIView  implements Observer {
     @Override
     public void updateChat(String sender, ArrayList<String> receivers, String text) {
         if(receivers.size() > 1){
-            if(globalChat == null)
+            if(globalChat == null) {
+                if (playersNickname == null)
+                    return;
                 globalChat = new ClientChat(0, playersNickname);
+            }
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             globalChat.addMessage(text, sender, receivers, timestamp);
             Platform.runLater(() ->
