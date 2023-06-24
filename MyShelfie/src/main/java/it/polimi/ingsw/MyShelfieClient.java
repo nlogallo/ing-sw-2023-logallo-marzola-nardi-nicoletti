@@ -61,14 +61,18 @@ public class MyShelfieClient {
         System.out.println("Welcome to MyShelfie!");
         Scanner sc = new Scanner(System.in);
         while (true) {
-            System.out.println("Press 1 to use the CLI or 2 to use the GUI:");
-            interfaceChosen = Integer.parseInt(sc.nextLine());
-            if (interfaceChosen == 2) {
-                MyShelfieFX.main(null);
-            } else if (interfaceChosen == 1) {
-                break;
-            } else {
-                System.out.println("Invalid choice!\nPlease select a valid option!");
+            try {
+                System.out.println("Press 1 to use the CLI or 2 to use the GUI:");
+                interfaceChosen = Integer.parseInt(sc.nextLine());
+                if (interfaceChosen == 2) {
+                    MyShelfieFX.main(null);
+                } else if (interfaceChosen == 1) {
+                    break;
+                } else {
+                    System.err.println("Invalid choice!\nPlease select a valid option!");
+                }
+            } catch (NumberFormatException e){
+                System.err.println("Invalid choice!\nPlease select a valid option!");
             }
         }
         while (true) {
@@ -85,7 +89,7 @@ public class MyShelfieClient {
             }
         }
         String serverAddress = "";
-        final Pattern pattern = Pattern.compile("^((\\d{1,3}\\.){3}\\d{1,3}|[a-zA-Z0-9\\-]+(\\.[a-zA-Z]{2,})?):\\d+$", Pattern.CASE_INSENSITIVE);
+        final Pattern pattern = Pattern.compile("^((\\d{1,3}\\.){3}\\d{1,3}|[a-zA-Z0-9\\-\\.]+):([0-9]{1,5})$", Pattern.CASE_INSENSITIVE);
         Matcher matcher;
         while (true) {
             System.out.println("Server address and port (hostname:port): ");
@@ -108,9 +112,9 @@ public class MyShelfieClient {
                         System.out.println("Enter your nickname: ");
                         nickname = sc.nextLine();
                         serverAnswer = checkNickname(nickname, protocol);
-                        if (serverAddress.equals("nicknameExists")) {
+                        if (serverAnswer.equals("nicknameExists")) {
                             System.out.println("User with nickname '" + nickname + "' already exists. Choose another nickname.");
-                        } else if (serverAddress.equals("nicknameWrong")) {
+                        } else if (serverAnswer.equals("nicknameWrong")) {
                             System.out.println("Wrong nickname pattern! You nickname cannot contain spaces and must have between 3 and 15 characters!");
                         }
                     } while (!serverAnswer.equals("nicknameOk"));
@@ -490,7 +494,28 @@ public class MyShelfieClient {
             outputStream.flush();
             return (String) inputStream.readObject();
         } else {
-            return RMIServer.RMICheckNickname(nickname);
+            String answer = RMIServer.RMICheckNickname(nickname);
+            if(answer.equals("nicknameOk")) {
+                new Thread(() -> {
+                    while (true) {
+                        try {
+                            RMIHeartbeat(nickname);
+                            Thread.sleep(100);
+                        } catch (RemoteException | InterruptedException e) {
+                            if (interfaceChosen == 2)
+                                Platform.runLater(() -> {
+                                    SceneController.changeScene("ErrorStage.fxml");
+                                });
+                            else {
+                                System.err.println("\nConnection lost!");
+                                System.exit(0);
+                            }
+                            break;
+                        }
+                    }
+                }).start();
+            }
+            return answer;
         }
     }
 
@@ -896,21 +921,6 @@ public class MyShelfieClient {
      * @param nickname
      */
     public void handleGameRMI(Game game, String nickname) {
-        new Thread(() -> {
-            while (!isGameEnded) {
-                try {
-                    RMIHeartbeat(nickname);
-                    Thread.sleep(1000);
-                } catch (RemoteException | InterruptedException e) {
-                    if(interfaceChosen == 2)
-                        Platform.runLater(()-> {
-                            SceneController.changeScene("ErrorStage.fxml");
-                        });
-                    else
-                        System.err.println("\nConnection lost!");
-                }
-            }
-        }).start();
         gameId = game.getId();
         isGameEnded = false;
         if (interfaceChosen == 2)
