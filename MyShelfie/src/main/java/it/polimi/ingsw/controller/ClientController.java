@@ -6,8 +6,6 @@ import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.utils.NetworkMessage;
 import it.polimi.ingsw.view.CLI.CLIMenus;
 import it.polimi.ingsw.view.ClientViewObservable;
-import it.polimi.ingsw.view.GUI.SceneController;
-import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -243,6 +241,9 @@ public class ClientController {
         }
     }
 
+    /**
+     * This method allows the user to type on the CLI
+     */
     public void enableInput() {
         clientViewObservable.enableInput();
     }
