@@ -133,7 +133,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     throw new RuntimeException(e);
                 }
                 int gameId = Integer.parseInt(gameFile.getName().substring(4, gameFile.getName().indexOf('.')));
-                games.put(gameId, (Game) object);
+                Game game = (Game) object;
+                game.clearRecoveredPlayers();
+                games.put(gameId, game);
             }
         } else {
             new File("data/savedGames").mkdirs();
@@ -176,7 +178,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         lastClientActivity.put(nickname, System.currentTimeMillis());
     }
 
-    private static final long CLIENT_TIMEOUT = 5000;
+    private static final long CLIENT_TIMEOUT = 30000;
 
     public void RMIStartClientTimeoutChecker(String nickname) {
         Thread timeoutCheckerThread = new Thread(() -> {
@@ -218,6 +220,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             game.setState(GameState.ENDED);
             games.put(game.getId(), game);
         }
+        game = games.get(game.getId());
+        game.clearRecoveredPlayers();
+        games.put(game.getId(), game);
         nicknames.remove(nickname);
     }
 
@@ -308,11 +313,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 }
                 else
                     return null;
-            }
-        }else{
-            if(seat){
-                game.clearRecoveredPlayers();
-                games.put(game.getId(), game);
             }
         }
         VirtualView virtualView = new VirtualView(game, nickname);
@@ -429,6 +429,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
             }
             NetworkMessage resp = virtualView.moveTiles(networkMessage, player);
             game = virtualView.getGame();
+            game.clearRecoveredPlayers();
             RMIVirtualViews.put(nickname, virtualView);
             games.put(game.getId(), game);
             return resp;
@@ -521,6 +522,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     public synchronized void RMITerminateGame(int gameId, String nickname) throws RemoteException {
         Game game = games.get(gameId);
         if (game != null) {
+            game.clearRecoveredPlayers();
+            games.put(gameId, game);
             System.err.println("Game with id " + game.getId() + " has been terminated.");
             games.get(game.getId()).setState(GameState.PLAYER_DISCONNECTED);
             nicknames.remove(nickname);
@@ -761,11 +764,6 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                 }
                             }
                         }
-                    }else{
-                        if(seat){
-                            game.clearRecoveredPlayers();
-                            games.put(game.getId(), game);
-                        }
                     }
                     outputStream.flush();
                     VirtualView virtualView = new VirtualView(game, game.getCurrentPlayer().getNickname());
@@ -781,6 +779,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                         if (games.get(game.getId()).getState() == GameState.STARTED && games.get(game.getId()).getCurrentPlayer() != null) {
                             if (games.get(game.getId()).getCurrentPlayer().getNickname().equals(nickname) && updateSend) {
                                 NetworkMessage netMessage = (NetworkMessage) inputStream.readObject();
+                                game.clearRecoveredPlayers();
+                                games.put(game.getId(), game);
                                 if (netMessage.getRequestId().equals("MT")) {
                                     virtualView = new VirtualView(games.get(game.getId()), game.getCurrentPlayer().getNickname());
                                     NetworkMessage resp = virtualView.moveTiles(netMessage, game.getCurrentPlayer());
@@ -858,6 +858,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                     games.get(game.getId()).setState(GameState.PLAYER_DISCONNECTED);
                     //deleteGame(game.getId());
                 }
+                game = games.get(game.getId());
+                game.clearRecoveredPlayers();
+                games.put(game.getId(), game);
                 nicknames.remove(nickname);
             } catch (StringIndexOutOfBoundsException e) {
                 System.err.println("Communication error. User disconnected.");
@@ -907,6 +910,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                                 }
                                 if(games.get(gameId) != null && games.get(gameId).getId() != -1){
                                     System.err.println("Game with id " + games.get(gameId).getId() + " has been terminated.");
+                                    Game game = games.get(gameId);
+                                    game.clearRecoveredPlayers();
+                                    games.put(gameId, game);
                                     games.get(games.get(gameId).getId()).setState(GameState.PLAYER_DISCONNECTED);
                                 }
                                 nicknames.remove(nickname);

@@ -117,6 +117,8 @@ public class ChatHandler {
     public void addMessage (String sender, ArrayList<String> receivers, String text, Timestamp timestamp) {
 
         boolean isDuoChatAlreadyExist = false;
+        if(view.getPlayersNickname() == null || view.getClientNickname() == null)
+            return;
         if ((receivers.size() > 1) || (view.getPlayersNickname().size() == 1)) {
             if (view.getGlobalChat() == null) {
                 ArrayList<String> players = new ArrayList<>(view.getPlayersNickname());

@@ -16,8 +16,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.rmi.ConnectException;
-import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -1065,8 +1063,10 @@ public class MyShelfieClient {
             e.printStackTrace();
             if(interfaceChosen == 2)
                 Platform.runLater(()-> SceneController.changeScene("ErrorStage.fxml"));
-            else
+            else {
                 System.err.println("\nConnection lost!");
+                System.exit(0);
+            }
         }
     }
 
