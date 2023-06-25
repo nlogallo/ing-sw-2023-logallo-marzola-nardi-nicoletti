@@ -36,6 +36,7 @@ public class Game implements Serializable {
     /**
      * Class constructor
      * @param id is the ID of the game instance
+     * @param playersNumber is the number of players
      * @throws NullPointerException if participants is null
      */
     public Game(int id, int playersNumber) throws NullPointerException {
@@ -58,7 +59,6 @@ public class Game implements Serializable {
 
     /**
      * This method allows to start a new game
-     *
      * @throws IllegalArgumentException if the number of players is incorrect
      */
     public void startGame() throws IllegalArgumentException {
@@ -116,7 +116,6 @@ public class Game implements Serializable {
 
     /**
      * This method serialize an Object
-     *
      * @param object is the object to serialize
      * @return a byte array
      * @throws IOException
@@ -508,14 +507,25 @@ public class Game implements Serializable {
         return firstToEnd;
     }
 
+    /**
+     * Add a Player to a recovered game
+     * @param nickname is the nickname of the player
+     */
     public void addRecoveredPlayer(String nickname){
         this.recoveredPlayers.add(nickname);
     }
 
+    /**
+     * Delete all the recovered Players
+     */
     public void clearRecoveredPlayers(){
         this.recoveredPlayers.clear();
     }
 
+    /**
+     * Getter
+     * @return a list with the nicknames of the recovered Players
+     */
     public ArrayList<String> getRecoveredPlayers() {
         return this.recoveredPlayers;
     }

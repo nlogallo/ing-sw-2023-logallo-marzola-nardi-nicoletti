@@ -21,7 +21,6 @@ public class Player implements Serializable {
      * Class constructor
      * @param shelf as the personal Shelf of the Player
      * @param nickname as the in game name of the Player
-
      * @param game as the game in which the player is
      */
     public Player(boolean seat, Shelf shelf, String nickname, Game game){
@@ -199,7 +198,6 @@ public class Player implements Serializable {
 
     /**
      * Getter
-     *
      * @return the player's points
      */
     public int getPoints() {
@@ -208,7 +206,6 @@ public class Player implements Serializable {
 
     /**
      * Setter
-     *
      * @param state represents the player's state
      */
     public void setState (State state)
@@ -216,13 +213,16 @@ public class Player implements Serializable {
         this.state = state;
     }
 
+    /**
+     * Setter
+     * @param seat represents the player's seat
+     */
     public void setSeat(boolean seat) {
         this.seat = seat;
     }
 
     /**
      * Getter
-     *
      * @return the player's state
      */
     public State getState ()
@@ -232,7 +232,6 @@ public class Player implements Serializable {
 
     /**
      * Getter
-     *
      * @return the player's nickname
      */
     public String getNickname() {
@@ -241,7 +240,6 @@ public class Player implements Serializable {
 
     /**
      * Getter
-     *
      * @return the player's Shelf
      */
     public Shelf getShelf() {
@@ -250,7 +248,6 @@ public class Player implements Serializable {
 
     /**
      * Getter
-     *
      * @return the tokens achieved by the player
      */
     public ArrayList<Token> getTokenCards() {

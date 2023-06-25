@@ -37,10 +37,9 @@ public class Shelf implements Serializable {
     }
 
     /**
-     * check how many free slots are in a column of the shelf
-     *
-     * @param col       the number of the column to check the free spaces
-     * @return          the number of free spaces in the specified column
+     * Check how many free slots are in a column of the shelf
+     * @param col the number of the column to check the free spaces
+     * @return the number of free spaces in the specified column
      */
     public int freeRows(int col) {
         int freeR = 0;
@@ -53,8 +52,7 @@ public class Shelf implements Serializable {
     }
 
     /**
-     * check the maximum number of free tiles between all the columns of the shelf
-     *
+     * Check the maximum number of free tiles between all the columns of the shelf
      * @return the maximum number of free tiles between all the columns of the shelf
      */
     public int freeSpots() {
@@ -69,10 +67,8 @@ public class Shelf implements Serializable {
 
     /**
      * Inserts tiles in the shelf
-     *
      * @param col       the number of the column to insert the tiles in
      * @param t         the list of tiles to insert in the shelf
-     *
      * @exception IllegalArgumentException throws an IllegalArgumentException
      */
     public void insertTiles(int col, ArrayList<Tile> t) throws IllegalArgumentException {
@@ -92,7 +88,6 @@ public class Shelf implements Serializable {
 
     /**
      * Check if the shelf is full
-     *
      * @return true if the shelf is full
      */
     public boolean isFull () {
@@ -104,8 +99,7 @@ public class Shelf implements Serializable {
     }
 
     /**
-     * getter
-     *
+     * Getter
      * @return the shelf
      */
     public Shelf getShelf() {
@@ -114,10 +108,8 @@ public class Shelf implements Serializable {
 
     /**
      * Getter
-     *
      * @param r     row of the tile of interest
      * @param c     column of the tile of interest
-     *
      * @return      the tile in the specified position
      */
     public Tile getTile(int r, int c) {
@@ -126,7 +118,6 @@ public class Shelf implements Serializable {
 
     /**
      * Getter
-     *
      * @return      the matrix of tileType from the tiles in the shelf
      */
     public TileType[][] getShelfTypes() {

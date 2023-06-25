@@ -41,6 +41,7 @@ public class Board implements Serializable {
 
     /**
      * Class Constructor
+     * @param playersNo is the number of players
      */
     public Board (int playersNo) {
         playersNumber = playersNo;
@@ -53,6 +54,7 @@ public class Board implements Serializable {
 
     /**
      * Getter
+     * @return a list with valid id for the token
      */
     public ArrayList<Integer> getValidIdList () {
         return validIdList;
@@ -61,6 +63,7 @@ public class Board implements Serializable {
 
     /**
      * Getter
+     * @return the matrix of tiles that represent the board
      */
     public Tile[][] getTilesTable () {
         return tilesTable;
@@ -69,7 +72,6 @@ public class Board implements Serializable {
 
     /**
      * Generates a new valid id
-     *
      * @return the valid id
      */
     public int generateId () {
@@ -101,7 +103,6 @@ public class Board implements Serializable {
 
     /**
      * Check if the board needs to be refilled
-     *
      * @return true if the board needs to be refilled
      */
     public boolean checkRefill() {
@@ -129,11 +130,8 @@ public class Board implements Serializable {
 
     /**
      * Pull the tiles from the board
-     *
      * @param positions       has rows and columns of the tiles to pull
-     *
      * @return the ArrayList of pulled tiles
-     *
      * @exception IllegalArgumentException throws an IllegalArgumentException
      */
     public ArrayList<Tile> pullTiles(ArrayList<Position> positions) throws IllegalArgumentException, NullPointerException {
@@ -165,10 +163,8 @@ public class Board implements Serializable {
 
     /**
      * Check if a tile can be pulled from the board
-     *
      * @param r         the number of the row to pull the tile from
      * @param c         the number of the column to pull the tile from
-     *
      * @return true if the tile can be pulled
      */
     public boolean canPull (int r, int c)
