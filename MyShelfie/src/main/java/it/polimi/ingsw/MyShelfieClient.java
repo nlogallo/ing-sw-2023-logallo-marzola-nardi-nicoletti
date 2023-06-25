@@ -467,8 +467,6 @@ public class MyShelfieClient {
             protocol = 2;
             try {
                 System.out.println("Connecting to RMI server...");
-                //RMIServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + port + "/Server");
-                //RMIChatServer = (MyShelfieRMIInterface) Naming.lookup("rmi://" + hostname + ":" + (port + 1) + "/chatServer");
                 RMIServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry(hostname, port).lookup("Server");
                 RMIChatServer = (MyShelfieRMIInterface) LocateRegistry.getRegistry(hostname, port + 1).lookup("chatServer");
                 System.out.println("Connected! :)");
@@ -783,6 +781,7 @@ public class MyShelfieClient {
                 inputLock.notifyAll();
             }
             ArrayList<NetworkMessage> result = null;
+            boolean isMessageErrorReceived = false;
             while (!isGameEnded) {
                 if ((currentPlayer.getContent().get(0).equals(nickname) && result == null) || (result != null && result.get(2).getContent().get(0).equals(nickname))) {
                     synchronized (lock) {
@@ -797,11 +796,21 @@ public class MyShelfieClient {
                 }
                 result = (ArrayList<NetworkMessage>) inputStream.readObject();
                 NetworkMessage board = result.get(0);
-                if (board.getRequestId().equals("ER")) {
-                    System.err.println("\n" + board.getTextMessage());
-                    synchronized (inputLock){
-                        inputLock.wait();
-                    }
+                if (board.getRequestId().equals("ER") || board.getRequestId().equals("END")) {
+                    if(interfaceChosen == 1)
+                        System.err.println("\n" + board.getTextMessage());
+                    else
+                        Platform.runLater(()->{
+                                    SceneController.getStage().close();
+                                    ArrayList<Object> parameters = new ArrayList<>();
+                                    parameters.add(protocol);
+                                    parameters.add(nickname);
+                                    SceneController.changeScene("QuittingScene.fxml", parameters);
+                                }
+                        );
+                    if(board.getRequestId().equals("END"))
+                        isGameEnded = true;
+                    isMessageErrorReceived = true;
                     break;
                 } else if (board.getRequestId().equals("UC")) {
                     controller.updateChat(board);
@@ -839,7 +848,8 @@ public class MyShelfieClient {
                     }
                 }
             }
-            inputStream.readObject();
+            if(!isMessageErrorReceived)
+                inputStream.readObject();
         } catch (IOException ex) {
             if(interfaceChosen == 1) {
                 System.err.println("Connection lost!");
@@ -885,7 +895,6 @@ public class MyShelfieClient {
             isChatAlive = false;
             if(interfaceChosen == 1) {
                 System.err.println("MyShelfieServer is temporarily down");
-                //e.printStackTrace();
                 System.exit(0);
             }
             else
@@ -1092,7 +1101,6 @@ public class MyShelfieClient {
                 }
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
             if(interfaceChosen == 2)
                 Platform.runLater(()-> SceneController.changeScene("ErrorStage.fxml"));
             else {

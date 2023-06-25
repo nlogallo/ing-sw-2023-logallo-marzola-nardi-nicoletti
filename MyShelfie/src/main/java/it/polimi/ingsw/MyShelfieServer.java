@@ -219,8 +219,9 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
     public void RMIHandleClientDisconnection(String nickname){
         Game game = null;
         boolean gameFound = false;
-        gamesFor: for (int i = 0; i < games.size(); i++) {
-            game = games.get(i);
+        Object[] gamesId = games.keySet().toArray();
+        gamesFor: for (int i = 0; i < gamesId.length; i++) {
+            game = games.get(gamesId[i]);
             if (game.getState().equals(GameState.STARTED)) {
                 for (Player p : game.getPlayers()) {
                     if (p.getNickname().equals(nickname)) {
@@ -854,7 +855,7 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                             }
                         } else {
                             ArrayList<NetworkMessage> result = new ArrayList<>();
-                            if (games.get(game.getId()).getState() == GameState.ENDED || games.get(game.getId()).getState() == GameState.PLAYER_DISCONNECTED) {
+                            if (games.get(game.getId()).getCurrentPlayer() == null || games.get(game.getId()).getState() == GameState.PLAYER_DISCONNECTED) {
                                 virtualView = new VirtualView(games.get(game.getId()), null);
                                 result.add(virtualView.updateBoard());
                                 result.add(virtualView.updateGameTokens());
@@ -904,7 +905,8 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 }
                 if(game != null && game.getId() != -1){
                     System.err.println("Game with id " + game.getId() + " has been terminated.");
-                    games.get(game.getId()).setState(GameState.PLAYER_DISCONNECTED);
+                    if(games.get(game.getId()) != null)
+                        games.get(game.getId()).setState(GameState.PLAYER_DISCONNECTED);
                     //deleteGame(game.getId());
                 }
                 if(game != null) {

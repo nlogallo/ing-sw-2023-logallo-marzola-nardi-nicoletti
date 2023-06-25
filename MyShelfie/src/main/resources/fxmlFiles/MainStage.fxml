@@ -1061,7 +1061,7 @@
                                    preserveRatio="true"/>
                         <Label fx:id="topLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER"
                                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                               AnchorPane.topAnchor="0.0">
+                               AnchorPane.topAnchor="0.0" styleClass="orderLabels">
                         </Label>
                         <Button fx:id="pickedTopButton" mnemonicParsing="false" opacity="0.0" prefHeight="44.0"
                                 prefWidth="53.5" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -1072,7 +1072,7 @@
                     <children>
                         <ImageView fx:id="pickedTileMiddle" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true"
                                    preserveRatio="true"/>
-                        <Label fx:id="middleLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER">
+                        <Label fx:id="middleLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER" styleClass="orderLabels">
                         </Label>
                         <Button fx:id="pickedMiddleButton" mnemonicParsing="false" opacity="0.0" prefHeight="44.0"
                                 prefWidth="53.5" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -1083,7 +1083,7 @@
                     <children>
                         <ImageView fx:id="pickedTileBottom" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true"
                                    preserveRatio="true"/>
-                        <Label fx:id="bottomLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER">
+                        <Label fx:id="bottomLabel" prefHeight="44.0" prefWidth="44.0" textAlignment="CENTER" styleClass="orderLabels">
                         </Label>
                         <Button fx:id="pickedBottomButton" mnemonicParsing="false" opacity="0.0" prefHeight="44.0"
                                 prefWidth="53.5" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
