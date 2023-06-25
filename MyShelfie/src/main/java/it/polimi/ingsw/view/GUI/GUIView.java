@@ -119,10 +119,11 @@ public class GUIView  implements Observer {
             ClientChat duoChat = new ClientChat(chats.size() + 1, partecipants);
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             duoChat.addMessage(text, sender, receivers, timestamp);
-            Platform.runLater(() ->
-            {
-                stageController.addMessage(sender, receivers, text, timestamp);
-            });
+            if(stageController != null)
+                Platform.runLater(() ->
+                {
+                    stageController.addMessage(sender, receivers, text, timestamp);
+                });
         }
     }
 

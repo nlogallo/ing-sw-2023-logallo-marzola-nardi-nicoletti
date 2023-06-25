@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.polimi.ingsw</groupId>
   <artifactId>PSP10</artifactId>
-  <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
   <name>My Shelfie</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -49,10 +49,14 @@
       <artifactId>javafx-graphics</artifactId>
       <version>17.0.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-shade-plugin</artifactId>
+      <version>3.5.0</version>
+      <type>maven-plugin</type>
+    </dependency>
   </dependencies>
   <build>
-    <pluginManagement>
-      <!--  lock down plugins versions to avoid using Maven defaults (may be moved to parent pom)  -->
       <plugins>
         <!--  clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle  -->
         <plugin>
@@ -73,17 +77,6 @@
           <version>3.0.0-M9</version>
         </plugin>
         <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.3.0</version>
-          <configuration>
-            <archive>
-              <manifest>
-                <mainClass>it.polimi.ingsw.MyShelfieServer</mainClass>
-              </manifest>
-            </archive>
-          </configuration>
-        </plugin>
-        <plugin>
           <artifactId>maven-install-plugin</artifactId>
           <version>3.1.0</version>
         </plugin>
@@ -101,42 +94,44 @@
           <version>3.4.2</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-shade-plugin</artifactId>
-          <version>3.2.4</version>
-          <executions>
-            <execution>
-              <id>server</id>
-              <phase>package</phase>
-              <goals>
-                <goal>shade</goal>
-              </goals>
-              <configuration>
-                <transformers>
-                  <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                    <mainClass>it.polimi.ingsw.MyShelfieServer</mainClass>
-                  </transformer>
-                </transformers>
-                <shadedArtifactAttached>true</shadedArtifactAttached>
-                <artifactSet>
-                  <includes>
-                    <include>com.google.code.gson:*</include>
-                  </includes>
-                  <!-- Alternative: exclusion of useless artifacts for Server JAR
-                  <excludes>
-                      <exclude>org.controlsfx:*</exclude>
-                      <exclude>org.jline:*</exclude>
-                      <esclude>com.diogonunes:JColor:*</esclude>
-                      <exclude>net.java.dev.jna:*</exclude>
-                      <exclude>org.openjfx:*</exclude>
-                  </excludes>
-                  -->
-                </artifactSet>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <executions>
+          <execution>
+            <id>MyShelfieClient</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <outputFile>${project.artifactId}-MyShelfieClient.jar</outputFile>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>it.polimi.ingsw.MyShelfieClient</mainClass>
+                </transformer>
+              </transformers>
+              <finalName>MyShelfieClient</finalName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>MyShelfieServer</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <outputFile>${project.artifactId}-MyShelfieServer.jar</outputFile>
+              <transformers>
+                <transfomer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>it.polimi.ingsw.MyShelfieServer</mainClass>
+                </transfomer>
+              </transformers>
+              <finalName>MyShelfieServer</finalName>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       </plugins>
-    </pluginManagement>
   </build>
 </project>
