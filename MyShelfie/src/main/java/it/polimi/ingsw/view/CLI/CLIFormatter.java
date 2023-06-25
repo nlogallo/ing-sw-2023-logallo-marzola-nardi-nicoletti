@@ -269,7 +269,7 @@ public class CLIFormatter {
             case GAME ->  ANSI_YELLOW + " \u001B[1mG ";
             case BOOK ->  ANSI_CREAM + " \u001B[1mB ";
             case CAT ->  ANSI_GREEN + " \u001B[1mC ";
-            case EMPTY -> ANSI_WHITE + String.format("%-3s", " ");
+            case EMPTY -> ANSI_WHITE + " _ ";
         };
     }
 

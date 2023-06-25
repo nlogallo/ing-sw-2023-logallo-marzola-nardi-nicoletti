@@ -236,9 +236,11 @@ public class Game implements Serializable {
         Gson gson = new Gson();
         PersonalGoalWrapper wrapper;
         try {
-            FileReader reader = new FileReader("src/main/java/it/polimi/ingsw/utils/configFiles/personalGoals.json");
-            wrapper = gson.fromJson(reader, PersonalGoalWrapper.class);
+            InputStream reader = getClass().getClassLoader().getResourceAsStream("configFiles/personalGoals.json");
+            Reader fileReader = new InputStreamReader(reader);
+            wrapper = gson.fromJson(fileReader, PersonalGoalWrapper.class);
             reader.close();
+            fileReader.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -255,9 +257,11 @@ public class Game implements Serializable {
         Gson gson = new Gson();
         DescriptionWrapper wrapper;
         try {
-            FileReader reader = new FileReader("src/main/java/it/polimi/ingsw/utils/configFiles/commonGoalDescriptions.json");
-            wrapper = gson.fromJson(reader, DescriptionWrapper.class);
+            InputStream reader = getClass().getClassLoader().getResourceAsStream("configFiles/commonGoalDescriptions.json");
+            Reader fileReader = new InputStreamReader(reader);
+            wrapper = gson.fromJson(fileReader, DescriptionWrapper.class);
             reader.close();
+            fileReader.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -240,7 +240,7 @@ class BoardTest {
         tilesTable = boardFour.getTilesTable();
 
         assertSame(null, tilesTable[row][column]);
-        assertSame(tileToPull.getID(), (pulledTiles.get(0)).getID());
+        assertEquals(tileToPull.getID(), (pulledTiles.get(0)).getID());
     }
 
 
