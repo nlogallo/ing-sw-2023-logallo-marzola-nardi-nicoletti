@@ -129,7 +129,7 @@ public class ClientViewObservable {
      * This method refresh the CLI interface
      */
     public void refreshCLI(){
-        view.refreshCLI();
+        view.refreshView();
     }
 
     /**

@@ -60,36 +60,12 @@ public class ServerController {
         gameController.nextPhase();
         gameController.revertMutex();
 
-            /*if (commonGoal1.checkCommonGoal(player.getShelf().getShelfTypes())) {
-                if (!commonGoal2.checkCommonGoal(player.getShelf().getShelfTypes())) {
+        stringToSend = "Well done!";
+        networkMessage.setTextMessage(stringToSend);
+        networkMessage.addContent(player.getShelf());
+        networkMessage.addContent(gameController.getBoard());
+        networkMessage.addContent(player.getTokenCards());
 
-                    stringPart2 = gameController.updateToken(commonGoal1, player.getShelf().getShelfTypes(), player);
-                    this.isTokenChange = true;
-
-                }
-            } else if (commonGoal2.checkCommonGoal(player.getShelf().getShelfTypes())) {
-                if (!commonGoal1.checkCommonGoal(player.getShelf().getShelfTypes())) {
-
-                    stringPart2 = gameController.updateToken(commonGoal2, player.getShelf().getShelfTypes(), player);
-                    this.isTokenChange = true;
-
-                }
-            } else if (commonGoal1.checkCommonGoal(player.getShelf().getShelfTypes())) {
-                if (commonGoal2.checkCommonGoal(player.getShelf().getShelfTypes())) {
-                    gameController.updateToken(commonGoal1, player.getShelf().getShelfTypes(), player);
-                    gameController.updateToken(commonGoal2, player.getShelf().getShelfTypes(), player);
-
-                    stringPart2 = "Congratulations, you've have earned two new Tokens: " +
-                            commonGoal1.getId() + ", " + commonGoal2.getId();
-                    this.isTokenChange = true;
-                }
-            }*/
-
-            stringToSend = "Well done!";
-            networkMessage.setTextMessage(stringToSend);
-            networkMessage.addContent(player.getShelf());
-            networkMessage.addContent(gameController.getBoard());
-            networkMessage.addContent(player.getTokenCards());
         }
 
         networkMessage.setRequestId("UPS");

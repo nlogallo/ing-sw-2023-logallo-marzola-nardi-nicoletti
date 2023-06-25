@@ -18,7 +18,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-
+/**
+ * This class represents the controller of the EndGameScene
+ * This class allows the user, when the previous Game is ended, to play again or exit
+ */
 public class EndGameSceneController implements GenericSceneController, Initializable {
 
     private GUIView gui;
@@ -70,18 +73,34 @@ public class EndGameSceneController implements GenericSceneController, Initializ
     private int protocol;
     private String clientNickname;
 
+    /**
+     * Class Constructor
+     */
     public EndGameSceneController () {}
 
+
+    /**
+     * Setter method
+     * @param gui is the specific GUI
+     */
     @Override
     public void setGui(GUIView gui) {
         this.gui = gui;
     }
 
+
+    /**
+     * Override method of initialize from Initializable
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
 
+    /**
+     * Override method of initData from GenericSceneController
+     * @param parameters is the list of parameters
+     */
     @Override
     public void initData(ArrayList<Object> parameters) {
 
@@ -96,11 +115,18 @@ public class EndGameSceneController implements GenericSceneController, Initializ
     }
 
 
+    /**
+     * This method close the window of the Game
+     * @param event is the press of the exit button
+     */
     private void endGame(Event event) {
         SceneController.closeStage();
     }
 
 
+    /**
+     * This method shows the final results of the Game
+     */
     private void showFinalResult () {
 
         /* Final Message:
@@ -163,6 +189,11 @@ public class EndGameSceneController implements GenericSceneController, Initializ
     }
 
 
+    /**
+     * This method is a splitter method
+     * @param line is the specific line
+     * @return the divided line
+     */
     private String splitMethod (String line) {
 
         String [] divisionLine = line.split(": ");
@@ -172,6 +203,11 @@ public class EndGameSceneController implements GenericSceneController, Initializ
 
     }
 
+
+    /**
+     * This method allows to start a new Game when the previous Game is ended
+     * @param event is the press of the button replayButton
+     */
     private void startANewGame(Event event) {
         try {
             ArrayList<Object> parameters = new ArrayList<>();

@@ -26,7 +26,7 @@ public interface Observer {
     public void updatePlayersNickname(ArrayList<String> playersNickname);
     public void updateCurrentPlayer(String nickname);
     public void updatePlayersShelf(Map<String, Shelf> playersShelf);
-    public void refreshCLI();
+    public void refreshView();
     public void setClientController(ClientController clientController);
     public void setIsOccurredAnError(boolean var);
     public void enableInput();

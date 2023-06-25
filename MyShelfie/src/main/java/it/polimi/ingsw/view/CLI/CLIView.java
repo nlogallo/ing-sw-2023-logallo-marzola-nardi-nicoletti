@@ -278,7 +278,7 @@ public class CLIView implements Observer {
 
     /**
      * Getter
-     * @return all players ninkname except for the client nickname
+     * @return all players nickname except for the client nickname
      */
     public ArrayList<String> getPlayersNickname() {
         return this.playersNickname;
@@ -286,8 +286,8 @@ public class CLIView implements Observer {
 
     /**
      * This method allows to move the Tiles from the CLI
-     * @param positions
-     * @param column
+     * @param positions is the arrayList of the position of the Tiles
+     * @param column is a specific column of the client Shelf
      */
     public void moveTiles(ArrayList<String> positions, int column){
         clientController.moveTiles(positions, column);
@@ -297,7 +297,7 @@ public class CLIView implements Observer {
      * This method refreshes the CLI with the updated objects
      */
     @Override
-    public void refreshCLI(){
+    public void refreshView(){
         cliFormatter.createCLIInterface();
     }
 
@@ -332,7 +332,7 @@ public class CLIView implements Observer {
     public ClientChat getGlobalChat () { return globalChat; }
 
     /**
-     * It adds a message in the gloabal chat
+     * It adds a message in the global chat
      * @param text is text of the message
      * @param sender is the sender nickname
      * @param receivers is the nickname list of receivers
@@ -342,16 +342,58 @@ public class CLIView implements Observer {
         globalChat.addMessage(text, sender, receivers, timestamp);
     }
 
+
     /**
      * Getter method
      * @return the arrayList of open duo chats
      */
     public ArrayList<ClientChat> getDuoChats () { return this.duoChats; }
+
+
+    /**
+     * This method call the clientController method that checks if a Tile is null
+     * @param row is the row of the Tile
+     * @param column is the column of the Tile
+     * @param board is the Board of the Game
+     * @return true if the Tile isn't null, otherwise false
+     */
     public boolean callCheckNullTiles (int row, int column, Board board) { return clientController.checkNullTiles(row, column, board); }
+
+
+    /**
+     * This method call the clientController method that checks if a Tile can be pulled
+     * @param row is the row of the Tile
+     * @param column is the column of the Tile
+     * @param board is the Board of the Game
+     * @return true if the Tile isn't null, otherwise false
+     */
     public boolean callCheckCanPullTile(int row, int column, Board board) { return clientController.checkCanPullTile(row, column, board); }
+
+
+    /**
+     * This method call the clientController method that checks if the chosen Tiles are aligned
+     * @param positions is the arrayList of the positions of the Tiles
+     * @param board is the Board of the Game
+     * @return true if the Tiles are aligned, otherwise false
+     */
     public boolean callCheckIsAlignedTiles(ArrayList<String> positions, Board board) { return clientController.checkIsAlignedTiles(positions, board); }
+
+
+    /**
+     * This method call the clientController method that checks if there are free spots in a specific column of the client Shelf
+     * @param positions is the arrayList of the position of the Tiles
+     * @param shelf is the client Shelf
+     * @param column is the specific column
+     * @return true if there are, otherwise false
+     */
     public boolean callCheckFreeSpotsInColumnShelf (ArrayList<String> positions, Shelf shelf, int column) { return clientController.checkFreeSpotsInColumnShelf(positions, shelf, column); }
 
+
+    /**
+     * This method checks if the game is ended
+     * @param isGameEnded is a boolean parameter that means if the game is ended or not
+     * @param protocol is the protocol with which the user is playing
+     */
     @Override
     public void isGameEnded(boolean isGameEnded, int protocol) {
 
