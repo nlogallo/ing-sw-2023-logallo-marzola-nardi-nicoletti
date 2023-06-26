@@ -35,7 +35,7 @@ public class MainSceneController implements GenericSceneController, Initializabl
     private GUIView gui;
     private ArrayList<Position> positionsToPick = new ArrayList<>();
     private ArrayList<Position> positionsToOrder = new ArrayList<>();
-    private int selectedColumn;
+    private static int selectedColumn;
     private int turnPhase;
     private int gameId;
     private String nickname;
@@ -493,52 +493,10 @@ public class MainSceneController implements GenericSceneController, Initializabl
 
     /**
      * (First Column) This method manages the actions of choosing the column of the shelf to put the tile into
-     *
-     * @param event is the event triggered by clicking the invisible button under the chosen tile
      */
-    private void firstColumnButtonClick(Event event){
+    private void ColumnButtonClick(int column){
         if (turnPhase == 3)
-            selectedColumn = 0;
-    }
-
-    /**
-     * (Second Column) This method manages the actions of choosing the column of the shelf to put the tile into
-     *
-     * @param event is the event triggered by clicking the invisible button under the chosen tile
-     */
-    private void secondColumnButtonClick(Event event){
-        if (turnPhase == 3)
-            selectedColumn = 1;
-    }
-
-    /**
-     * (Third Column) This method manages the actions of choosing the column of the shelf to put the tile into
-     *
-     * @param event is the event triggered by clicking the invisible button under the chosen tile
-     */
-    private void thirdColumnButtonClick(Event event){
-        if (turnPhase == 3)
-            selectedColumn = 2;
-    }
-
-    /**
-     * (Fourth Column) This method manages the actions of choosing the column of the shelf to put the tile into
-     *
-     * @param event is the event triggered by clicking the invisible button under the chosen tile
-     */
-    private void fourthColumnButtonClick(Event event){
-        if (turnPhase == 3)
-            selectedColumn = 3;
-    }
-
-    /**
-     * (Fifth Column) This method manages the actions of choosing the column of the shelf to put the tile into
-     *
-     * @param event is the event triggered by clicking the invisible button under the chosen tile
-     */
-    private void fifthColumnButtonClick(Event event){
-        if (turnPhase == 3)
-            selectedColumn = 4;
+            selectedColumn = column;
     }
 
     private void otherPlayerButtonClick0(Event event) {}
@@ -596,636 +554,26 @@ public class MainSceneController implements GenericSceneController, Initializabl
             seat.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/misc/firstplayertoken.png"))));;
     }
 
-    private void boardButtonClick03 (Event event){
+    /**
+     * This method removes a tile from the Board
+     * @param row is the row of the tile
+     * @param column is the column of the tile
+     */
+    private void boardButtonClick (int row, int column){
         if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board03.getOpacity() == 1.0) {
+            if (boardImage[row][column].getOpacity() == 1.0) {
                 if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(0, 3)) {
-                        positionsToPick.add(new Position(0, 3));
+                    if (gui.getBoard().canPull(row, column)) {
+                        positionsToPick.add(new Position(row, column));
                         if (gui.getBoard().areAligned(positionsToPick)) {
-                            board03.setOpacity(0.3);
+                            boardImage[row][column].setOpacity(0.3);
                         } else positionsToPick.remove(positionsToPick.size() - 1);
                     }
                 }
             }
         }
     }
-    private void boardButtonClick04 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board04.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(0, 4)) {
-                        positionsToPick.add(new Position(0, 4));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board04.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick13 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board13.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(1, 3)) {
-                        positionsToPick.add(new Position(1, 3));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board13.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick14 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board14.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(1, 4)) {
-                        positionsToPick.add(new Position(1, 4));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board14.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick15 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board15.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(1, 5)) {
-                        positionsToPick.add(new Position(1, 5));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board15.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick22 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board22.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(2, 2)) {
-                        positionsToPick.add(new Position(2, 2));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board22.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick23 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board23.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(2, 3)) {
-                        positionsToPick.add(new Position(2, 3));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board23.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick24 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board24.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(2, 4)) {
-                        positionsToPick.add(new Position(2, 4));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board24.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick25 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board25.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(2, 5)) {
-                        positionsToPick.add(new Position(2, 5));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board25.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick26 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board26.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(2, 6)) {
-                        positionsToPick.add(new Position(2, 6));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board26.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick31 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board31.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(3, 1)) {
-                        positionsToPick.add(new Position(3, 1));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board31.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick32 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board32.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(3, 2)) {
-                        positionsToPick.add(new Position(3, 2));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board32.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick33 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board33.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(3, 3)) {
-                        positionsToPick.add(new Position(3, 3));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board33.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick34 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board34.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(3, 4)) {
-                        positionsToPick.add(new Position(3, 4));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board34.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick35 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board35.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(3, 5)) {
-                        positionsToPick.add(new Position(3, 5));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board35.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick36 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board36.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(3, 6)) {
-                        positionsToPick.add(new Position(3, 6));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board36.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick37 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board37.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(3, 7)) {
-                        positionsToPick.add(new Position(3, 7));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board37.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick38 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board38.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(3, 8)) {
-                        positionsToPick.add(new Position(3, 8));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board38.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick40 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board40.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(4, 0)) {
-                        positionsToPick.add(new Position(4, 0));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board40.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick41 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board41.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(4, 1)) {
-                        positionsToPick.add(new Position(4, 1));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board41.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick42 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board42.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(4, 2)) {
-                        positionsToPick.add(new Position(4, 2));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board42.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick43 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board43.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(4, 3)) {
-                        positionsToPick.add(new Position(4, 3));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board43.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick44 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board44.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(4, 4)) {
-                        positionsToPick.add(new Position(4, 4));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board44.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick45 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board45.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(4, 5)) {
-                        positionsToPick.add(new Position(4, 5));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board45.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick46 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board46.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(4, 6)) {
-                        positionsToPick.add(new Position(4, 6));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board46.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick47 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board47.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(4, 7)) {
-                        positionsToPick.add(new Position(4, 7));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board47.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick48 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board48.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(4, 8)) {
-                        positionsToPick.add(new Position(4, 8));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board48.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick50 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board50.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(5, 0)) {
-                        positionsToPick.add(new Position(5, 0));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board50.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick51 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board51.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(5, 1)) {
-                        positionsToPick.add(new Position(5, 1));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board51.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick52 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board52.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(5, 2)) {
-                        positionsToPick.add(new Position(5, 2));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board52.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick53 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board53.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(5, 3)) {
-                        positionsToPick.add(new Position(5, 3));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board53.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick54 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board54.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(5, 4)) {
-                        positionsToPick.add(new Position(5, 4));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board54.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick55 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board55.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(5, 5)) {
-                        positionsToPick.add(new Position(5, 5));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board55.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick56 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board56.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(5, 6)) {
-                        positionsToPick.add(new Position(5, 6));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board56.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick57 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board57.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(5, 7)) {
-                        positionsToPick.add(new Position(5, 7));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board57.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick62 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board62.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(6, 2)) {
-                        positionsToPick.add(new Position(6, 2));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board62.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick63 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board63.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(6, 3)) {
-                        positionsToPick.add(new Position(6, 3));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board63.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick64 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board64.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(6, 4)) {
-                        positionsToPick.add(new Position(6, 4));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board64.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick65 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board65.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(6, 5)) {
-                        positionsToPick.add(new Position(6, 5));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board65.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick66 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board66.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(6, 6)) {
-                        positionsToPick.add(new Position(6, 6));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board66.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick73 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board73.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(7, 3)) {
-                        positionsToPick.add(new Position(7, 3));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board73.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick74 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board74.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(7, 4)) {
-                        positionsToPick.add(new Position(7, 4));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board74.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick75 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board75.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(7, 5)) {
-                        positionsToPick.add(new Position(7, 5));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board75.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick84 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board84.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(8, 4)) {
-                        positionsToPick.add(new Position(8, 4));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board84.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
-    private void boardButtonClick85 (Event event){
-        if (turnPhase == 1 && gui.getShelf().freeSpots() > positionsToPick.size()) {
-            if (board85.getOpacity() == 1.0) {
-                if (positionsToPick.size() >= 0 && positionsToPick.size() < 3) {
-                    if (gui.getBoard().canPull(8, 5)) {
-                        positionsToPick.add(new Position(8, 5));
-                        if (gui.getBoard().areAligned(positionsToPick)) {
-                            board85.setOpacity(0.3);
-                        } else positionsToPick.remove(positionsToPick.size() - 1);
-                    }
-                }
-            }
-        }
-    }
+
     /**
      * This method sets the assets of the other players
      */
@@ -1322,7 +670,7 @@ public class MainSceneController implements GenericSceneController, Initializabl
 
 
     /**
-     * This method initializes all the button
+     * This method initializes all the buttons
      */
     private void initButtons() {
         myShelf.addEventHandler(MouseEvent.MOUSE_CLICKED, this::setOtherPlayersShelves);
@@ -1333,57 +681,57 @@ public class MainSceneController implements GenericSceneController, Initializabl
         backButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::backButtonClick);
         vButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::vButtonClick);
 
-        firstColumnButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::firstColumnButtonClick);
-        secondColumnButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::secondColumnButtonClick);
-        thirdColumnButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::thirdColumnButtonClick);
-        fourthColumnButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::fourthColumnButtonClick);
-        fifthColumnButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::fifthColumnButtonClick);
+        firstColumnButton.setOnMouseClicked(mouseEvent ->{ColumnButtonClick(0);});
+        secondColumnButton.setOnMouseClicked(mouseEvent -> {ColumnButtonClick(1);});
+        thirdColumnButton.setOnMouseClicked(mouseEvent -> {ColumnButtonClick(2);});
+        fourthColumnButton.setOnMouseClicked(mouseEvent -> {ColumnButtonClick(3);});
+        fifthColumnButton.setOnMouseClicked(mouseEvent -> {ColumnButtonClick(4);});
 
-        boardButton03.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick03);
-        boardButton04.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick04);
-        boardButton13.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick13);
-        boardButton14.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick14);
-        boardButton15.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick15);
-        boardButton22.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick22);
-        boardButton23.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick23);
-        boardButton24.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick24);
-        boardButton25.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick25);
-        boardButton26.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick26);
-        boardButton31.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick31);
-        boardButton32.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick32);
-        boardButton33.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick33);
-        boardButton34.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick34);
-        boardButton35.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick35);
-        boardButton36.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick36);
-        boardButton37.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick37);
-        boardButton38.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick38);
-        boardButton40.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick40);
-        boardButton41.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick41);
-        boardButton42.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick42);
-        boardButton43.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick43);
-        boardButton44.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick44);
-        boardButton45.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick45);
-        boardButton46.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick46);
-        boardButton47.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick47);
-        boardButton48.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick48);
-        boardButton50.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick50);
-        boardButton51.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick51);
-        boardButton52.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick52);
-        boardButton53.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick53);
-        boardButton54.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick54);
-        boardButton55.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick55);
-        boardButton56.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick56);
-        boardButton57.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick57);
-        boardButton62.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick62);
-        boardButton63.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick63);
-        boardButton64.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick64);
-        boardButton65.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick65);
-        boardButton66.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick66);
-        boardButton73.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick73);
-        boardButton74.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick74);
-        boardButton75.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick75);
-        boardButton84.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick84);
-        boardButton85.addEventHandler(MouseEvent.MOUSE_RELEASED, this::boardButtonClick85);
+        boardButton03.setOnMouseClicked(mouseEvent -> {boardButtonClick(0, 3);});
+        boardButton04.setOnMouseClicked(mouseEvent -> {boardButtonClick(0, 4);});
+        boardButton13.setOnMouseClicked(mouseEvent -> {boardButtonClick(1, 3);});
+        boardButton14.setOnMouseClicked(mouseEvent -> {boardButtonClick(1, 4);});
+        boardButton15.setOnMouseClicked(mouseEvent -> {boardButtonClick(1, 5);});
+        boardButton22.setOnMouseClicked(mouseEvent -> {boardButtonClick(2, 2);});
+        boardButton23.setOnMouseClicked(mouseEvent -> {boardButtonClick(2, 3);});
+        boardButton24.setOnMouseClicked(mouseEvent -> {boardButtonClick(2, 4);});
+        boardButton25.setOnMouseClicked(mouseEvent -> {boardButtonClick(2, 5);});
+        boardButton26.setOnMouseClicked(mouseEvent -> {boardButtonClick(2, 6);});
+        boardButton31.setOnMouseClicked(mouseEvent -> {boardButtonClick(3, 1);});
+        boardButton32.setOnMouseClicked(mouseEvent -> {boardButtonClick(3, 2);});
+        boardButton33.setOnMouseClicked(mouseEvent -> {boardButtonClick(3, 3);});
+        boardButton34.setOnMouseClicked(mouseEvent -> {boardButtonClick(3, 4);});
+        boardButton35.setOnMouseClicked(mouseEvent -> {boardButtonClick(3, 5);});
+        boardButton36.setOnMouseClicked(mouseEvent -> {boardButtonClick(3, 6);});
+        boardButton37.setOnMouseClicked(mouseEvent -> {boardButtonClick(3, 7);});
+        boardButton38.setOnMouseClicked(mouseEvent -> {boardButtonClick(3, 8);});
+        boardButton40.setOnMouseClicked(mouseEvent -> {boardButtonClick(4, 0);});
+        boardButton41.setOnMouseClicked(mouseEvent -> {boardButtonClick(4, 1);});
+        boardButton42.setOnMouseClicked(mouseEvent -> {boardButtonClick(4, 2);});
+        boardButton43.setOnMouseClicked(mouseEvent -> {boardButtonClick(4, 3);});
+        boardButton44.setOnMouseClicked(mouseEvent -> {boardButtonClick(4, 4);});
+        boardButton45.setOnMouseClicked(mouseEvent -> {boardButtonClick(4, 5);});
+        boardButton46.setOnMouseClicked(mouseEvent -> {boardButtonClick(4, 6);});
+        boardButton47.setOnMouseClicked(mouseEvent -> {boardButtonClick(4, 7);});
+        boardButton48.setOnMouseClicked(mouseEvent -> {boardButtonClick(4, 8);});
+        boardButton50.setOnMouseClicked(mouseEvent -> {boardButtonClick(5, 0);});
+        boardButton51.setOnMouseClicked(mouseEvent -> {boardButtonClick(5, 1);});
+        boardButton52.setOnMouseClicked(mouseEvent -> {boardButtonClick(5, 2);});
+        boardButton53.setOnMouseClicked(mouseEvent -> {boardButtonClick(5, 3);});
+        boardButton54.setOnMouseClicked(mouseEvent -> {boardButtonClick(5, 4);});
+        boardButton55.setOnMouseClicked(mouseEvent -> {boardButtonClick(5, 5);});
+        boardButton56.setOnMouseClicked(mouseEvent -> {boardButtonClick(5, 6);});
+        boardButton57.setOnMouseClicked(mouseEvent -> {boardButtonClick(5, 7);});
+        boardButton62.setOnMouseClicked(mouseEvent -> {boardButtonClick(6, 2);});
+        boardButton63.setOnMouseClicked(mouseEvent -> {boardButtonClick(6, 3);});
+        boardButton64.setOnMouseClicked(mouseEvent -> {boardButtonClick(6, 4);});
+        boardButton65.setOnMouseClicked(mouseEvent -> {boardButtonClick(6, 5);});
+        boardButton66.setOnMouseClicked(mouseEvent -> {boardButtonClick(6, 6);});
+        boardButton73.setOnMouseClicked(mouseEvent -> {boardButtonClick(7, 3);});
+        boardButton74.setOnMouseClicked(mouseEvent -> {boardButtonClick(7, 4);});
+        boardButton75.setOnMouseClicked(mouseEvent -> {boardButtonClick(7, 5);});
+        boardButton84.setOnMouseClicked(mouseEvent -> {boardButtonClick(8, 4);});
+        boardButton85.setOnMouseClicked(mouseEvent -> {boardButtonClick(8, 5);});
 
         pickedBottomButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::pickedBottomButtonClick);
         pickedMiddleButton.addEventHandler(MouseEvent.MOUSE_RELEASED, this::pickedMiddleButtonClick);
