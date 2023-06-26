@@ -64,7 +64,6 @@ public class ClientController {
         Tile[][] tilesTable = board.getTilesTable();
         if (tilesTable[row - 1][column - 1] == null) {
             clientViewObservable.setScreenMessage("You can't select a spot that doesn't contain a tile.");
-            //clientViewObservable.setIsOccurredAnError(true);
             return false;
         }
         return true;
@@ -82,7 +81,6 @@ public class ClientController {
 
         if (!board.canPull(row - 1, column - 1)) {
             clientViewObservable.setScreenMessage("You can't pick tiles that don't have at least one free edge.");
-            //clientViewObservable.setIsOccurredAnError(true);
             return false;
         }
         return true;
@@ -100,7 +98,6 @@ public class ClientController {
         ArrayList<Position> listPosition = convertStringListToPositionList(positions);
         if (!board.areAligned(listPosition)) {
             clientViewObservable.setScreenMessage("You have to pick aligned tiles");
-            //clientViewObservable.setIsOccurredAnError(true);
             return false;
         }
         return true;
@@ -119,7 +116,6 @@ public class ClientController {
         ArrayList<Position> listPosition = convertStringListToPositionList(positions);
         if (shelf.freeRows(column - 1) < listPosition.size()) {
             clientViewObservable.setScreenMessage("You don't have enough free spots in this column.");
-            //clientViewObservable.setIsOccurredAnError(true);
             return false;
         }
         return true;
