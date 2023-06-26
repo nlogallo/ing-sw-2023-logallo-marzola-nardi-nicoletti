@@ -3,6 +3,9 @@ package it.polimi.ingsw.utils;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+/**
+ * This class represents the class of Messages stored in the Client
+ */
 public class ClientMessage {
 
     private final String message;

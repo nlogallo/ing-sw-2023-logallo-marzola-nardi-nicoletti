@@ -36,9 +36,97 @@
       </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>17.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>17.0.2</version>
+      <classifier>mac-aarch64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>17.0.2</version>
+      <classifier>mac</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>17.0.2</version>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>17.0.2</version>
+      <classifier>linux</classifier>
+    </dependency>
+
+    <!-- JavaFX Graphics components -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>17.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>17.0.2</version>
+      <classifier>mac-aarch64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>17.0.2</version>
+      <classifier>mac</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>17.0.2</version>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>17.0.2</version>
+      <classifier>linux</classifier>
+    </dependency>
+
+    <!-- JavaFX Controls -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>17.0.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>17.0.2</version>
+      <classifier>mac-aarch64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>17.0.2</version>
+      <classifier>mac</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>17.0.2</version>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>17.0.2</version>
+      <classifier>linux</classifier>
+    </dependency>
+
+    <!-- JavaFX FXML -->
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
@@ -46,8 +134,27 @@
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
-      <artifactId>javafx-graphics</artifactId>
+      <artifactId>javafx-fxml</artifactId>
       <version>17.0.2</version>
+      <classifier>mac-aarch64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>17.0.2</version>
+      <classifier>mac</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>17.0.2</version>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>17.0.2</version>
+      <classifier>linux</classifier>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.plugins</groupId>

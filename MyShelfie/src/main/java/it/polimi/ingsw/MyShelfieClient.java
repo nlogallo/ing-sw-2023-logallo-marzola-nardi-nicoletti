@@ -1132,7 +1132,6 @@ public class MyShelfieClient {
                     return result;
                 } else if (networkMessage.getRequestId().equals("SM")) {
                     chatOutput.flush();
-                    System.out.println("Invio il messaggio");
                     chatOutput.writeObject(networkMessage);
                 }
             } catch (IOException | ClassNotFoundException e) {

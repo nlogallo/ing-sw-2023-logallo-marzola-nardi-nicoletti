@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.commonGoal.CommonGoal;
 import it.polimi.ingsw.utils.NetworkMessage;
 import java.util.ArrayList;
 
+/**
+ * This class represents the main controller class for the Server
+ */
 public class ServerController {
     private final GameController gameController;
     private boolean isTokenChange;
