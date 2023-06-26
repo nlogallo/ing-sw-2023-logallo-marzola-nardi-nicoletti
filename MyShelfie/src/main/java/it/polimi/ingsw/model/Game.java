@@ -6,8 +6,6 @@ import it.polimi.ingsw.utils.wrapperCustom.DescriptionWrapper;
 import it.polimi.ingsw.utils.wrapperCustom.PersonalGoalWrapper;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -90,11 +88,6 @@ public class Game implements Serializable {
     public void endGame() {
         this.currentPlayer = null;
         this.state = GameState.ENDED;
-        try {
-            Files.delete(Path.of("data/savedGames/game" + this.id + ".bin"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 
@@ -109,7 +102,7 @@ public class Game implements Serializable {
             fileOutputStream.flush();
             fileOutputStream.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Failed to save the game");
         }
     }
 
