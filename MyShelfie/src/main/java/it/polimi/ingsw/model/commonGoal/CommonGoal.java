@@ -4,6 +4,9 @@ import it.polimi.ingsw.model.TileType;
 
 import java.io.Serializable;
 
+/**
+ * This abstract class represents the generic Common Goal
+ */
 public abstract class CommonGoal implements Serializable {
     final private int id;
     final private String description;
