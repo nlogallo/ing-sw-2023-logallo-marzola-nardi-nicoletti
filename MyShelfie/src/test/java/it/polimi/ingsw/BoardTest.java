@@ -26,47 +26,12 @@ class BoardTest {
     void tearDown() {
     }
 
-
     @Test
-    void generateId_TwoPLayers_CorrectBehavior() {
-
-        int c = 0;
-        ArrayList<Integer> validIdList;
-        validIdList = boardTwo.getValidIdList();
-        while (validIdList.size() > 0) {
-            boardTwo.generateId();
-            c++;
-        }
-        assertSame(132 - 29, c);
+    void getValidIdList_CorrectBehavior() {
+        assertEquals(103, boardTwo.getValidIdList().size());
+        assertEquals(95, boardThree.getValidIdList().size());
+        assertEquals(87, boardFour.getValidIdList().size());
     }
-
-    @Test
-    void generateId_ThreePLayers_CorrectBehavior() {
-
-        int c = 0;
-        ArrayList<Integer> validIdList;
-        validIdList = boardThree.getValidIdList();
-        while (validIdList.size() > 0) {
-            boardThree.generateId();
-            c++;
-        }
-        assertSame(132-37,c );
-    }
-
-    @Test
-    void generateId_FourPLayers_CorrectBehavior() {
-
-        int c = 0;
-        ArrayList<Integer> validIdList;
-        validIdList = boardFour.getValidIdList();
-        while (validIdList.size() > 0) {
-            boardFour.generateId();
-            c++;
-        }
-        assertSame(132-45,c );
-    }
-
-
 
     @Test
     void refillBoard_TwoPLayers_CorrectBehavior() {

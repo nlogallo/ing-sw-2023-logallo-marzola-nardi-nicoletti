@@ -74,7 +74,7 @@ public class Board implements Serializable {
      * Generates a new valid id
      * @return the valid id
      */
-    public int generateId () {
+    private int generateId () {
         Random rand = new Random();
         int idPos = rand.nextInt(validIdList.size());
         int id = validIdList.get(idPos);
