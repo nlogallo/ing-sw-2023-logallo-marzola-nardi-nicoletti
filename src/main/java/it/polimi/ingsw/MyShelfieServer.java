@@ -338,12 +338,10 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
         if(!isRecovered){
             if (seat) {
                 game.startGame();
-                game.clearRecoveredPlayers();
                 games.put(game.getId(), game);
             } else {
                 if (games.get(game.getId()).isSetupFinished()) {
                     game = games.get(game.getId());
-                    game.clearRecoveredPlayers();
                     games.put(game.getId(), game);
                 }
                 else
@@ -911,8 +909,10 @@ public class MyShelfieServer extends UnicastRemoteObject implements MyShelfieRMI
                 }
                 if(game != null) {
                     game = games.get(game.getId());
-                    game.clearRecoveredPlayers();
-                    games.put(game.getId(), game);
+                    if(game != null) {
+                        game.clearRecoveredPlayers();
+                        games.put(game.getId(), game);
+                    }
                 }
                 nicknames.remove(nickname);
             } catch (StringIndexOutOfBoundsException e) {
