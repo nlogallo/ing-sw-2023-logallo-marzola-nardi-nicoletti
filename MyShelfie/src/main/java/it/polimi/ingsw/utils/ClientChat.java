@@ -58,7 +58,10 @@ public class ClientChat {
 
     /**
      * This method adds the new message (String) in the arrayList contained all messages (String) of the chat instance
-     * @param message is the new message (String). The format of the new message (String) is: sender&&&receiver&&&text
+     * @param message is the new message (String); the format of the new message (String) is: sender&&&receiver&&&text
+     * @param sender is the sender nickname of the message
+     * @param receivers is the arrayList of the receivers of the message
+     * @param timestamp is the Timestamp of the message
      */
     public void addMessage(String message, String sender, ArrayList<String> receivers, Timestamp timestamp) {
         this.chat.add(new ClientMessage(message, sender, receivers, timestamp));

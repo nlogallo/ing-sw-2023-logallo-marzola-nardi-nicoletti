@@ -22,8 +22,6 @@ public class GameController {
 
     /**
      * Set the game for the next player's turn
-     *
-     * @return a String
      */
     public void nextPhase(){
         String nextPlayer = " ";
