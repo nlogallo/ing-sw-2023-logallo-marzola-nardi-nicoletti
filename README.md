@@ -15,7 +15,7 @@
 
 | How to run | How to play | Javadocs | Project deliverables|
 | :-------------: | :-------------: | :--------: | :--------:|
-| [Click here](#how-to-run)| [Click here](#how-to-play)| [Click here](https://github.com/emanicoletti/myShelfie-javadocs.git)| :mechanic: Working...|
+| [Click here](#how-to-run)| [Click here](#how-to-play)| [Click here](https://nlogallo.github.io)| [Click here](https://github.com/nlogallo/ing-sw-2023-logallo-marzola-nardi-nicoletti/tree/main/deliverables/)|
 
 
 ## Implemented Functionalities
